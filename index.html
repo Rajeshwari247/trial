@@ -4,146 +4,93 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>Ashtadala – The Fading Lotus</title>
-
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <!-- AR.js (marker-based, works on iOS Safari via GitHub Pages HTTPS) -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  <!-- Firebase compat (works without bundler, no import needed) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { overflow: hidden; font-family: Arial, sans-serif; background: #000; }
-
-    /* ── SPLASH ── */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { overflow:hidden; font-family:Arial,sans-serif; background:#000; }
     #splash {
-      position: fixed; inset: 0; z-index: 9999;
-      background: radial-gradient(ellipse at center, #1a0800 0%, #000 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      color: #f5c97a; padding: 2rem; text-align: center;
+      position:fixed; inset:0; z-index:9999;
+      background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      color:#f5c97a; padding:2rem; text-align:center;
     }
-    #splash h1 { font-size: 2rem; margin-bottom: 0.3rem; letter-spacing: 0.05em; }
-    #splash .sub { font-style: italic; color: #b8864a; margin-bottom: 1.2rem; font-size: 0.95rem; }
+    #splash h1 { font-size:2rem; margin-bottom:.3rem; }
+    #splash .sub { font-style:italic; color:#b8864a; margin-bottom:1.2rem; font-size:.95rem; }
     #splash .story {
-      background: rgba(245,169,35,0.08);
-      border: 1px solid rgba(245,169,35,0.25);
-      border-radius: 12px;
-      padding: 1rem 1.2rem;
-      font-size: 0.88rem;
-      color: #d4a85a;
-      line-height: 1.7;
-      max-width: 320px;
-      margin-bottom: 1.4rem;
+      background:rgba(245,169,35,.08); border:1px solid rgba(245,169,35,.25);
+      border-radius:12px; padding:1rem 1.2rem; font-size:.88rem; color:#d4a85a;
+      line-height:1.7; max-width:320px; margin-bottom:1.4rem;
     }
     #splash input {
-      width: 100%; max-width: 260px;
-      padding: 0.7rem 1rem;
-      background: rgba(245,169,35,0.1);
-      border: 1px solid rgba(245,169,35,0.35);
-      border-radius: 8px;
-      color: #f5c97a; font-size: 1rem; text-align: center;
-      outline: none; margin-bottom: 1rem;
+      width:100%; max-width:260px; padding:.7rem 1rem;
+      background:rgba(245,169,35,.1); border:1px solid rgba(245,169,35,.35);
+      border-radius:8px; color:#f5c97a; font-size:1rem; text-align:center;
+      outline:none; margin-bottom:1rem;
     }
-    #splash input::placeholder { color: rgba(245,169,35,0.4); }
+    #splash input::placeholder { color:rgba(245,169,35,.4); }
     #splash button {
-      background: linear-gradient(135deg, #c8780a, #f5a623);
-      border: none; border-radius: 10px;
-      padding: 0.8rem 2.2rem;
-      font-size: 0.95rem; font-weight: bold;
-      color: #1a0800; cursor: pointer;
-      box-shadow: 0 4px 18px rgba(245,140,0,0.35);
+      background:linear-gradient(135deg,#c8780a,#f5a623); border:none;
+      border-radius:10px; padding:.8rem 2.2rem; font-size:.95rem;
+      font-weight:bold; color:#1a0800; cursor:pointer;
     }
-
-    /* ── HUD ── */
     #hud {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: none;
-      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
-      padding: 0.6rem 1rem 1rem;
-      color: #f5c97a;
-      pointer-events: none;
+      position:fixed; top:0; left:0; right:0; z-index:100; display:none;
+      background:linear-gradient(180deg,rgba(0,0,0,.85) 0%,transparent 100%);
+      padding:.6rem 1rem 1rem; color:#f5c97a; pointer-events:none;
     }
-    #hud .row1 { display: flex; justify-content: space-between; align-items: center; }
-    #hud .title { font-size: 0.75rem; letter-spacing: 0.08em; color: #b8864a; }
-    #timer { font-size: 1.5rem; font-weight: bold; }
-    #timer.urgent { color: #ff4444; animation: blink 0.5s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0.3; } }
-    #petal-strip { display: flex; gap: 5px; margin-top: 5px; justify-content: center; }
-    .pdot {
-      width: 30px; height: 8px; border-radius: 4px;
-      background: #333; transition: background 0.4s;
-    }
-    .pdot.full    { background: #f5a623; }
-    .pdot.mid     { background: #c86400; }
-    .pdot.low     { background: #7a2000; }
-    .pdot.dead    { background: #111; }
-    .pdot.guarded { background: #00e5ff; }
-
-    /* ── BOTTOM BAR ── */
+    #hud .row1 { display:flex; justify-content:space-between; align-items:center; }
+    #hud .title { font-size:.75rem; letter-spacing:.08em; color:#b8864a; }
+    #timer { font-size:1.5rem; font-weight:bold; }
+    #timer.urgent { color:#ff4444; animation:blink .5s step-end infinite; }
+    @keyframes blink { 50%{opacity:.3;} }
+    #petal-strip { display:flex; gap:5px; margin-top:5px; justify-content:center; }
+    .pdot { width:30px; height:8px; border-radius:4px; background:#333; transition:background .4s; }
+    .pdot.full    { background:#f5a623; }
+    .pdot.mid     { background:#c86400; }
+    .pdot.low     { background:#7a2000; }
+    .pdot.dead    { background:#111; }
+    .pdot.guarded { background:#00e5ff; }
     #bottom {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-      display: none;
-      background: linear-gradient(0deg, rgba(0,0,0,0.88) 0%, transparent 100%);
-      padding: 0.8rem 1rem 1.4rem;
-      color: #f5c97a; text-align: center;
-      pointer-events: none;
+      position:fixed; bottom:0; left:0; right:0; z-index:100; display:none;
+      background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,transparent 100%);
+      padding:.8rem 1rem 1.4rem; color:#f5c97a; text-align:center; pointer-events:none;
     }
-    #status { font-size: 0.85rem; color: #d4a85a; font-style: italic; }
-    #myscore { font-size: 1rem; margin-top: 3px; }
-
-    /* ── STORM BANNER ── */
+    #status { font-size:.85rem; color:#d4a85a; font-style:italic; }
+    #myscore { font-size:1rem; margin-top:3px; }
     #storm {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 200;
-      background: rgba(160,10,0,0.92);
-      border: 2px solid #ff3322;
-      border-radius: 12px;
-      padding: 1rem 1.8rem;
-      color: #fff; text-align: center;
-      font-size: 1rem; font-weight: bold;
-      display: none;
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:200;
+      background:rgba(160,10,0,.92); border:2px solid #ff3322; border-radius:12px;
+      padding:1rem 1.8rem; color:#fff; text-align:center; font-size:1rem;
+      font-weight:bold; display:none;
     }
-
-    /* ── END SCREEN ── */
     #endscreen {
-      position: fixed; inset: 0; z-index: 9999;
-      background: radial-gradient(ellipse at center, #1a0800, #000);
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      color: #f5c97a; padding: 2rem; text-align: center;
+      position:fixed; inset:0; z-index:9999;
+      background:radial-gradient(ellipse at center,#1a0800,#000);
+      display:none; flex-direction:column; align-items:center; justify-content:center;
+      color:#f5c97a; padding:2rem; text-align:center;
     }
-    #endscreen h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
-    #final-pct { font-size: 3.5rem; margin: 0.4rem 0; color: #f5a623; }
-    #verdict { font-style: italic; color: #b8864a; margin-bottom: 1.2rem; font-size: 1rem; }
+    #endscreen h2 { font-size:1.6rem; margin-bottom:.4rem; }
+    #final-pct { font-size:3.5rem; margin:.4rem 0; color:#f5a623; }
+    #verdict { font-style:italic; color:#b8864a; margin-bottom:1.2rem; font-size:1rem; }
     #board {
-      background: rgba(245,169,35,0.07);
-      border: 1px solid rgba(245,169,35,0.2);
-      border-radius: 10px;
-      padding: 0.9rem 1.4rem;
-      margin-bottom: 1.2rem;
-      width: 100%; max-width: 300px;
-      font-size: 0.9rem; line-height: 1.9;
+      background:rgba(245,169,35,.07); border:1px solid rgba(245,169,35,.2);
+      border-radius:10px; padding:.9rem 1.4rem; margin-bottom:1.2rem;
+      width:100%; max-width:300px; font-size:.9rem; line-height:1.9;
     }
-    .srow { display: flex; justify-content: space-between; }
+    .srow { display:flex; justify-content:space-between; }
     #endscreen button {
-      background: linear-gradient(135deg, #c8780a, #f5a623);
-      border: none; border-radius: 10px;
-      padding: 0.8rem 2rem;
-      font-size: 0.95rem; font-weight: bold;
-      color: #1a0800; cursor: pointer;
+      background:linear-gradient(135deg,#c8780a,#f5a623); border:none;
+      border-radius:10px; padding:.8rem 2rem; font-size:.95rem;
+      font-weight:bold; color:#1a0800; cursor:pointer;
     }
-
-    /* AR scene fills screen */
-    a-scene { position: fixed; inset: 0; }
+    a-scene { position:fixed; inset:0; }
   </style>
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
   <h1>🪷 Ashtadala</h1>
   <p class="sub">The Fading Lotus</p>
@@ -157,7 +104,6 @@
   <button onclick="startGame()">Begin the Ritual</button>
 </div>
 
-<!-- HUD -->
 <div id="hud">
   <div class="row1">
     <span class="title">🪷 ASHTADALA</span>
@@ -165,17 +111,13 @@
   </div>
   <div id="petal-strip"></div>
 </div>
-
 <div id="bottom">
   <div id="status">Point camera at a pillar marker…</div>
-  <div id="myscore">Your guard score: <strong id="pts">0</strong></div>
+  <div id="myscore">Guard score: <strong id="pts">0</strong></div>
 </div>
-
-<div id="storm">⚡ The Yaksha storms!<br><span style="font-size:0.8rem;font-weight:normal">3 petals fading faster…</span></div>
-
-<!-- END SCREEN -->
+<div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
 <div id="endscreen">
-  <div style="font-size:3rem;margin-bottom:0.3rem">🪷</div>
+  <div style="font-size:3rem;margin-bottom:.3rem">🪷</div>
   <h2 id="end-title">The Lotus Endures</h2>
   <div id="final-pct">72%</div>
   <div id="verdict">The Yaksha retreats… for now.</div>
@@ -183,201 +125,257 @@
   <button onclick="location.reload()">Play Again</button>
 </div>
 
-<!-- AR SCENE — 8 barcode markers (IDs 0–7), one per pillar -->
-<a-scene
-  embedded
-  arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-  vr-mode-ui="enabled: false"
-  renderer="logarithmicDepthBuffer: true; precision: medium;"
-  style="display:none"
-  id="ar-scene"
->
+<!--
+  KEY DESIGN CHANGE:
+  Petals = a-cone with rotation="-90 Ydeg 0"
+  This tips the cone from pointing UP to pointing OUTWARD (flat on ground).
+  radius-bottom="0.01" = pointy tip (petal tip toward centre)
+  radius-top="0.3"     = wide base (petal base at edge)
+  Positioned at distance 0.55 from centre along each of 8 angles.
+  Two layers: outer (large) + inner (smaller, fills gaps between outer petals).
+  Result: flat flower seen from above.
+-->
 
-  <!-- ══ PETAL 0 — orange-red ══ -->
+<a-scene embedded
+  arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;"
+  vr-mode-ui="enabled:false"
+  renderer="logarithmicDepthBuffer:true; precision:medium;"
+  style="display:none" id="ar-scene">
+
+  <!-- macro to build one lotus — repeated 8 times with different colors -->
+
+  <!-- PETAL 0: saffron orange -->
   <a-marker type="barcode" value="0" smooth="true" smoothCount="5">
     <a-entity id="pe0">
-      <!-- Outer ring -->
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#ff6b35" emissive="#ff4400" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <!-- 8 petals via rotated planes -->
-      <a-plane position="0 0.02 0.4" rotation="-90 0 0"   width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28" rotation="-90 0 -45" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0" rotation="-90 0 -90"  width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28" rotation="-90 0 -135" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4" rotation="-90 0 -180" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0" rotation="-90 0 -270" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28" rotation="-90 0 -315" width="0.22" height="0.5" color="#ff8c55" opacity="0.9"></a-plane>
-      <!-- Centre gem -->
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#ff6600" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <!-- outer 8 petals -->
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"   radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff7700" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff8800" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff7700" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff8800" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff7700" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff8800" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff7700" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ff8800" opacity="0.95"></a-cone>
+      <!-- inner 8 petals (between outer, slightly raised, shorter) -->
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"   radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffaa22" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffbb33" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffaa22" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffbb33" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffaa22" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffbb33" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffaa22" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffbb33" opacity="0.95"></a-cone>
+      <!-- centre: pulsing gold dome + stamen ring -->
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:800"></a-sphere>
-      <!-- Label -->
-      <a-text id="pt0" value="Petal 1  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt0" value="Petal 1  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 1 — purple ══ -->
+  <!-- PETAL 1: deep pink/magenta -->
   <a-marker type="barcode" value="1" smooth="true" smoothCount="5">
     <a-entity id="pe1">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#e040fb" emissive="#cc00ee" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#e070ff" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#e040fb" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e040fb" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#cc00dd" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e040fb" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#cc00dd" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e040fb" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#cc00dd" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e040fb" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#cc00dd" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#f070ff" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ee55ee" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#f070ff" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ee55ee" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#f070ff" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ee55ee" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#f070ff" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ee55ee" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:900"></a-sphere>
-      <a-text id="pt1" value="Petal 2  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt1" value="Petal 2  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 2 — green ══ -->
+  <!-- PETAL 2: emerald green -->
   <a-marker type="barcode" value="2" smooth="true" smoothCount="5">
     <a-entity id="pe2">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#00e676" emissive="#00bb44" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#44ff88" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#00e676" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00cc55" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00e676" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00cc55" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00e676" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00cc55" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00e676" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00cc55" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00e676" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44ff88" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#33ee77" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44ff88" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#33ee77" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44ff88" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#33ee77" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44ff88" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#33ee77" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:1000"></a-sphere>
-      <a-text id="pt2" value="Petal 3  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt2" value="Petal 3  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 3 — cyan/blue ══ -->
+  <!-- PETAL 3: sky blue -->
   <a-marker type="barcode" value="3" smooth="true" smoothCount="5">
     <a-entity id="pe3">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#40c4ff" emissive="#0088ff" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#66d4ff" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#29b6f6" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#0288d1" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#29b6f6" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#0288d1" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#29b6f6" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#0288d1" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#29b6f6" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#0288d1" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#29b6f6" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#81d4fa" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#55bbee" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#81d4fa" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#55bbee" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#81d4fa" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#55bbee" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#81d4fa" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#55bbee" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:700"></a-sphere>
-      <a-text id="pt3" value="Petal 4  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt3" value="Petal 4  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 4 — yellow ══ -->
+  <!-- PETAL 4: gold -->
   <a-marker type="barcode" value="4" smooth="true" smoothCount="5">
     <a-entity id="pe4">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#ffeb3b" emissive="#ffaa00" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#fff066" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#ffd600" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#f9a825" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ffd600" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#f9a825" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ffd600" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#f9a825" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ffd600" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#f9a825" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#ffd600" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#fff176" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffee58" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#fff176" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffee58" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#fff176" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffee58" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#fff176" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ffee58" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:1100"></a-sphere>
-      <a-text id="pt4" value="Petal 5  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt4" value="Petal 5  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 5 — pink/rose ══ -->
+  <!-- PETAL 5: crimson red -->
   <a-marker type="barcode" value="5" smooth="true" smoothCount="5">
     <a-entity id="pe5">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#ff4081" emissive="#cc0044" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#ff6699" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#e53935" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#c62828" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e53935" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#c62828" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e53935" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#c62828" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e53935" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#c62828" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#e53935" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ef9a9a" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ff7070" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ef9a9a" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ff7070" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ef9a9a" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ff7070" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ef9a9a" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#ff7070" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:850"></a-sphere>
-      <a-text id="pt5" value="Petal 6  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt5" value="Petal 6  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 6 — mint ══ -->
+  <!-- PETAL 6: teal -->
   <a-marker type="barcode" value="6" smooth="true" smoothCount="5">
     <a-entity id="pe6">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#69f0ae" emissive="#00aa66" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#88ffcc" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#1de9b6" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00897b" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#1de9b6" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00897b" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#1de9b6" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00897b" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#1de9b6" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#00897b" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#1de9b6" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#64ffda" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44eebb" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#64ffda" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44eebb" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#64ffda" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44eebb" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#64ffda" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#44eebb" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:950"></a-sphere>
-      <a-text id="pt6" value="Petal 7  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt6" value="Petal 7  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
-  <!-- ══ PETAL 7 — amber/orange ══ -->
+  <!-- PETAL 7: deep violet -->
   <a-marker type="barcode" value="7" smooth="true" smoothCount="5">
     <a-entity id="pe7">
-      <a-torus position="0 0.01 0" rotation="-90 0 0"
-        radius="0.55" radius-tubular="0.04"
-        color="#ff9100" emissive="#cc5500" emissive-intensity="0.6"
-        animation="property:rotation; to:-90 360 0; loop:true; dur:5000; easing:linear">
-      </a-torus>
-      <a-plane position="0 0.02 0.4"       rotation="-90 0 0"    width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 0.28"   rotation="-90 0 -45"  width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="0.4 0.02 0"       rotation="-90 0 -90"  width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="0.28 0.02 -0.28"  rotation="-90 0 -135" width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="0 0.02 -0.4"      rotation="-90 0 -180" width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 -0.28" rotation="-90 0 -225" width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="-0.4 0.02 0"      rotation="-90 0 -270" width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-plane position="-0.28 0.02 0.28"  rotation="-90 0 -315" width="0.22" height="0.5" color="#ffaa44" opacity="0.9"></a-plane>
-      <a-sphere position="0 0.08 0" radius="0.1" color="#ffe066" emissive="#ffcc00" emissive-intensity="1"
+      <a-cylinder position="0 0.003 0" radius="1.2" height="0.006" color="#7c4dff" opacity="0.2"
+        animation="property:rotation; to:0 360 0; loop:true; dur:7000; easing:linear"></a-cylinder>
+      <a-cone position="0 0.02 0.55"      rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.3" height="1.05" color="#512da8" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 0.39"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#7c4dff" opacity="0.95"></a-cone>
+      <a-cone position="0.55 0.02 0"      rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.3" height="1.05" color="#512da8" opacity="0.95"></a-cone>
+      <a-cone position="0.39 0.02 -0.39"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#7c4dff" opacity="0.95"></a-cone>
+      <a-cone position="0 0.02 -0.55"     rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#512da8" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 -0.39" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#7c4dff" opacity="0.95"></a-cone>
+      <a-cone position="-0.55 0.02 0"     rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#512da8" opacity="0.95"></a-cone>
+      <a-cone position="-0.39 0.02 0.39"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.3" height="1.05" color="#7c4dff" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 0.3"       rotation="-90 0 0"    radius-bottom="0.01" radius-top="0.2" height="0.58" color="#b388ff" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 0.21"   rotation="-90 -45 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#9966ee" opacity="0.95"></a-cone>
+      <a-cone position="0.3 0.05 0"       rotation="-90 -90 0"  radius-bottom="0.01" radius-top="0.2" height="0.58" color="#b388ff" opacity="0.95"></a-cone>
+      <a-cone position="0.21 0.05 -0.21"  rotation="-90 -135 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#9966ee" opacity="0.95"></a-cone>
+      <a-cone position="0 0.05 -0.3"      rotation="-90 -180 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#b388ff" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 -0.21" rotation="-90 -225 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#9966ee" opacity="0.95"></a-cone>
+      <a-cone position="-0.3 0.05 0"      rotation="-90 -270 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#b388ff" opacity="0.95"></a-cone>
+      <a-cone position="-0.21 0.05 0.21"  rotation="-90 -315 0" radius-bottom="0.01" radius-top="0.2" height="0.58" color="#9966ee" opacity="0.95"></a-cone>
+      <a-sphere position="0 0.12 0" radius="0.18" color="#ffe566" emissive="#ffcc00" emissive-intensity="1.5"
         animation="property:scale; to:1.3 1.3 1.3; dir:alternate; loop:true; dur:750"></a-sphere>
-      <a-text id="pt7" value="Petal 8  100%" align="center" color="#ffe066"
-        position="0 0.8 0" scale="0.7 0.7 0.7"></a-text>
+      <a-torus position="0 0.07 0" radius="0.2" radius-tubular="0.03" color="#ffdd00" emissive="#ffaa00" emissive-intensity="1"
+        animation="property:rotation; to:360 0 0; loop:true; dur:3500; easing:linear"></a-torus>
+      <a-text id="pt7" value="Petal 8  100%" align="center" color="#ffe066" position="0 1.1 0" scale="1 1 1"></a-text>
     </a-entity>
   </a-marker>
 
@@ -385,9 +383,6 @@
 </a-scene>
 
 <script>
-// ─────────────────────────────────────────
-// FIREBASE CONFIG — already connected!
-// ─────────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyA4gpps6atNsq8dV3DB2USb7Bs5qvbF3Jk",
   authDomain: "ashtadala.firebaseapp.com",
@@ -397,282 +392,158 @@ const firebaseConfig = {
   messagingSenderId: "584325446650",
   appId: "1:584325446650:web:c3236007ae63df89654243"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ─────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────
-const GAME_DURATION  = 180;   // seconds
-const FADE_RATE      = 0.7;   // % per second normal
-const STORM_RATE     = 2.2;   // % per second storm
-const STORM_AT       = 90;    // trigger when timeLeft hits this
-const STORM_COUNT    = 3;     // petals affected
-const N              = 8;     // number of petals/pillars
+const GAME_DURATION=180, FADE_RATE=0.7, STORM_RATE=2.2, STORM_AT=90, STORM_COUNT=3, N=8;
+let playerName="Guardian", playerId="p_"+Math.random().toString(36).substr(2,6);
+let gameActive=false, timeLeft=GAME_DURATION, myScore=0;
+let petals=Array(N).fill(100), visible=Array(N).fill(false);
+let stormPetals=[], stormActive=false, stormShown=false, isHost=false;
 
-// ─────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────
-let playerName  = "Guardian";
-let playerId    = "p_" + Math.random().toString(36).substr(2,6);
-let gameActive  = false;
-let timeLeft    = GAME_DURATION;
-let myScore     = 0;
-let petals      = Array(N).fill(100);   // brightness 0–100
-let visible     = Array(N).fill(false); // which markers this phone sees
-let stormPetals = [];
-let stormActive = false;
-let stormShown  = false;
-let isHost      = false;
+const $timer=document.getElementById("timer"), $strip=document.getElementById("petal-strip");
+const $status=document.getElementById("status"), $pts=document.getElementById("pts");
+const $storm=document.getElementById("storm"), $hud=document.getElementById("hud");
+const $bottom=document.getElementById("bottom"), $scene=document.getElementById("ar-scene");
 
-// ─────────────────────────────────────────
-// DOM REFS
-// ─────────────────────────────────────────
-const $timer   = document.getElementById("timer");
-const $strip   = document.getElementById("petal-strip");
-const $status  = document.getElementById("status");
-const $pts     = document.getElementById("pts");
-const $storm   = document.getElementById("storm");
-const $hud     = document.getElementById("hud");
-const $bottom  = document.getElementById("bottom");
-const $scene   = document.getElementById("ar-scene");
-
-// ─────────────────────────────────────────
-// BUILD PETAL STRIP
-// ─────────────────────────────────────────
-function buildStrip() {
-  $strip.innerHTML = "";
-  for (let i = 0; i < N; i++) {
-    const d = document.createElement("div");
-    d.className = "pdot full";
-    d.id = "pd" + i;
-    $strip.appendChild(d);
+function buildStrip(){
+  $strip.innerHTML="";
+  for(let i=0;i<N;i++){
+    const d=document.createElement("div");
+    d.className="pdot full"; d.id="pd"+i; $strip.appendChild(d);
   }
 }
 
-// ─────────────────────────────────────────
-// START GAME
-// ─────────────────────────────────────────
-function startGame() {
-  playerName = document.getElementById("name-input").value.trim() || "Guardian";
-  document.getElementById("splash").style.display = "none";
-  $hud.style.display = "block";
-  $bottom.style.display = "block";
-  $scene.style.display = "block";
-  buildStrip();
-  setupMarkers();
-  electHost();
+function startGame(){
+  playerName=document.getElementById("name-input").value.trim()||"Guardian";
+  document.getElementById("splash").style.display="none";
+  $hud.style.display="block"; $bottom.style.display="block"; $scene.style.display="block";
+  buildStrip(); setupMarkers(); electHost();
 }
-window.startGame = startGame; // expose to onclick
+window.startGame=startGame;
 
-// ─────────────────────────────────────────
-// MARKER DETECTION
-// ─────────────────────────────────────────
-function setupMarkers() {
-  for (let i = 0; i < N; i++) {
-    const m = document.querySelector(`a-marker[value="${i}"]`);
-    if (!m) continue;
-    const idx = i;
-    m.addEventListener("markerFound", () => {
-      visible[idx] = true;
-      $status.textContent = `🪷 Guarding Petal ${idx + 1}…`;
-      db.ref("guard/" + playerId + "_" + idx).set(true);
+function setupMarkers(){
+  for(let i=0;i<N;i++){
+    const m=document.querySelector(`a-marker[value="${i}"]`);
+    if(!m) continue;
+    const idx=i;
+    m.addEventListener("markerFound",()=>{
+      visible[idx]=true;
+      $status.textContent=`🪷 Guarding Petal ${idx+1}…`;
+      db.ref("guard/"+playerId+"_"+idx).set(true);
     });
-    m.addEventListener("markerLost", () => {
-      visible[idx] = false;
-      db.ref("guard/" + playerId + "_" + idx).remove();
+    m.addEventListener("markerLost",()=>{
+      visible[idx]=false;
+      db.ref("guard/"+playerId+"_"+idx).remove();
     });
   }
 }
 
-// ─────────────────────────────────────────
-// HOST ELECTION via Firebase transaction
-// ─────────────────────────────────────────
-function electHost() {
-  // Register player
-  db.ref("players/" + playerId).set({ name: playerName, score: 0 });
-  db.ref("players/" + playerId).onDisconnect().remove();
-
-  // First writer becomes host
-  db.ref("meta/host").transaction(current => {
-    if (!current) return playerId;
-    return; // abort — already set
-  }, (err, committed) => {
-    if (committed) {
-      isHost = true;
-      // Init petals
-      const init = {};
-      for (let i = 0; i < N; i++) init[i] = 100;
+function electHost(){
+  db.ref("players/"+playerId).set({name:playerName,score:0});
+  db.ref("players/"+playerId).onDisconnect().remove();
+  db.ref("meta/host").transaction(cur=>{if(!cur)return playerId;},(err,committed)=>{
+    if(committed){
+      isHost=true;
+      const init={}; for(let i=0;i<N;i++) init[i]=100;
       db.ref("petals").set(init);
     }
-    // Everyone listens for petal updates
-    db.ref("petals").on("value", snap => {
-      const d = snap.val();
-      if (!d) return;
-      for (let i = 0; i < N; i++) {
-        if (d[i] !== undefined) petals[i] = d[i];
-      }
+    db.ref("petals").on("value",snap=>{
+      const d=snap.val(); if(!d) return;
+      for(let i=0;i<N;i++) if(d[i]!==undefined) petals[i]=d[i];
       updateVisuals();
     });
-    gameActive = true;
-    runLoop();
+    gameActive=true; runLoop();
   });
 }
 
-// ─────────────────────────────────────────
-// GAME LOOP — runs on every phone, host writes petals
-// ─────────────────────────────────────────
-function runLoop() {
-  const iv = setInterval(() => {
-    if (!gameActive) { clearInterval(iv); return; }
-
-    timeLeft--;
-    updateTimer();
-
-    // Storm trigger
-    if (!stormShown && timeLeft <= STORM_AT) {
-      stormShown = true;
-      stormActive = true;
-      stormPetals = shuffle([0,1,2,3,4,5,6,7]).slice(0, STORM_COUNT);
-      showStorm();
-      setTimeout(() => { stormActive = false; }, 20000);
+function runLoop(){
+  const iv=setInterval(()=>{
+    if(!gameActive){clearInterval(iv);return;}
+    timeLeft--; updateTimer();
+    if(!stormShown&&timeLeft<=STORM_AT){
+      stormShown=true; stormActive=true;
+      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,STORM_COUNT);
+      $storm.style.display="block";
+      setTimeout(()=>{$storm.style.display="none";},3000);
+      setTimeout(()=>{stormActive=false;},20000);
     }
-
-    // Score: earn points for each marker currently visible
-    for (let i = 0; i < N; i++) {
-      if (visible[i]) myScore++;
-    }
-    $pts.textContent = myScore;
-    db.ref("players/" + playerId + "/score").set(myScore);
-
-    // Only host fades petals and writes to Firebase
-    if (isHost) {
-      for (let i = 0; i < N; i++) {
-        if (!visible[i]) {
-          const rate = (stormActive && stormPetals.includes(i)) ? STORM_RATE : FADE_RATE;
-          petals[i] = Math.max(0, petals[i] - rate);
+    for(let i=0;i<N;i++) if(visible[i]) myScore++;
+    $pts.textContent=myScore;
+    db.ref("players/"+playerId+"/score").set(myScore);
+    if(isHost){
+      for(let i=0;i<N;i++){
+        if(!visible[i]){
+          const rate=(stormActive&&stormPetals.includes(i))?STORM_RATE:FADE_RATE;
+          petals[i]=Math.max(0,petals[i]-rate);
         }
       }
-      const update = {};
-      for (let i = 0; i < N; i++) update[i] = Math.round(petals[i]);
-      db.ref("petals").set(update);
+      const upd={}; for(let i=0;i<N;i++) upd[i]=Math.round(petals[i]);
+      db.ref("petals").set(upd);
     }
-
-    if (timeLeft <= 0) {
-      clearInterval(iv);
-      endGame();
-    }
-  }, 1000);
+    if(timeLeft<=0){clearInterval(iv);endGame();}
+  },1000);
 }
 
-// ─────────────────────────────────────────
-// VISUALS
-// ─────────────────────────────────────────
-function updateVisuals() {
-  for (let i = 0; i < N; i++) {
-    const b = Math.round(petals[i]);
-    const g = visible[i];
-
-    // Update AR entity opacity
-    const ent = document.getElementById("pe" + i);
-    if (ent) {
-      const op = g ? 1.0 : Math.max(0.05, b / 100);
-      ent.setAttribute("opacity", op);
+function updateVisuals(){
+  for(let i=0;i<N;i++){
+    const b=Math.round(petals[i]), g=visible[i];
+    const ent=document.getElementById("pe"+i);
+    if(ent){
+      const op=g?1.0:Math.max(0.05,b/100);
+      ent.querySelectorAll("a-cone,a-sphere,a-torus,a-cylinder").forEach(el=>el.setAttribute("opacity",op));
     }
-
-    // Update AR text label
-    const txt = document.getElementById("pt" + i);
-    if (txt) {
-      txt.setAttribute("value", g ? `Petal ${i+1}  GUARDED` : `Petal ${i+1}  ${b}%`);
-    }
-
-    // Update HUD dot
-    const dot = document.getElementById("pd" + i);
-    if (dot) {
-      if      (g)     dot.className = "pdot guarded";
-      else if (b > 65) dot.className = "pdot full";
-      else if (b > 35) dot.className = "pdot mid";
-      else if (b > 5)  dot.className = "pdot low";
-      else             dot.className = "pdot dead";
+    const txt=document.getElementById("pt"+i);
+    if(txt) txt.setAttribute("value",g?`Petal ${i+1}  GUARDED`:`Petal ${i+1}  ${b}%`);
+    const dot=document.getElementById("pd"+i);
+    if(dot){
+      if(g)          dot.className="pdot guarded";
+      else if(b>65)  dot.className="pdot full";
+      else if(b>35)  dot.className="pdot mid";
+      else if(b>5)   dot.className="pdot low";
+      else           dot.className="pdot dead";
     }
   }
 }
 
-function updateTimer() {
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  $timer.textContent = `${m}:${s.toString().padStart(2,"0")}`;
-  $timer.className = timeLeft <= 30 ? "urgent" : "";
+function updateTimer(){
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
+  $timer.textContent=`${m}:${s.toString().padStart(2,"0")}`;
+  $timer.className=timeLeft<=30?"urgent":"";
 }
 
-function showStorm() {
-  $storm.style.display = "block";
-  setTimeout(() => { $storm.style.display = "none"; }, 3000);
+async function endGame(){
+  gameActive=false;
+  const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
+  setTimeout(async()=>{
+    const snap=await db.ref("players").once("value");
+    const data=snap.val()||{};
+    const scores=Object.values(data).sort((a,b)=>b.score-a.score);
+    db.ref("meta").remove(); db.ref("petals").remove();
+    db.ref("guard").remove(); db.ref("players").remove();
+    showEnd(avg,scores);
+  },1800);
 }
 
-// ─────────────────────────────────────────
-// END GAME
-// ─────────────────────────────────────────
-async function endGame() {
-  gameActive = false;
-  const avg = Math.round(petals.reduce((a, b) => a + b, 0) / N);
-
-  // Wait for all players to write final scores
-  setTimeout(async () => {
-    const snap = await db.ref("players").once("value");
-    const data = snap.val() || {};
-    const scores = Object.values(data).sort((a, b) => b.score - a.score);
-
-    // Clean up Firebase
-    db.ref("meta").remove();
-    db.ref("petals").remove();
-    db.ref("guard").remove();
-    db.ref("players").remove();
-
-    showEnd(avg, scores);
-  }, 1800);
+function showEnd(avg,scores){
+  $scene.style.display="none"; $hud.style.display="none"; $bottom.style.display="none";
+  document.getElementById("final-pct").textContent=avg+"%";
+  const [[,t,v]]=[[75,"The Lotus Endures! 🪷","The Yaksha flees in defeat."],
+                  [50,"The Lotus Wavers…","The Yaksha lingers. Try again."],
+                  [0,"The Lotus Fades 💀","The Yaksha has won."]].filter(([th])=>avg>=th);
+  document.getElementById("end-title").textContent=t;
+  document.getElementById("verdict").textContent=v;
+  document.getElementById("board").innerHTML=
+    "<strong style='display:block;margin-bottom:6px;color:#f5c97a'>Guardian Scores</strong>"+
+    scores.map((p,i)=>`<div class="srow"><span>${["🥇","🥈","🥉"][i]||""} ${p.name}</span><span>${p.score} pts</span></div>`).join("");
+  document.getElementById("endscreen").style.display="flex";
 }
 
-function showEnd(avg, scores) {
-  $scene.style.display = "none";
-  $hud.style.display = "none";
-  $bottom.style.display = "none";
-
-  document.getElementById("final-pct").textContent = avg + "%";
-
-  const titles = [
-    [75, "The Lotus Endures! 🪷", "The Yaksha flees in defeat. The pavilion is protected."],
-    [50, "The Lotus Wavers…",     "The Yaksha lingers. Try again, guardian."],
-    [0,  "The Lotus Fades 💀",    "The Yaksha has won. The pavilion falls dark."]
-  ];
-  const [, t, v] = titles.find(([th]) => avg >= th);
-  document.getElementById("end-title").textContent = t;
-  document.getElementById("verdict").textContent = v;
-
-  const medals = ["🥇","🥈","🥉"];
-  document.getElementById("board").innerHTML =
-    "<strong style='display:block;margin-bottom:6px;color:#f5c97a'>Guardian Scores</strong>" +
-    scores.map((p, i) =>
-      `<div class="srow"><span>${medals[i]||"  "} ${p.name}</span><span>${p.score} pts</span></div>`
-    ).join("");
-
-  const endEl = document.getElementById("endscreen");
-  endEl.style.display = "flex";
-}
-
-// ─────────────────────────────────────────
-// UTILS
-// ─────────────────────────────────────────
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
 </script>
-
 </body>
 </html>
