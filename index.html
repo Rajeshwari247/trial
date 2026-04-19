@@ -546,6 +546,7 @@ function startGame() {
 
   // ── Always initialise locally ──
   petals     = Array(N).fill(100);
+  visible    = Array(N).fill(false);
   isHost     = true;      // solo / fallback default
   gameActive = true;
   updateTimer();           // show 3:00 immediately
@@ -670,24 +671,21 @@ function runLoop() {
     $pts && ($pts.textContent = myScore);
     if (db) { try { db.ref("players/" + playerId + "/score").set(myScore); } catch(e){} }
 
-    // ── Petal fading: host only (or solo) ──
-    if (isHost) {
-      for (let i = 0; i < N; i++) {
-        // Consider this petal guarded if local player sees it OR a remote player signals it
-        const guarded = visible[i] || remoteGuardedSet.has(i);
-        if (!guarded) {
-          const rate = (stormActive && stormPetals.includes(i)) ? STORM_RATE : FADE_RATE;
-          petals[i]  = Math.max(0, petals[i] - rate);
-        }
+    // ── Petal fading: always runs locally ──
+    for (let i = 0; i < N; i++) {
+      const guarded = visible[i] || remoteGuardedSet.has(i);
+      if (!guarded) {
+        const rate = (stormActive && stormPetals.includes(i)) ? STORM_RATE : FADE_RATE;
+        petals[i]  = Math.max(0, petals[i] - rate);
       }
-      // Push to Firebase for other players
-      if (db) {
-        try {
-          const upd = {};
-          for (let i = 0; i < N; i++) upd[i] = Math.round(petals[i]);
-          db.ref("petals").set(upd);
-        } catch(e) {}
-      }
+    }
+    // Host pushes to Firebase so other players can sync
+    if (isHost && db) {
+      try {
+        const upd = {};
+        for (let i = 0; i < N; i++) upd[i] = Math.round(petals[i]);
+        db.ref("petals").set(upd);
+      } catch(e) {}
     }
 
     // Always update visuals every tick on every device
