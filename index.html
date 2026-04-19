@@ -36,30 +36,85 @@
       border-radius:10px; padding:.8rem 2.2rem; font-size:.95rem;
       font-weight:bold; color:#1a0800; cursor:pointer;
     }
+    @keyframes blink { 50%{opacity:.3;} }
+    @keyframes guardPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,0.5)} 50%{box-shadow:0 0 0 6px rgba(0,229,255,0)} }
+    @keyframes fadeWarn { 0%,100%{box-shadow:0 0 0 0 rgba(255,60,0,0.6)} 50%{box-shadow:0 0 0 8px rgba(255,60,0,0)} }
+
+    /* ── TOP HUD ── */
     #hud {
       position:fixed; top:0; left:0; right:0; z-index:100; display:none;
-      background:linear-gradient(180deg,rgba(0,0,0,.85) 0%,transparent 100%);
-      padding:.6rem 1rem 1rem; color:#f5c97a; pointer-events:none;
+      padding:.7rem 1rem .5rem; color:#f5c97a; pointer-events:none;
     }
-    #hud .row1 { display:flex; justify-content:space-between; align-items:center; }
-    #hud .title { font-size:.75rem; letter-spacing:.08em; color:#b8864a; }
-    #timer { font-size:1.5rem; font-weight:bold; }
+    #hud-top {
+      display:flex; justify-content:space-between; align-items:center;
+      background:rgba(10,6,2,.82); border:1px solid rgba(245,169,35,.18);
+      border-radius:14px; padding:.55rem 1rem;
+      backdrop-filter:blur(8px);
+    }
+    #timer-block { display:flex; align-items:center; gap:.5rem; }
+    #timer-icon { font-size:1.1rem; }
+    #timer { font-size:1.4rem; font-weight:700; letter-spacing:.02em; }
     #timer.urgent { color:#ff4444; animation:blink .5s step-end infinite; }
-    @keyframes blink { 50%{opacity:.3;} }
-    #petal-strip { display:flex; gap:5px; margin-top:5px; justify-content:center; }
-    .pdot { width:30px; height:8px; border-radius:4px; background:#333; transition:background .4s; }
-    .pdot.full    { background:#f5a623; }
-    .pdot.mid     { background:#c86400; }
-    .pdot.low     { background:#7a2000; }
-    .pdot.dead    { background:#111; }
-    .pdot.guarded { background:#00e5ff; }
+    #guardian-block { display:flex; align-items:center; gap:.4rem; color:#7ec8e3; font-size:.9rem; }
+
+    /* ── BRIGHTNESS BAR ── */
+    #brightness-wrap {
+      margin-top:.5rem;
+      background:rgba(10,6,2,.82); border:1px solid rgba(245,169,35,.18);
+      border-radius:14px; padding:.6rem 1rem;
+      backdrop-filter:blur(8px);
+    }
+    #brightness-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:.4rem; }
+    #brightness-label span:first-child { font-size:.8rem; color:#b8864a; letter-spacing:.06em; }
+    #brightness-pct { font-size:1rem; font-weight:700; color:#4ade80; transition:color .5s; }
+    #brightness-pct.mid { color:#f5a623; }
+    #brightness-pct.low { color:#ff4444; }
+    #brightness-bar-bg {
+      width:100%; height:7px; background:rgba(255,255,255,.1); border-radius:4px; overflow:hidden;
+    }
+    #brightness-bar-fill {
+      height:100%; border-radius:4px; background:#4ade80;
+      transition:width .8s ease, background .5s;
+    }
+
+    /* ── INSTRUCTION CARD ── */
+    #status-card {
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:99; display:none; pointer-events:none;
+      background:rgba(10,6,2,.78); border:1px solid rgba(245,169,35,.2);
+      border-radius:18px; padding:1.1rem 1.6rem; text-align:center;
+      backdrop-filter:blur(10px); max-width:240px;
+    }
+    #status-card-title { font-size:1rem; font-weight:700; color:#f5c97a; margin-bottom:.3rem; }
+    #status-card-sub { font-size:.82rem; color:#b8864a; }
+
+    /* ── BOTTOM PETAL GRID ── */
     #bottom {
       position:fixed; bottom:0; left:0; right:0; z-index:100; display:none;
-      background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,transparent 100%);
-      padding:.8rem 1rem 1.4rem; color:#f5c97a; text-align:center; pointer-events:none;
+      padding:.5rem .6rem .8rem; pointer-events:none;
     }
-    #status { font-size:.85rem; color:#d4a85a; font-style:italic; }
-    #myscore { font-size:1rem; margin-top:3px; }
+    #petal-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:.4rem;
+    }
+    .pcard {
+      background:rgba(10,6,2,.85); border:1px solid rgba(255,255,255,.1);
+      border-radius:12px; padding:.4rem .3rem .45rem;
+      display:flex; flex-direction:column; align-items:center; gap:.22rem;
+      transition:border-color .4s, box-shadow .4s;
+    }
+    .pcard.guarded {
+      border-color:rgba(0,229,255,.5);
+      animation:guardPulse 1.5s ease infinite;
+    }
+    .pcard.low {
+      border-color:rgba(255,60,0,.5);
+      animation:fadeWarn 1.2s ease infinite;
+    }
+    .pcard canvas { width:44px; height:44px; border-radius:6px; display:block; }
+    .pcard-name { font-size:.6rem; font-weight:700; color:#f5c97a; letter-spacing:.04em; text-align:center; }
+    .pcard-bar-bg { width:100%; height:4px; background:rgba(255,255,255,.12); border-radius:2px; overflow:hidden; }
+    .pcard-bar-fill { height:100%; border-radius:2px; transition:width .8s ease, background .5s; }
+    .pcard-pct { font-size:.62rem; color:#b8864a; }
     #storm {
       position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:200;
       background:rgba(160,10,0,.92); border:2px solid #ff3322; border-radius:12px;
@@ -163,15 +218,34 @@
 </div>
 
 <div id="hud">
-  <div class="row1">
-    <span class="title">🪷 ASHTADALA</span>
-    <span id="timer">3:00</span>
+  <div id="hud-top">
+    <div id="timer-block">
+      <span id="timer-icon">⏱</span>
+      <span id="timer">3:00</span>
+    </div>
+    <div id="guardian-block">
+      <span>👥</span>
+      <span id="guardian-count">1 Guardian</span>
+    </div>
   </div>
-  <div id="petal-strip"></div>
+  <div id="brightness-wrap">
+    <div id="brightness-label">
+      <span>LOTUS BRIGHTNESS</span>
+      <span id="brightness-pct">100%</span>
+    </div>
+    <div id="brightness-bar-bg">
+      <div id="brightness-bar-fill" style="width:100%"></div>
+    </div>
+  </div>
 </div>
+
+<div id="status-card">
+  <div id="status-card-title">Point camera at a pillar</div>
+  <div id="status-card-sub">Move close to guard its petal</div>
+</div>
+
 <div id="bottom">
-  <div id="status">Point camera at a pillar marker…</div>
-  <div id="myscore">Guard score: <strong id="pts">0</strong></div>
+  <div id="petal-grid"></div>
 </div>
 <div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
 <div id="endscreen">
@@ -206,6 +280,10 @@ const PALETTES = [
   { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00' },
   { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff' },
 ];
+// Kannada colour names (written in English) for each palette
+const PETAL_NAMES = ['Kesari','Gulabi','Hasiru','Neeli','Kempu','Firozi','Arakku','Nerale'];
+// Off-screen canvases holding each lotus image for the UI cards
+const lotusCardCanvases = [];
 
 // ─────────────────────────────────────────
 // DRAW LOTUS
@@ -334,6 +412,7 @@ function buildScene() {
   PALETTES.forEach((pal, i) => {
     const canvas = document.createElement('canvas');
     drawLotus(canvas, pal);
+    lotusCardCanvases[i] = canvas;  // keep reference for card UI
     const img = document.createElement('img');
     img.id = 'tex' + i;
     img.src = canvas.toDataURL('image/png');
@@ -400,21 +479,54 @@ let stormPetals = [], stormActive = false, stormShown = false;
 let isHost     = false;
 
 const $timer  = document.getElementById("timer");
-const $strip  = document.getElementById("petal-strip");
-const $status = document.getElementById("status");
-const $pts    = document.getElementById("pts");
-const $storm  = document.getElementById("storm");
-const $hud    = document.getElementById("hud");
 const $bottom = document.getElementById("bottom");
 const $scene  = document.getElementById("ar-scene");
+const $hud    = document.getElementById("hud");
+const $storm  = document.getElementById("storm");
+const $statusCard = document.getElementById("status-card");
+const $brightPct  = document.getElementById("brightness-pct");
+const $brightFill = document.getElementById("brightness-bar-fill");
+const $guardCount = document.getElementById("guardian-count");
 
 function buildStrip() {
-  $strip.innerHTML = "";
+  const grid = document.getElementById("petal-grid");
+  grid.innerHTML = "";
   for (let i = 0; i < N; i++) {
-    const d = document.createElement("div");
-    d.className = "pdot full";
-    d.id = "pd" + i;
-    $strip.appendChild(d);
+    const card = document.createElement("div");
+    card.className = "pcard";
+    card.id = "pcard" + i;
+
+    // Mini lotus canvas
+    const cv = document.createElement("canvas");
+    cv.width = 128; cv.height = 128;
+    // Draw scaled-down lotus onto card canvas
+    const ctx = cv.getContext("2d");
+    ctx.drawImage(lotusCardCanvases[i], 0, 0, 128, 128);
+    cv.id = "pcv" + i;
+
+    const name = document.createElement("div");
+    name.className = "pcard-name";
+    name.textContent = PETAL_NAMES[i];
+
+    const barBg = document.createElement("div");
+    barBg.className = "pcard-bar-bg";
+    const barFill = document.createElement("div");
+    barFill.className = "pcard-bar-fill";
+    barFill.id = "pbar" + i;
+    barFill.style.width = "100%";
+    barFill.style.background = PALETTES[i].glow;
+    barBg.appendChild(barFill);
+
+    const pct = document.createElement("div");
+    pct.className = "pcard-pct";
+    pct.id = "ppct" + i;
+    pct.textContent = "100%";
+
+    card.appendChild(cv);
+    card.appendChild(name);
+    card.appendChild(barBg);
+    card.appendChild(pct);
+    grid.appendChild(card);
   }
 }
 
@@ -431,6 +543,7 @@ function startGame() {
 
   buildStrip();
   setupMarkers();
+  $statusCard.style.display = "block";
 
   // ── Always initialise locally ──
   petals     = Array(N).fill(100);
@@ -477,6 +590,11 @@ function startGame() {
 }
 window.startGame = startGame;
 
+function updateGuardianCount() {
+  const n = visible.filter(Boolean).length;
+  $guardCount.textContent = n + (n === 1 ? " Guardian" : " Guardians");
+}
+
 let remoteGuardedSet = new Set();
 
 function setupMarkers() {
@@ -486,12 +604,14 @@ function setupMarkers() {
     const idx = i;
     m.addEventListener("markerFound", () => {
       visible[idx] = true;
-      $status.textContent = `🪷 Guarding Petal ${idx + 1}…`;
+      $statusCard.style.display = "none";
+      updateGuardianCount();
       if (db) { try { db.ref("guard/" + playerId + "_" + idx).set(true); } catch(e){} }
     });
     m.addEventListener("markerLost", () => {
       visible[idx] = false;
-      if (!visible.some(v => v)) $status.textContent = "Point camera at a pillar marker…";
+      if (!visible.some(v => v)) $statusCard.style.display = "block";
+      updateGuardianCount();
       if (db) { try { db.ref("guard/" + playerId + "_" + idx).remove(); } catch(e){} }
     });
   }
@@ -521,7 +641,7 @@ function runLoop() {
     for (let i = 0; i < N; i++) {
       if (visible[i]) myScore++;
     }
-    $pts.textContent = myScore;
+    $pts && ($pts.textContent = myScore);
     if (db) { try { db.ref("players/" + playerId + "/score").set(myScore); } catch(e){} }
 
     // ── Petal fading: host only (or solo) ──
@@ -558,15 +678,29 @@ function updateTimer() {
 }
 
 function updateVisuals() {
+  // Overall brightness bar
+  const avg = Math.round(petals.reduce((a,b) => a+b, 0) / N);
+  $brightPct.textContent = avg + "%";
+  $brightFill.style.width = avg + "%";
+  if (avg > 65) {
+    $brightPct.className = ""; $brightFill.style.background = "#4ade80";
+  } else if (avg > 35) {
+    $brightPct.className = "mid"; $brightFill.style.background = "#f5a623";
+  } else {
+    $brightPct.className = "low"; $brightFill.style.background = "#ff4444";
+  }
+
   for (let i = 0; i < N; i++) {
     const b = Math.round(petals[i]), g = visible[i];
 
+    // AR plane
     const plane = document.getElementById("lotus-plane-" + i);
     if (plane) {
       plane.setAttribute("opacity", g ? 1.0 : Math.max(0.06, b / 100));
       plane.setAttribute("color",   g ? "#aaddff" : "#ffffff");
     }
 
+    // AR yaksha
     const yaksha = document.getElementById("yaksha-" + i);
     if (yaksha) {
       if      (g)    { yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2"); }
@@ -576,15 +710,28 @@ function updateVisuals() {
     }
 
     const txt = document.getElementById("pt" + i);
-    if (txt) txt.setAttribute("value", g ? `Petal ${i+1}  GUARDED` : `Petal ${i+1}  ${b}%`);
+    if (txt) txt.setAttribute("value", g ? `${PETAL_NAMES[i]}  GUARDED` : `${PETAL_NAMES[i]}  ${b}%`);
 
-    const dot = document.getElementById("pd" + i);
-    if (dot) {
-      if      (g)    dot.className = "pdot guarded";
-      else if (b>65) dot.className = "pdot full";
-      else if (b>35) dot.className = "pdot mid";
-      else if (b>5)  dot.className = "pdot low";
-      else           dot.className = "pdot dead";
+    // Card UI
+    const card = document.getElementById("pcard" + i);
+    const bar  = document.getElementById("pbar"  + i);
+    const pct  = document.getElementById("ppct"  + i);
+    const cv   = document.getElementById("pcv"   + i);
+
+    if (card) {
+      card.className = "pcard" + (g ? " guarded" : b <= 35 ? " low" : "");
+    }
+    if (bar) {
+      bar.style.width = (g ? 100 : b) + "%";
+      bar.style.background = g ? "#00e5ff" : b > 65 ? PALETTES[i].glow : b > 35 ? "#f5a623" : "#ff4444";
+    }
+    if (pct) {
+      pct.textContent = g ? "GUARDED" : b + "%";
+      pct.style.color = g ? "#00e5ff" : b > 65 ? "#b8864a" : b > 35 ? "#f5a623" : "#ff4444";
+    }
+    // Dim the card canvas when petal is low
+    if (cv) {
+      cv.style.opacity = g ? "1" : Math.max(0.2, b / 100).toFixed(2);
     }
   }
 }
@@ -611,9 +758,10 @@ async function endGame() {
 }
 
 function showEnd(avg, scores) {
-  $scene.style.display = "none";
-  $hud.style.display   = "none";
+  $scene.style.display  = "none";
+  $hud.style.display    = "none";
   $bottom.style.display = "none";
+  $statusCard.style.display = "none";
 
   document.getElementById("final-pct").textContent = avg + "%";
   const [[,t,v]] = [[75,"The Lotus Endures! 🪷","The Yaksha flees in defeat."],
