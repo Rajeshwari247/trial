@@ -97,96 +97,25 @@
       touch-action:pan-x;
     }
     #tutorial.visible { display:flex; }
-
-    /* progress dots */
-    .tut-dots {
-      display:flex; gap:10px; margin-top:0.5rem;
-    }
-    .tut-dot {
-      width:8px; height:8px; border-radius:50%;
-      background:rgba(245,169,35,.3);
-      transition:background .3s, transform .3s;
-    }
-    .tut-dot.active {
-      background:#f5a623;
-      transform:scale(1.3);
-    }
-
-    /* slide track */
-    .tut-track {
-      flex:1; width:100%; overflow:hidden;
-      position:relative; margin:1rem 0;
-    }
-    .tut-slides {
-      display:flex; width:300%; height:100%;
-      transition:transform .4s cubic-bezier(.4,0,.2,1);
-    }
-    .tut-slide {
-      width:33.333%; flex-shrink:0;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      padding:0 0.5rem; text-align:center;
-    }
-
-    /* illustration box */
-    .tut-illustration {
-      width:180px; height:180px;
-      background:rgba(245,169,35,.06);
-      border:1px solid rgba(245,169,35,.2);
-      border-radius:20px;
-      display:flex; align-items:center; justify-content:center;
-      margin-bottom:1.5rem;
-      font-size:4.5rem;
-      position:relative;
-      overflow:hidden;
-    }
-    .tut-illustration canvas {
-      position:absolute; inset:0; width:100%; height:100%;
-    }
-
-    .tut-step-num {
-      font-size:0.7rem; letter-spacing:.12em;
-      color:#b8864a; margin-bottom:0.5rem;
-      text-transform:uppercase;
-    }
-    .tut-title {
-      font-size:1.3rem; font-weight:bold;
-      color:#f5c97a; margin-bottom:0.75rem;
-      line-height:1.2;
-    }
-    .tut-body {
-      font-size:0.9rem; color:#d4a85a;
-      line-height:1.7; max-width:280px;
-    }
+    .tut-dots { display:flex; gap:10px; margin-top:0.5rem; }
+    .tut-dot { width:8px; height:8px; border-radius:50%; background:rgba(245,169,35,.3); transition:background .3s, transform .3s; }
+    .tut-dot.active { background:#f5a623; transform:scale(1.3); }
+    .tut-track { flex:1; width:100%; overflow:hidden; position:relative; margin:1rem 0; }
+    .tut-slides { display:flex; width:300%; height:100%; transition:transform .4s cubic-bezier(.4,0,.2,1); }
+    .tut-slide { width:33.333%; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 0.5rem; text-align:center; }
+    .tut-illustration { width:180px; height:180px; background:rgba(245,169,35,.06); border:1px solid rgba(245,169,35,.2); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; font-size:4.5rem; position:relative; overflow:hidden; }
+    .tut-illustration canvas { position:absolute; inset:0; width:100%; height:100%; }
+    .tut-step-num { font-size:0.7rem; letter-spacing:.12em; color:#b8864a; margin-bottom:0.5rem; text-transform:uppercase; }
+    .tut-title { font-size:1.3rem; font-weight:bold; color:#f5c97a; margin-bottom:0.75rem; line-height:1.2; }
+    .tut-body { font-size:0.9rem; color:#d4a85a; line-height:1.7; max-width:280px; }
     .tut-body strong { color:#f5c97a; }
-
-    /* nav row */
-    .tut-nav {
-      display:flex; width:100%;
-      justify-content:space-between; align-items:center;
-      gap:1rem;
-    }
-    .tut-btn {
-      padding:.7rem 1.4rem; border-radius:10px; font-size:.9rem;
-      font-weight:bold; cursor:pointer; border:none;
-      transition:opacity .2s, transform .15s;
-    }
+    .tut-nav { display:flex; width:100%; justify-content:space-between; align-items:center; gap:1rem; }
+    .tut-btn { padding:.7rem 1.4rem; border-radius:10px; font-size:.9rem; font-weight:bold; cursor:pointer; border:none; transition:opacity .2s, transform .15s; }
     .tut-btn:active { transform:scale(.96); }
-    .tut-btn.secondary {
-      background:rgba(245,169,35,.12);
-      color:#b8864a;
-      border:1px solid rgba(245,169,35,.2);
-    }
+    .tut-btn.secondary { background:rgba(245,169,35,.12); color:#b8864a; border:1px solid rgba(245,169,35,.2); }
     .tut-btn.secondary:disabled { opacity:.3; cursor:default; }
-    .tut-btn.primary {
-      background:linear-gradient(135deg,#c8780a,#f5a623);
-      color:#1a0800; flex:1;
-    }
-    /* swipe hint */
-    .swipe-hint {
-      font-size:0.72rem; color:#b8864a; font-style:italic;
-      margin-top:.4rem; opacity:.7;
-    }
+    .tut-btn.primary { background:linear-gradient(135deg,#c8780a,#f5a623); color:#1a0800; flex:1; }
+    .swipe-hint { font-size:0.72rem; color:#b8864a; font-style:italic; margin-top:.4rem; opacity:.7; }
   </style>
 </head>
 <body>
@@ -203,52 +132,27 @@
   <button onclick="openTutorial()">Begin the Ritual</button>
 </div>
 
-<!-- ══ TUTORIAL OVERLAY ══ -->
 <div id="tutorial">
-
-  <!-- progress dots -->
   <div class="tut-dots">
     <div class="tut-dot active" id="dot0"></div>
     <div class="tut-dot" id="dot1"></div>
   </div>
-
-  <!-- slides -->
   <div class="tut-track">
     <div class="tut-slides" id="tut-slides">
-
-      <!-- SLIDE 1: Point camera, see lotus -->
       <div class="tut-slide">
-        <div class="tut-illustration">
-          <canvas id="tut-canvas-0"></canvas>
-        </div>
+        <div class="tut-illustration"><canvas id="tut-canvas-0"></canvas></div>
         <div class="tut-step-num">Step 1 of 2</div>
         <div class="tut-title">Point & guard your petal</div>
-        <div class="tut-body">
-          Point your camera at any pillar card.
-          A <strong>glowing lotus petal</strong> appears in AR.
-          Stay close to that pillar to <strong>guard it</strong> from fading —
-          the longer you stay, the more points you earn.
-        </div>
+        <div class="tut-body">Point your camera at any pillar card. A <strong>glowing lotus petal</strong> appears in AR. Stay close to that pillar to <strong>guard it</strong> from fading — the longer you stay, the more points you earn.</div>
       </div>
-
-      <!-- SLIDE 2: Sprint, decide, win -->
       <div class="tut-slide">
-        <div class="tut-illustration">
-          <canvas id="tut-canvas-1"></canvas>
-        </div>
+        <div class="tut-illustration"><canvas id="tut-canvas-1"></canvas></div>
         <div class="tut-step-num">Step 2 of 2</div>
         <div class="tut-title">Sprint, decide, survive!</div>
-        <div class="tut-body">
-          You can't guard all 8 petals at once — <strong>decide which to save</strong>.
-          At 90 seconds the <strong>Yaksha storms</strong> — 3 petals fade twice as fast.
-          Keep the lotus above <strong>60% brightness</strong> for 3 minutes to win!
-        </div>
+        <div class="tut-body">You can't guard all 8 petals at once — <strong>decide which to save</strong>. At 90 seconds the <strong>Yaksha storms</strong> — 3 petals fade twice as fast. Keep the lotus above <strong>60% brightness</strong> for 3 minutes to win!</div>
       </div>
-
     </div>
   </div>
-
-  <!-- nav -->
   <div style="width:100%">
     <div class="tut-nav">
       <button class="tut-btn secondary" id="tut-back" onclick="tutNav(-1)" disabled>← Back</button>
@@ -256,7 +160,6 @@
     </div>
     <div class="swipe-hint">swipe left or right to navigate</div>
   </div>
-
 </div>
 
 <div id="hud">
@@ -269,13 +172,6 @@
 <div id="bottom">
   <div id="status">Point camera at a pillar marker…</div>
   <div id="myscore">Guard score: <strong id="pts">0</strong></div>
-  <div id="debug-panel" style="font-size:0.7rem;color:#888;margin-top:4px;font-family:monospace;display:none">
-    host:<span id="dbg-host">?</span> |
-    p0:<span id="dbg-p0">100</span>
-    p1:<span id="dbg-p1">100</span>
-    p2:<span id="dbg-p2">100</span>
-    p3:<span id="dbg-p3">100</span>
-  </div>
 </div>
 <div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
 <div id="endscreen">
@@ -298,147 +194,136 @@
 
 <script>
 // ─────────────────────────────────────────
-// 8 lotus colour schemes
+// PALETTES
 // ─────────────────────────────────────────
 const PALETTES = [
-  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600' }, // saffron
-  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff' }, // magenta
-  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55' }, // green
-  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff' }, // blue
-  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333' }, // crimson
-  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc' }, // teal
-  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00' }, // amber
-  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff' }, // violet
+  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600' },
+  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff' },
+  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55' },
+  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff' },
+  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333' },
+  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc' },
+  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00' },
+  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff' },
 ];
 
 // ─────────────────────────────────────────
-// DRAW FULL LOTUS on a 512×512 canvas
-// Using SVG bezier petal paths rendered via canvas
+// DRAW LOTUS
 // ─────────────────────────────────────────
 function drawLotus(canvas, pal) {
   const S = 512;
   canvas.width = S; canvas.height = S;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, S, S);
-
   const cx = S / 2, cy = S / 2;
 
-  // --- Draw one petal as bezier path ---
-  // Petal tip at outer edge, wide rounded base at centre
-  // This is a teardrop pointing OUTWARD from centre
   function drawPetal(ctx, cx, cy, angle, len, width, col1, col2) {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
-
-    // Petal path: tip at top (outward), base at bottom (centre)
-    const tip = -len;        // tip points away from centre (upward after rotate)
-    const base = 0;          // base sits at centre
-    const hw = width / 2;    // half width at widest point
-
+    const tip = -len, base = 0, hw = width / 2;
     ctx.beginPath();
-    ctx.moveTo(0, tip);                        // tip
-    ctx.bezierCurveTo( hw*1.1, tip*0.5,        // right upper control
-                       hw*1.2, base*0.3,        // right lower control
-                       0,      base);           // base centre
-    ctx.bezierCurveTo(-hw*1.2, base*0.3,        // left lower control
-                      -hw*1.1, tip*0.5,         // left upper control
-                       0,      tip);            // back to tip
+    ctx.moveTo(0, tip);
+    ctx.bezierCurveTo( hw*1.1, tip*0.5, hw*1.2, base*0.3, 0, base);
+    ctx.bezierCurveTo(-hw*1.2, base*0.3, -hw*1.1, tip*0.5, 0, tip);
     ctx.closePath();
-
-    // Gradient: dark at base, light at tip
     const g = ctx.createLinearGradient(0, base, 0, tip);
-    g.addColorStop(0,   col1);   // base colour
-    g.addColorStop(0.5, col2);   // mid
-    g.addColorStop(1,   '#fff'); // bright tip
-    ctx.fillStyle = g;
-    ctx.fill();
-
-    // Soft edge glow
-    ctx.strokeStyle = col2;
-    ctx.lineWidth = 2;
-    ctx.globalAlpha = 0.5;
-    ctx.stroke();
+    g.addColorStop(0, col1); g.addColorStop(0.5, col2); g.addColorStop(1, '#fff');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = col2; ctx.lineWidth = 2; ctx.globalAlpha = 0.5; ctx.stroke();
     ctx.globalAlpha = 1;
-
-    // Centre vein
-    ctx.beginPath();
-    ctx.moveTo(0, base - 4);
-    ctx.lineTo(0, tip + 10);
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
+    ctx.beginPath(); ctx.moveTo(0, base - 4); ctx.lineTo(0, tip + 10);
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 2; ctx.stroke();
     ctx.restore();
   }
 
-  // --- Background soft glow circle ---
   const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 0.48);
-  glow.addColorStop(0,   pal.glow + 'aa');
-  glow.addColorStop(0.5, pal.glow + '44');
-  glow.addColorStop(1,   'transparent');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, S * 0.48, 0, Math.PI * 2);
-  ctx.fill();
+  glow.addColorStop(0, pal.glow + 'aa'); glow.addColorStop(0.5, pal.glow + '44'); glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, S * 0.48, 0, Math.PI * 2); ctx.fill();
 
-  // --- Outer 8 petals (large, pointing outward) ---
-  for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * Math.PI * 2;
-    drawPetal(ctx, cx, cy, angle, S * 0.42, S * 0.22, pal.base, pal.mid);
-  }
+  for (let i = 0; i < 8; i++) drawPetal(ctx, cx, cy, (i/8)*Math.PI*2, S*0.42, S*0.22, pal.base, pal.mid);
+  for (let i = 0; i < 8; i++) drawPetal(ctx, cx, cy, ((i+0.5)/8)*Math.PI*2, S*0.27, S*0.16, pal.mid, pal.light);
 
-  // --- Inner 8 petals (shorter, between outer petals, lighter colour) ---
-  for (let i = 0; i < 8; i++) {
-    const angle = ((i + 0.5) / 8) * Math.PI * 2;
-    drawPetal(ctx, cx, cy, angle, S * 0.27, S * 0.16, pal.mid, pal.light);
-  }
-
-  // --- Centre circle: golden stamens ---
-  // Outer stamen ring
   const stamenR = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 0.1);
-  stamenR.addColorStop(0,   '#fffde7');
-  stamenR.addColorStop(0.6, '#ffe066');
-  stamenR.addColorStop(1,   '#cc8800');
-  ctx.beginPath();
-  ctx.arc(cx, cy, S * 0.1, 0, Math.PI * 2);
-  ctx.fillStyle = stamenR;
-  ctx.fill();
-  ctx.strokeStyle = '#ffaa00';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Stamen dots ring
+  stamenR.addColorStop(0, '#fffde7'); stamenR.addColorStop(0.6, '#ffe066'); stamenR.addColorStop(1, '#cc8800');
+  ctx.beginPath(); ctx.arc(cx, cy, S * 0.1, 0, Math.PI * 2); ctx.fillStyle = stamenR; ctx.fill();
+  ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = 3; ctx.stroke();
   for (let i = 0; i < 12; i++) {
-    const a = (i / 12) * Math.PI * 2;
-    const r = S * 0.075;
-    ctx.beginPath();
-    ctx.arc(cx + Math.cos(a)*r, cy + Math.sin(a)*r, 4, 0, Math.PI*2);
-    ctx.fillStyle = '#ffee44';
-    ctx.fill();
+    const a = (i/12)*Math.PI*2, r = S*0.075;
+    ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r, cy+Math.sin(a)*r, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#ffee44'; ctx.fill();
   }
-
-  // Central gem
-  const gem = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 0.04);
-  gem.addColorStop(0,   '#ffffff');
-  gem.addColorStop(0.5, '#ffe566');
-  gem.addColorStop(1,   '#ffaa00');
-  ctx.beginPath();
-  ctx.arc(cx, cy, S * 0.04, 0, Math.PI*2);
-  ctx.fillStyle = gem;
-  ctx.fill();
+  const gem = ctx.createRadialGradient(cx, cy, 0, cx, cy, S*0.04);
+  gem.addColorStop(0, '#ffffff'); gem.addColorStop(0.5, '#ffe566'); gem.addColorStop(1, '#ffaa00');
+  ctx.beginPath(); ctx.arc(cx, cy, S*0.04, 0, Math.PI*2); ctx.fillStyle = gem; ctx.fill();
 }
 
 // ─────────────────────────────────────────
-// BUILD SCENE: one a-plane per marker, full lotus texture
-// The plane faces the camera (it's in the XY plane by default)
-// Scale 1.4 = about 28cm square on the marker
+// DRAW YAKSHA
+// ─────────────────────────────────────────
+function drawYaksha(canvas) {
+  const S = 256;
+  canvas.width = S; canvas.height = S;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, S, S);
+  const cx = S/2, cy = S/2;
+
+  const aura = ctx.createRadialGradient(cx,cy,20,cx,cy,S*0.48);
+  aura.addColorStop(0,'rgba(180,0,0,0.5)'); aura.addColorStop(0.6,'rgba(120,0,80,0.3)'); aura.addColorStop(1,'transparent');
+  ctx.fillStyle=aura; ctx.beginPath(); ctx.arc(cx,cy,S*0.48,0,Math.PI*2); ctx.fill();
+
+  const face=ctx.createRadialGradient(cx,cy+10,10,cx,cy+10,80);
+  face.addColorStop(0,'#8B2500'); face.addColorStop(0.6,'#5C1500'); face.addColorStop(1,'#3a0a00');
+  ctx.fillStyle=face; ctx.beginPath(); ctx.ellipse(cx,cy+15,72,85,0,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#ff4400'; ctx.lineWidth=2; ctx.stroke();
+
+  ctx.fillStyle='#cc8800';
+  [[-50,-85],[-28,-100],[0,-110],[28,-100],[50,-85]].forEach(([dx,dy])=>{
+    ctx.beginPath(); ctx.moveTo(cx+dx-10,cy+dy+30); ctx.lineTo(cx+dx,cy+dy); ctx.lineTo(cx+dx+10,cy+dy+30); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1; ctx.stroke();
+  });
+  ctx.fillStyle='#aa6600'; ctx.fillRect(cx-65,cy-62,130,18);
+  ctx.fillStyle='#ffcc00'; ctx.fillRect(cx-65,cy-65,130,6);
+  ['#ff0000','#00ffcc','#ff8800','#ff0000','#00ffcc'].forEach((col,i)=>{
+    ctx.beginPath(); ctx.arc(cx-50+(i*25),cy-57,5,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+  });
+
+  [-28,28].forEach((dx,side)=>{
+    const ex=cx+dx, ey=cy-15;
+    ctx.beginPath(); ctx.ellipse(ex,ey,22,14,side===0?0.3:-0.3,0,Math.PI*2); ctx.fillStyle='#ffe066'; ctx.fill();
+    ctx.beginPath(); ctx.arc(ex,ey,9,0,Math.PI*2); ctx.fillStyle='#cc0000'; ctx.fill();
+    ctx.beginPath(); ctx.arc(ex,ey,4,0,Math.PI*2); ctx.fillStyle='#000'; ctx.fill();
+    ctx.beginPath(); ctx.arc(ex-3,ey-3,2,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(ex-22,ey+(side===0?6:-6)); ctx.lineTo(ex+22,ey+(side===0?-6:6));
+    ctx.strokeStyle='#ff2200'; ctx.lineWidth=2.5; ctx.stroke();
+  });
+
+  ctx.fillStyle='#6a1a00'; ctx.beginPath(); ctx.ellipse(cx,cy+12,14,10,0,0,Math.PI*2); ctx.fill();
+  [-8,8].forEach(dx=>{ ctx.beginPath(); ctx.arc(cx+dx,cy+15,5,0,Math.PI*2); ctx.fillStyle='#2a0500'; ctx.fill(); });
+
+  ctx.beginPath(); ctx.moveTo(cx-35,cy+38); ctx.quadraticCurveTo(cx,cy+60,cx+35,cy+38); ctx.quadraticCurveTo(cx,cy+52,cx-35,cy+38); ctx.fillStyle='#1a0000'; ctx.fill();
+  ctx.fillStyle='#fffde7';
+  [[cx-20,cy+40],[cx+20,cy+40]].forEach(([fx,fy])=>{ ctx.beginPath(); ctx.moveTo(fx-7,fy); ctx.lineTo(fx,fy+16); ctx.lineTo(fx+7,fy); ctx.closePath(); ctx.fill(); });
+  [-8,0,8].forEach(dx=>{ ctx.beginPath(); ctx.moveTo(cx+dx-5,cy+39); ctx.lineTo(cx+dx,cy+50); ctx.lineTo(cx+dx+5,cy+39); ctx.fillStyle='#e0d8b0'; ctx.fill(); });
+
+  ctx.strokeStyle='#1a0800'; ctx.lineWidth=4; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(cx,cy+30); ctx.bezierCurveTo(cx-15,cy+28,cx-35,cy+22,cx-42,cy+30); ctx.bezierCurveTo(cx-48,cy+38,cx-40,cy+48,cx-30,cy+42); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy+30); ctx.bezierCurveTo(cx+15,cy+28,cx+35,cy+22,cx+42,cy+30); ctx.bezierCurveTo(cx+48,cy+38,cx+40,cy+48,cx+30,cy+42); ctx.stroke();
+
+  [-72,72].forEach(dx=>{ ctx.beginPath(); ctx.arc(cx+dx,cy+15,10,0,Math.PI*2); ctx.fillStyle='#cc8800'; ctx.fill(); ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(cx+dx,cy+15,5,0,Math.PI*2); ctx.fillStyle='#ff2200'; ctx.fill(); });
+
+  ctx.beginPath(); ctx.moveTo(cx,cy-42); ctx.lineTo(cx-6,cy-30); ctx.lineTo(cx+6,cy-30); ctx.closePath(); ctx.fillStyle='#ff4400'; ctx.fill();
+  ctx.strokeStyle='rgba(255,80,0,0.6)'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.ellipse(cx,cy+15,74,87,0,0,Math.PI*2); ctx.stroke();
+}
+
+// ─────────────────────────────────────────
+// BUILD SCENE
 // ─────────────────────────────────────────
 function buildScene() {
   const assets = document.getElementById('assets');
   const scene  = document.getElementById('ar-scene');
 
-  // Generate and register Yaksha texture (shared across all markers)
   const yakshaCanvas = document.createElement('canvas');
   drawYaksha(yakshaCanvas);
   const yakshaImg = document.createElement('img');
@@ -447,7 +332,6 @@ function buildScene() {
   assets.appendChild(yakshaImg);
 
   PALETTES.forEach((pal, i) => {
-    // Generate lotus texture
     const canvas = document.createElement('canvas');
     drawLotus(canvas, pal);
     const img = document.createElement('img');
@@ -455,7 +339,6 @@ function buildScene() {
     img.src = canvas.toDataURL('image/png');
     assets.appendChild(img);
 
-    // Build marker
     const marker = document.createElement('a-marker');
     marker.setAttribute('type', 'barcode');
     marker.setAttribute('value', String(i));
@@ -464,56 +347,18 @@ function buildScene() {
 
     marker.innerHTML = `
       <a-entity id="pe${i}">
-
-        <!-- Yaksha mask — billboards to always face camera -->
-        <a-plane id="yaksha-${i}"
-          src="#yaksha-tex"
-          width="0.9" height="0.9"
-          transparent="true"
-          opacity="0.95"
-          side="double"
-          position="0 0.5 0"
-          scale="1 1 1"
-          look-at="[camera]"
+        <a-plane id="yaksha-${i}" src="#yaksha-tex" width="0.9" height="0.9" transparent="true" opacity="0.95" side="double" position="0 0.5 0" scale="1 1 1" look-at="[camera]"
           animation__float="property:position; from:0 0.45 0; to:0 0.62 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
           animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
         </a-plane>
-
-        <!-- Main lotus plane — billboards to always face camera -->
-        <a-plane id="lotus-plane-${i}"
-          src="#tex${i}"
-          width="1.5" height="1.5"
-          transparent="true"
-          opacity="1"
-          side="double"
-          position="0 0 0"
-          look-at="[camera]"
+        <a-plane id="lotus-plane-${i}" src="#tex${i}" width="1.5" height="1.5" transparent="true" opacity="1" side="double" position="0 0 0" look-at="[camera]"
           animation__spin="property:rotation; from:0 0 0; to:0 0 360; loop:true; dur:12000; easing:linear"
           animation__pulse="property:scale; from:1 1 1; to:1.08 1.08 1.08; dir:alternate; loop:true; dur:1500">
         </a-plane>
-
-        <!-- Glow ring — also billboards -->
-        <a-ring
-          radius-inner="0.55" radius-outer="0.75"
-          color="${pal.glow}"
-          emissive="${pal.glow}"
-          emissive-intensity="0.6"
-          opacity="0.4"
-          position="0 0 0"
-          look-at="[camera]"
+        <a-ring radius-inner="0.55" radius-outer="0.75" color="${pal.glow}" emissive="${pal.glow}" emissive-intensity="0.6" opacity="0.4" position="0 0 0" look-at="[camera]"
           animation="property:rotation; from:0 0 0; to:0 0 -360; loop:true; dur:8000; easing:linear">
         </a-ring>
-
-        <!-- Label -->
-        <a-text id="pt${i}"
-          value="Petal ${i+1}  100%"
-          align="center"
-          color="#ffe066"
-          position="0 1.0 0"
-          look-at="[camera]"
-          scale="0.9 0.9 0.9">
-        </a-text>
-
+        <a-text id="pt${i}" value="Petal ${i+1}  100%" align="center" color="#ffe066" position="0 1.0 0" look-at="[camera]" scale="0.9 0.9 0.9"></a-text>
       </a-entity>`;
 
     scene.appendChild(marker);
@@ -521,213 +366,273 @@ function buildScene() {
 }
 
 // ─────────────────────────────────────────
-// FIREBASE
+// FIREBASE (with graceful failure)
 // ─────────────────────────────────────────
-const firebaseConfig = {
-  apiKey: "AIzaSyA4gpps6atNsq8dV3DB2USb7Bs5qvbF3Jk",
-  authDomain: "ashtadala.firebaseapp.com",
-  databaseURL: "https://ashtadala-default-rtdb.firebaseio.com",
-  projectId: "ashtadala",
-  storageBucket: "ashtadala.firebasestorage.app",
-  messagingSenderId: "584325446650",
-  appId: "1:584325446650:web:c3236007ae63df89654243"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+let db = null;
+try {
+  const firebaseConfig = {
+    apiKey: "AIzaSyA4gpps6atNsq8dV3DB2USb7Bs5qvbF3Jk",
+    authDomain: "ashtadala.firebaseapp.com",
+    databaseURL: "https://ashtadala-default-rtdb.firebaseio.com",
+    projectId: "ashtadala",
+    storageBucket: "ashtadala.firebasestorage.app",
+    messagingSenderId: "584325446650",
+    appId: "1:584325446650:web:c3236007ae63df89654243"
+  };
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+} catch(e) {
+  console.warn("Firebase init failed, running in solo mode:", e);
+}
 
 // ─────────────────────────────────────────
-// GAME
+// GAME STATE
 // ─────────────────────────────────────────
-const GAME_DURATION=180, FADE_RATE=0.7, STORM_RATE=2.2, STORM_AT=90, STORM_COUNT=3, N=8;
-let playerName="Guardian", playerId="p_"+Math.random().toString(36).substr(2,6);
-let gameActive=false, timeLeft=GAME_DURATION, myScore=0;
-let petals=Array(N).fill(100), visible=Array(N).fill(false);
-let stormPetals=[], stormActive=false, stormShown=false, isHost=false;
+const GAME_DURATION = 180, FADE_RATE = 0.7, STORM_RATE = 2.2, STORM_AT = 90, STORM_COUNT = 3, N = 8;
+let playerName = "Guardian";
+let playerId   = "p_" + Math.random().toString(36).substr(2, 6);
+let gameActive = false;
+let timeLeft   = GAME_DURATION;
+let myScore    = 0;
+let petals     = Array(N).fill(100);
+let visible    = Array(N).fill(false);
+let stormPetals = [], stormActive = false, stormShown = false;
+let isHost     = false;
 
-const $timer=document.getElementById("timer"), $strip=document.getElementById("petal-strip");
-const $status=document.getElementById("status"), $pts=document.getElementById("pts");
-const $storm=document.getElementById("storm"), $hud=document.getElementById("hud");
-const $bottom=document.getElementById("bottom"), $scene=document.getElementById("ar-scene");
+const $timer  = document.getElementById("timer");
+const $strip  = document.getElementById("petal-strip");
+const $status = document.getElementById("status");
+const $pts    = document.getElementById("pts");
+const $storm  = document.getElementById("storm");
+const $hud    = document.getElementById("hud");
+const $bottom = document.getElementById("bottom");
+const $scene  = document.getElementById("ar-scene");
 
-function buildStrip(){
-  $strip.innerHTML="";
-  for(let i=0;i<N;i++){
-    const d=document.createElement("div");
-    d.className="pdot full"; d.id="pd"+i; $strip.appendChild(d);
+function buildStrip() {
+  $strip.innerHTML = "";
+  for (let i = 0; i < N; i++) {
+    const d = document.createElement("div");
+    d.className = "pdot full";
+    d.id = "pd" + i;
+    $strip.appendChild(d);
   }
 }
 
-function startGame(){
-  playerName=document.getElementById("name-input").value.trim()||"Guardian";
-  document.getElementById("splash").style.display="none";
-  $hud.style.display="block"; $bottom.style.display="block"; $scene.style.display="block";
-  buildStrip(); setupMarkers(); electHost();
-}
-window.startGame=startGame;
+// ─────────────────────────────────────────
+// START GAME — always boots the loop locally,
+// Firebase is additive (sync) not a blocker
+// ─────────────────────────────────────────
+function startGame() {
+  playerName = document.getElementById("name-input").value.trim() || "Guardian";
+  document.getElementById("splash").style.display = "none";
+  $hud.style.display    = "block";
+  $bottom.style.display = "block";
+  $scene.style.display  = "block";
 
-function setupMarkers(){
-  for(let i=0;i<N;i++){
-    const m=document.querySelector(`a-marker[value="${i}"]`);
-    if(!m) continue;
-    const idx=i;
-    m.addEventListener("markerFound",()=>{
-      visible[idx]=true;
-      $status.textContent=`🪷 Guarding Petal ${idx+1}…`;
-      db.ref("guard/"+playerId+"_"+idx).set(true);
+  buildStrip();
+  setupMarkers();
+
+  // ── Always initialise locally ──
+  petals     = Array(N).fill(100);
+  isHost     = true;      // solo / fallback default
+  gameActive = true;
+  updateTimer();           // show 3:00 immediately
+  runLoop();               // ← the fix: start the loop right away
+
+  // ── Firebase: try to register player & sync ──
+  if (db) {
+    try {
+      db.ref("players/" + playerId).set({ name: playerName, score: 0 });
+      db.ref("players/" + playerId).onDisconnect().remove();
+
+      // Only first writer becomes host; others follow their petals from Firebase
+      db.ref("meta/host").transaction(cur => { if (!cur) return playerId; }, (err, committed) => {
+        if (err) { console.warn("Host tx failed, staying solo host"); return; }
+        if (!committed) {
+          // Someone else is host — read petals from Firebase instead of fading locally
+          isHost = false;
+          db.ref("petals").on("value", snap => {
+            const d = snap.val();
+            if (!d) return;
+            for (let i = 0; i < N; i++) if (d[i] !== undefined) petals[i] = d[i];
+            updateVisuals();
+          });
+        } else {
+          // We are host — push initial petal state
+          const init = {};
+          for (let i = 0; i < N; i++) init[i] = 100;
+          db.ref("petals").set(init);
+          // Subscribe to guard signals from other players
+          db.ref("guard").on("value", snap => {
+            const d = snap.val() || {};
+            // merge other players' guard signals into visible[] for fading logic
+            const remoteGuarded = new Set();
+            Object.keys(d).forEach(k => { const idx = parseInt(k.split("_").pop()); if (!isNaN(idx)) remoteGuarded.add(idx); });
+            remoteGuardedSet = remoteGuarded;
+          });
+        }
+      });
+    } catch(e) { console.warn("Firebase ops failed:", e); }
+  }
+}
+window.startGame = startGame;
+
+let remoteGuardedSet = new Set();
+
+function setupMarkers() {
+  for (let i = 0; i < N; i++) {
+    const m = document.querySelector(`a-marker[value="${i}"]`);
+    if (!m) continue;
+    const idx = i;
+    m.addEventListener("markerFound", () => {
+      visible[idx] = true;
+      $status.textContent = `🪷 Guarding Petal ${idx + 1}…`;
+      if (db) { try { db.ref("guard/" + playerId + "_" + idx).set(true); } catch(e){} }
     });
-    m.addEventListener("markerLost",()=>{
-      visible[idx]=false;
-      db.ref("guard/"+playerId+"_"+idx).remove();
+    m.addEventListener("markerLost", () => {
+      visible[idx] = false;
+      if (!visible.some(v => v)) $status.textContent = "Point camera at a pillar marker…";
+      if (db) { try { db.ref("guard/" + playerId + "_" + idx).remove(); } catch(e){} }
     });
   }
 }
 
-function electHost(){
-  db.ref("players/"+playerId).set({name:playerName,score:0});
-  db.ref("players/"+playerId).onDisconnect().remove();
-  db.ref("meta/host").transaction(cur=>{if(!cur)return playerId;},(err,committed)=>{
-    if(committed){
-      isHost=true;
-      document.getElementById('dbg-host').textContent='YOU';
-      document.getElementById('debug-panel').style.display='block';
-      const init={}; for(let i=0;i<N;i++) init[i]=100;
-      db.ref("petals").set(init);
-    } else {
-      document.getElementById('dbg-host').textContent='other';
-      document.getElementById('debug-panel').style.display='block';
-    }
-    db.ref("petals").on("value",snap=>{
-      const d=snap.val(); if(!d) return;
-      for(let i=0;i<N;i++) if(d[i]!==undefined) petals[i]=d[i];
-      updateVisuals();
-    });
-    gameActive=true;
-    runLoop();
-  });
-}
+// ─────────────────────────────────────────
+// MAIN GAME LOOP — pure local, runs every second
+// ─────────────────────────────────────────
+function runLoop() {
+  const iv = setInterval(() => {
+    if (!gameActive) { clearInterval(iv); return; }
 
-function runLoop(){
-  const iv=setInterval(()=>{
-    if(!gameActive){clearInterval(iv);return;}
-    timeLeft--; updateTimer();
-    if(!stormShown&&timeLeft<=STORM_AT){
-      stormShown=true; stormActive=true;
-      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,STORM_COUNT);
-      $storm.style.display="block";
-      setTimeout(()=>{$storm.style.display="none";},3000);
-      setTimeout(()=>{stormActive=false;},20000);
+    timeLeft--;
+    updateTimer();
+
+    // Storm trigger
+    if (!stormShown && timeLeft <= STORM_AT) {
+      stormShown  = true;
+      stormActive = true;
+      stormPetals = shuffle([0,1,2,3,4,5,6,7]).slice(0, STORM_COUNT);
+      $storm.style.display = "block";
+      setTimeout(() => { $storm.style.display = "none"; }, 3000);
+      setTimeout(() => { stormActive = false; }, 20000);
     }
 
-    // Score runs on ALL phones — count seconds guarding any marker
-    for(let i=0;i<N;i++) if(visible[i]) myScore++;
-    $pts.textContent=myScore;
-    db.ref("players/"+playerId+"/score").set(myScore);
-
-    // Update debug panel
-    for(let i=0;i<4;i++){
-      const el=document.getElementById('dbg-p'+i);
-      if(el) el.textContent=Math.round(petals[i]);
+    // ── Guard score: purely local, runs on every phone ──
+    for (let i = 0; i < N; i++) {
+      if (visible[i]) myScore++;
     }
+    $pts.textContent = myScore;
+    if (db) { try { db.ref("players/" + playerId + "/score").set(myScore); } catch(e){} }
 
-    // Only host fades petals
-    if(isHost){
-      for(let i=0;i<N;i++){
-        if(!visible[i]){
-          const rate=(stormActive&&stormPetals.includes(i))?STORM_RATE:FADE_RATE;
-          petals[i]=Math.max(0,petals[i]-rate);
+    // ── Petal fading: host only (or solo) ──
+    if (isHost) {
+      for (let i = 0; i < N; i++) {
+        // Consider this petal guarded if local player sees it OR a remote player signals it
+        const guarded = visible[i] || remoteGuardedSet.has(i);
+        if (!guarded) {
+          const rate = (stormActive && stormPetals.includes(i)) ? STORM_RATE : FADE_RATE;
+          petals[i]  = Math.max(0, petals[i] - rate);
         }
       }
-      const upd={}; for(let i=0;i<N;i++) upd[i]=Math.round(petals[i]);
-      db.ref("petals").set(upd);
-    }
-    if(timeLeft<=0){clearInterval(iv);endGame();}
-  },1000);
-}
+      updateVisuals();
 
-function updateVisuals(){
-  for(let i=0;i<N;i++){
-    const b=Math.round(petals[i]), g=visible[i];
-
-    // Lotus plane opacity + tint
-    const plane=document.getElementById("lotus-plane-"+i);
-    if(plane){
-      const op=g?1.0:Math.max(0.06,b/100);
-      plane.setAttribute("opacity",op);
-      plane.setAttribute("color", g?"#aaddff":"#ffffff");
-    }
-
-    // Yaksha: shrinks and fades when guarded, grows when petal is low
-    const yaksha=document.getElementById("yaksha-"+i);
-    if(yaksha){
-      if(g){
-        // Guardian present — Yaksha retreats (shrink + fade)
-        yaksha.setAttribute("scale","0.3 0.3 0.3");
-        yaksha.setAttribute("opacity","0.2");
-      } else if(b < 35){
-        // Petal critically low — Yaksha looms large and menacing
-        yaksha.setAttribute("scale","1.4 1.4 1.4");
-        yaksha.setAttribute("opacity","1");
-      } else if(b < 65){
-        // Petal mid — Yaksha normal size
-        yaksha.setAttribute("scale","1 1 1");
-        yaksha.setAttribute("opacity","0.85");
-      } else {
-        // Petal healthy — Yaksha small, lurking
-        yaksha.setAttribute("scale","0.7 0.7 0.7");
-        yaksha.setAttribute("opacity","0.6");
+      // Push to Firebase for other players
+      if (db) {
+        try {
+          const upd = {};
+          for (let i = 0; i < N; i++) upd[i] = Math.round(petals[i]);
+          db.ref("petals").set(upd);
+        } catch(e) {}
       }
     }
+    // Non-host visuals are updated via Firebase listener above
 
-    const txt=document.getElementById("pt"+i);
-    if(txt) txt.setAttribute("value",g?`Petal ${i+1}  GUARDED`:`Petal ${i+1}  ${b}%`);
+    if (timeLeft <= 0) { clearInterval(iv); endGame(); }
+  }, 1000);
+}
 
-    const dot=document.getElementById("pd"+i);
-    if(dot){
-      if(g)          dot.className="pdot guarded";
-      else if(b>65)  dot.className="pdot full";
-      else if(b>35)  dot.className="pdot mid";
-      else if(b>5)   dot.className="pdot low";
-      else           dot.className="pdot dead";
+function updateTimer() {
+  const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+  $timer.textContent = `${m}:${s.toString().padStart(2, "0")}`;
+  $timer.className   = timeLeft <= 30 ? "urgent" : "";
+}
+
+function updateVisuals() {
+  for (let i = 0; i < N; i++) {
+    const b = Math.round(petals[i]), g = visible[i];
+
+    const plane = document.getElementById("lotus-plane-" + i);
+    if (plane) {
+      plane.setAttribute("opacity", g ? 1.0 : Math.max(0.06, b / 100));
+      plane.setAttribute("color",   g ? "#aaddff" : "#ffffff");
+    }
+
+    const yaksha = document.getElementById("yaksha-" + i);
+    if (yaksha) {
+      if      (g)    { yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2"); }
+      else if (b<35) { yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");   }
+      else if (b<65) { yaksha.setAttribute("scale","1 1 1");       yaksha.setAttribute("opacity","0.85"); }
+      else           { yaksha.setAttribute("scale","0.7 0.7 0.7"); yaksha.setAttribute("opacity","0.6"); }
+    }
+
+    const txt = document.getElementById("pt" + i);
+    if (txt) txt.setAttribute("value", g ? `Petal ${i+1}  GUARDED` : `Petal ${i+1}  ${b}%`);
+
+    const dot = document.getElementById("pd" + i);
+    if (dot) {
+      if      (g)    dot.className = "pdot guarded";
+      else if (b>65) dot.className = "pdot full";
+      else if (b>35) dot.className = "pdot mid";
+      else if (b>5)  dot.className = "pdot low";
+      else           dot.className = "pdot dead";
     }
   }
 }
 
-function updateTimer(){
-  const m=Math.floor(timeLeft/60), s=timeLeft%60;
-  $timer.textContent=`${m}:${s.toString().padStart(2,"0")}`;
-  $timer.className=timeLeft<=30?"urgent":"";
+async function endGame() {
+  gameActive = false;
+  const avg = Math.round(petals.reduce((a,b) => a + b, 0) / N);
+
+  let scores = [{ name: playerName, score: myScore }];
+
+  if (db) {
+    try {
+      const snap = await db.ref("players").once("value");
+      const data = snap.val() || {};
+      scores = Object.values(data).sort((a,b) => b.score - a.score);
+      db.ref("meta").remove();
+      db.ref("petals").remove();
+      db.ref("guard").remove();
+      db.ref("players").remove();
+    } catch(e) {}
+  }
+
+  showEnd(avg, scores);
 }
 
-async function endGame(){
-  gameActive=false;
-  const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
-  setTimeout(async()=>{
-    const snap=await db.ref("players").once("value");
-    const data=snap.val()||{};
-    const scores=Object.values(data).sort((a,b)=>b.score-a.score);
-    db.ref("meta").remove(); db.ref("petals").remove();
-    db.ref("guard").remove(); db.ref("players").remove();
-    showEnd(avg,scores);
-  },1800);
+function showEnd(avg, scores) {
+  $scene.style.display = "none";
+  $hud.style.display   = "none";
+  $bottom.style.display = "none";
+
+  document.getElementById("final-pct").textContent = avg + "%";
+  const [[,t,v]] = [[75,"The Lotus Endures! 🪷","The Yaksha flees in defeat."],
+                    [50,"The Lotus Wavers…","The Yaksha lingers. Try again."],
+                    [0, "The Lotus Fades 💀","The Yaksha has won."]].filter(([th]) => avg >= th);
+  document.getElementById("end-title").textContent = t;
+  document.getElementById("verdict").textContent   = v;
+  document.getElementById("board").innerHTML =
+    "<strong style='display:block;margin-bottom:6px;color:#f5c97a'>Guardian Scores</strong>" +
+    scores.map((p,i) => `<div class="srow"><span>${["🥇","🥈","🥉"][i]||""} ${p.name}</span><span>${p.score} pts</span></div>`).join("");
+  document.getElementById("endscreen").style.display = "flex";
 }
 
-function showEnd(avg,scores){
-  $scene.style.display="none"; $hud.style.display="none"; $bottom.style.display="none";
-  document.getElementById("final-pct").textContent=avg+"%";
-  const [[,t,v]]=[[75,"The Lotus Endures! 🪷","The Yaksha flees in defeat."],
-                  [50,"The Lotus Wavers…","The Yaksha lingers. Try again."],
-                  [0,"The Lotus Fades 💀","The Yaksha has won."]].filter(([th])=>avg>=th);
-  document.getElementById("end-title").textContent=t;
-  document.getElementById("verdict").textContent=v;
-  document.getElementById("board").innerHTML=
-    "<strong style='display:block;margin-bottom:6px;color:#f5c97a'>Guardian Scores</strong>"+
-    scores.map((p,i)=>`<div class="srow"><span>${["🥇","🥈","🥉"][i]||""} ${p.name}</span><span>${p.score} pts</span></div>`).join("");
-  document.getElementById("endscreen").style.display="flex";
-}
-
-function shuffle(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
   return a;
 }
 
@@ -738,62 +643,42 @@ let tutStep = 0;
 const TUT_TOTAL = 2;
 
 function drawTutIllustrations() {
-  // Slide 0: phone pointing at pillar with lotus
   (function(){
     const c = document.getElementById('tut-canvas-0');
     c.width = 180; c.height = 180;
     const ctx = c.getContext('2d');
-    ctx.fillStyle = '#222';
-    ctx.beginPath(); ctx.roundRect(100,40,55,100,8); ctx.fill();
-    ctx.fillStyle = '#334';
-    ctx.beginPath(); ctx.roundRect(105,50,45,80,4); ctx.fill();
-    ctx.beginPath(); ctx.arc(127,48,4,0,Math.PI*2);
-    ctx.fillStyle='#444'; ctx.fill();
+    ctx.fillStyle='#222'; ctx.beginPath(); ctx.roundRect(100,40,55,100,8); ctx.fill();
+    ctx.fillStyle='#334'; ctx.beginPath(); ctx.roundRect(105,50,45,80,4); ctx.fill();
+    ctx.beginPath(); ctx.arc(127,48,4,0,Math.PI*2); ctx.fillStyle='#444'; ctx.fill();
     ctx.font='18px Arial'; ctx.fillText('🪷',116,96);
-    ctx.setLineDash([4,3]);
-    ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(100,90); ctx.lineTo(65,90); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='#666'; ctx.fillRect(30,30,28,130);
-    ctx.fillStyle='#888'; ctx.fillRect(32,30,6,130);
+    ctx.setLineDash([4,3]); ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(100,90); ctx.lineTo(65,90); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#666'; ctx.fillRect(30,30,28,130); ctx.fillStyle='#888'; ctx.fillRect(32,30,6,130);
     ctx.font='26px Arial'; ctx.fillText('🪷',26,75);
     ctx.strokeStyle='rgba(255,170,0,0.4)'; ctx.lineWidth=2;
-    for(let r=18;r<=30;r+=6){
-      ctx.beginPath(); ctx.arc(39,63,r,0,Math.PI*2); ctx.stroke();
-    }
+    for(let r=18;r<=30;r+=6){ ctx.beginPath(); ctx.arc(39,63,r,0,Math.PI*2); ctx.stroke(); }
   })();
-
-  // Slide 1: 8 pillars, player running
   (function(){
     const c = document.getElementById('tut-canvas-1');
-    c.width = 180; c.height = 180;
-    const ctx = c.getContext('2d');
-    const cx=90, cy=85, R=65;
-    ctx.strokeStyle='rgba(245,169,35,0.2)'; ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let i=0;i<8;i++){
-      const a=(i/8)*Math.PI*2-Math.PI/8;
-      i===0?ctx.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R)
-           :ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
-    }
+    c.width=180; c.height=180;
+    const ctx=c.getContext('2d');
+    const cx=90,cy=85,R=65;
+    ctx.strokeStyle='rgba(245,169,35,0.2)'; ctx.lineWidth=1; ctx.beginPath();
+    for(let i=0;i<8;i++){ const a=(i/8)*Math.PI*2-Math.PI/8; i===0?ctx.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R):ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R); }
     ctx.closePath(); ctx.stroke();
     const colours=['#ff8800','#333','#cc44ff','#ff4444','#00cc88','#333','#2299ff','#ffcc00'];
-    const emojis =['🪷','💀','🪷','⚡','🪷','💀','🪷','🪷'];
+    const emojis=['🪷','💀','🪷','⚡','🪷','💀','🪷','🪷'];
     for(let i=0;i<8;i++){
-      const a=(i/8)*Math.PI*2-Math.PI/8;
-      const px=cx+Math.cos(a)*R, py=cy+Math.sin(a)*R;
-      ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2);
-      ctx.fillStyle=colours[i]; ctx.fill();
+      const a=(i/8)*Math.PI*2-Math.PI/8, px=cx+Math.cos(a)*R, py=cy+Math.sin(a)*R;
+      ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2); ctx.fillStyle=colours[i]; ctx.fill();
       ctx.font='13px Arial'; ctx.fillText(emojis[i],px-7,py-10);
     }
     ctx.font='22px Arial'; ctx.fillText('🏃',cx-11,cy+8);
     ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5; ctx.setLineDash([3,2]);
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+46,cy-46); ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+46,cy-46); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle='rgba(245,169,35,0.15)'; ctx.fillRect(10,158,160,12);
     ctx.fillStyle='#f5a623'; ctx.fillRect(10,158,112,12);
-    ctx.fillStyle='#1a0800'; ctx.font='bold 9px Arial';
-    ctx.fillText('lotus health  70%', 14, 168);
+    ctx.fillStyle='#1a0800'; ctx.font='bold 9px Arial'; ctx.fillText('lotus health  70%',14,168);
   })();
 }
 
@@ -805,7 +690,7 @@ function openTutorial() {
     setTimeout(()=>{ inp.style.border='1px solid rgba(245,169,35,.35)'; },1200);
     return;
   }
-  document.getElementById('splash').style.display = 'none';
+  document.getElementById('splash').style.display='none';
   document.getElementById('tutorial').classList.add('visible');
   drawTutIllustrations();
   setupTutSwipe();
@@ -813,10 +698,9 @@ function openTutorial() {
 window.openTutorial = openTutorial;
 
 function tutNav(dir) {
-  tutStep = Math.max(0, Math.min(TUT_TOTAL - 1, tutStep + dir));
-  document.getElementById('tut-slides').style.transform = `translateX(-${tutStep*33.333}%)`;
-  for(let i=0;i<TUT_TOTAL;i++)
-    document.getElementById('dot'+i).className='tut-dot'+(i===tutStep?' active':'');
+  tutStep = Math.max(0, Math.min(TUT_TOTAL-1, tutStep+dir));
+  document.getElementById('tut-slides').style.transform=`translateX(-${tutStep*33.333}%)`;
+  for(let i=0;i<TUT_TOTAL;i++) document.getElementById('dot'+i).className='tut-dot'+(i===tutStep?' active':'');
   document.getElementById('tut-back').disabled = tutStep===0;
   const nb = document.getElementById('tut-next');
   if(tutStep===TUT_TOTAL-1){
@@ -833,167 +717,10 @@ function setupTutSwipe() {
   const track=document.getElementById('tut-slides');
   let sx=0, moved=false;
   track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;moved=false;},{passive:true});
-  track.addEventListener('touchmove', ()=>{moved=true;},{passive:true});
-  track.addEventListener('touchend',  e=>{
-    if(!moved)return;
-    const dx=e.changedTouches[0].clientX-sx;
-    if(Math.abs(dx)>40) tutNav(dx<0?1:-1);
-  });
+  track.addEventListener('touchmove',()=>{moved=true;},{passive:true});
+  track.addEventListener('touchend',e=>{ if(!moved)return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40) tutNav(dx<0?1:-1); });
 }
 
-// ─────────────────────────────────────────
-// DRAW YAKSHA MASK on canvas
-// Traditional Karnataka Yakshagana mask style:
-// fierce eyes, curled moustache, crown
-// ─────────────────────────────────────────
-function drawYaksha(canvas) {
-  const S = 256;
-  canvas.width = S; canvas.height = S;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, S, S);
-  const cx = S/2, cy = S/2;
-
-  // Outer glow aura
-  const aura = ctx.createRadialGradient(cx,cy,20,cx,cy,S*0.48);
-  aura.addColorStop(0,   'rgba(180,0,0,0.5)');
-  aura.addColorStop(0.6, 'rgba(120,0,80,0.3)');
-  aura.addColorStop(1,   'transparent');
-  ctx.fillStyle = aura;
-  ctx.beginPath(); ctx.arc(cx,cy,S*0.48,0,Math.PI*2); ctx.fill();
-
-  // Face shape — dark reddish oval
-  const face = ctx.createRadialGradient(cx,cy+10,10,cx,cy+10,80);
-  face.addColorStop(0,   '#8B2500');
-  face.addColorStop(0.6, '#5C1500');
-  face.addColorStop(1,   '#3a0a00');
-  ctx.fillStyle = face;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy+15, 72, 85, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.strokeStyle = '#ff4400';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Crown / headdress spikes
-  ctx.fillStyle = '#cc8800';
-  const spikes = [[-50,-85],[-28,-100],[0,-110],[28,-100],[50,-85]];
-  spikes.forEach(([dx,dy]) => {
-    ctx.beginPath();
-    ctx.moveTo(cx+dx-10, cy+dy+30);
-    ctx.lineTo(cx+dx, cy+dy);
-    ctx.lineTo(cx+dx+10, cy+dy+30);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1; ctx.stroke();
-  });
-  // Crown base band
-  ctx.fillStyle='#aa6600';
-  ctx.fillRect(cx-65, cy-62, 130, 18);
-  ctx.fillStyle='#ffcc00';
-  ctx.fillRect(cx-65, cy-65, 130, 6);
-  // Crown gems
-  ['#ff0000','#00ffcc','#ff8800','#ff0000','#00ffcc'].forEach((col,i) => {
-    ctx.beginPath();
-    ctx.arc(cx-50+(i*25), cy-57, 5, 0, Math.PI*2);
-    ctx.fillStyle=col; ctx.fill();
-  });
-
-  // Fierce EYES — wide, glowing, angry slant
-  [-28,28].forEach((dx,side) => {
-    const ex=cx+dx, ey=cy-15;
-    // eye white (actually yellowish)
-    ctx.beginPath();
-    ctx.ellipse(ex, ey, 22, 14, side===0?0.3:-0.3, 0, Math.PI*2);
-    ctx.fillStyle='#ffe066'; ctx.fill();
-    // iris — red
-    ctx.beginPath();
-    ctx.arc(ex, ey, 9, 0, Math.PI*2);
-    ctx.fillStyle='#cc0000'; ctx.fill();
-    // pupil
-    ctx.beginPath();
-    ctx.arc(ex, ey, 4, 0, Math.PI*2);
-    ctx.fillStyle='#000'; ctx.fill();
-    // eye highlight
-    ctx.beginPath();
-    ctx.arc(ex-3, ey-3, 2, 0, Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.fill();
-    // eyelid angry slant
-    ctx.beginPath();
-    ctx.moveTo(ex-22, ey+(side===0?6:-6));
-    ctx.lineTo(ex+22, ey+(side===0?-6:6));
-    ctx.strokeStyle='#ff2200'; ctx.lineWidth=2.5; ctx.stroke();
-  });
-
-  // Nose — broad, flat
-  ctx.fillStyle='#6a1a00';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy+12, 14, 10, 0, 0, Math.PI*2);
-  ctx.fill();
-  // nostrils
-  [-8,8].forEach(dx => {
-    ctx.beginPath(); ctx.arc(cx+dx, cy+15, 5, 0, Math.PI*2);
-    ctx.fillStyle='#2a0500'; ctx.fill();
-  });
-
-  // Fierce mouth — open, showing fangs
-  ctx.beginPath();
-  ctx.moveTo(cx-35, cy+38);
-  ctx.quadraticCurveTo(cx, cy+60, cx+35, cy+38);
-  ctx.quadraticCurveTo(cx, cy+52, cx-35, cy+38);
-  ctx.fillStyle='#1a0000'; ctx.fill();
-  // fangs
-  ctx.fillStyle='#fffde7';
-  [[cx-20,cy+40],[cx+20,cy+40]].forEach(([fx,fy]) => {
-    ctx.beginPath();
-    ctx.moveTo(fx-7, fy); ctx.lineTo(fx, fy+16); ctx.lineTo(fx+7, fy);
-    ctx.closePath(); ctx.fill();
-  });
-  // teeth
-  [-8,0,8].forEach(dx => {
-    ctx.beginPath();
-    ctx.moveTo(cx+dx-5, cy+39); ctx.lineTo(cx+dx, cy+50); ctx.lineTo(cx+dx+5, cy+39);
-    ctx.fillStyle='#e0d8b0'; ctx.fill();
-  });
-
-  // Curled moustache — traditional Yakshagana style
-  ctx.strokeStyle='#1a0800'; ctx.lineWidth=4; ctx.lineCap='round';
-  // left curl
-  ctx.beginPath();
-  ctx.moveTo(cx, cy+30);
-  ctx.bezierCurveTo(cx-15,cy+28, cx-35,cy+22, cx-42,cy+30);
-  ctx.bezierCurveTo(cx-48,cy+38, cx-40,cy+48, cx-30,cy+42);
-  ctx.stroke();
-  // right curl
-  ctx.beginPath();
-  ctx.moveTo(cx, cy+30);
-  ctx.bezierCurveTo(cx+15,cy+28, cx+35,cy+22, cx+42,cy+30);
-  ctx.bezierCurveTo(cx+48,cy+38, cx+40,cy+48, cx+30,cy+42);
-  ctx.stroke();
-
-  // Earrings
-  [-72,72].forEach(dx => {
-    ctx.beginPath(); ctx.arc(cx+dx, cy+15, 10, 0, Math.PI*2);
-    ctx.fillStyle='#cc8800'; ctx.fill();
-    ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx+dx, cy+15, 5, 0, Math.PI*2);
-    ctx.fillStyle='#ff2200'; ctx.fill();
-  });
-
-  // Forehead tilak mark
-  ctx.beginPath();
-  ctx.moveTo(cx, cy-42);
-  ctx.lineTo(cx-6, cy-30);
-  ctx.lineTo(cx+6, cy-30);
-  ctx.closePath();
-  ctx.fillStyle='#ff4400'; ctx.fill();
-
-  // Outer border glow
-  ctx.strokeStyle='rgba(255,80,0,0.6)';
-  ctx.lineWidth=3;
-  ctx.beginPath(); ctx.ellipse(cx,cy+15,74,87,0,0,Math.PI*2); ctx.stroke();
-}
-
-// ─────────────────────────────────────────
 // Build scene on load
 buildScene();
 </script>
