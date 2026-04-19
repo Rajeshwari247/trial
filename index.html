@@ -545,6 +545,17 @@ function startGame() {
   setupMarkers();
   $statusCard.style.display = "block";
 
+  // Force-hide all Yaksha planes — A-Frame may override initial opacity="0"
+  const hideYakshas = () => {
+    for (let i = 0; i < N; i++) {
+      const y = document.getElementById("yaksha-" + i);
+      if (y) { y.setAttribute("visible","false"); y.setAttribute("opacity","0"); }
+    }
+  };
+  hideYakshas();
+  setTimeout(hideYakshas, 500);
+  setTimeout(hideYakshas, 1500);
+
   // ── Always initialise locally ──
   petals     = Array(N).fill(100);
   isHost     = true;      // solo / fallback default
@@ -705,14 +716,17 @@ function updateVisuals() {
     if (yaksha) {
       const isStormTarget = stormActive && stormPetals.includes(i);
       if (!isStormTarget) {
-        yaksha.setAttribute("opacity", "0");
-      } else if (g) {
-        // Guarded storm petal — Yaksha retreats
-        yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2");
-      } else if (b < 35) {
-        yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");
+        yaksha.setAttribute("visible","false");
+        yaksha.setAttribute("opacity","0");
       } else {
-        yaksha.setAttribute("scale","1 1 1"); yaksha.setAttribute("opacity","0.85");
+        yaksha.setAttribute("visible","true");
+        if (g) {
+          yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2");
+        } else if (b < 35) {
+          yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");
+        } else {
+          yaksha.setAttribute("scale","1 1 1"); yaksha.setAttribute("opacity","0.85");
+        }
       }
     }
 
