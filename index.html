@@ -269,6 +269,13 @@
 <div id="bottom">
   <div id="status">Point camera at a pillar marker…</div>
   <div id="myscore">Guard score: <strong id="pts">0</strong></div>
+  <div id="debug-panel" style="font-size:0.7rem;color:#888;margin-top:4px;font-family:monospace;display:none">
+    host:<span id="dbg-host">?</span> |
+    p0:<span id="dbg-p0">100</span>
+    p1:<span id="dbg-p1">100</span>
+    p2:<span id="dbg-p2">100</span>
+    p3:<span id="dbg-p3">100</span>
+  </div>
 </div>
 <div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
 <div id="endscreen">
@@ -458,38 +465,42 @@ function buildScene() {
     marker.innerHTML = `
       <a-entity id="pe${i}">
 
-        <!-- Yaksha mask — hovers above lotus, shrinks when guarded -->
+        <!-- Yaksha mask — billboards to always face camera -->
         <a-plane id="yaksha-${i}"
           src="#yaksha-tex"
-          width="0.55" height="0.55"
+          width="0.9" height="0.9"
           transparent="true"
-          opacity="0.92"
+          opacity="0.95"
           side="double"
-          position="0 0.55 0.02"
-          animation__float="property:position; from:0 0.55 0.02; to:0 0.68 0.02; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
-          animation__spin="property:rotation; from:0 -8 0; to:0 8 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
+          position="0 0.5 0"
+          scale="1 1 1"
+          look-at="[camera]"
+          animation__float="property:position; from:0 0.45 0; to:0 0.62 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
+          animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
         </a-plane>
 
-        <!-- Main lotus plane -->
+        <!-- Main lotus plane — billboards to always face camera -->
         <a-plane id="lotus-plane-${i}"
           src="#tex${i}"
           width="1.5" height="1.5"
           transparent="true"
           opacity="1"
           side="double"
-          position="0 0 0.01"
+          position="0 0 0"
+          look-at="[camera]"
           animation__spin="property:rotation; from:0 0 0; to:0 0 360; loop:true; dur:12000; easing:linear"
           animation__pulse="property:scale; from:1 1 1; to:1.08 1.08 1.08; dir:alternate; loop:true; dur:1500">
         </a-plane>
 
-        <!-- Glow ring -->
+        <!-- Glow ring — also billboards -->
         <a-ring
           radius-inner="0.55" radius-outer="0.75"
           color="${pal.glow}"
           emissive="${pal.glow}"
           emissive-intensity="0.6"
           opacity="0.4"
-          position="0 0 -0.01"
+          position="0 0 0"
+          look-at="[camera]"
           animation="property:rotation; from:0 0 0; to:0 0 -360; loop:true; dur:8000; easing:linear">
         </a-ring>
 
@@ -499,6 +510,7 @@ function buildScene() {
           align="center"
           color="#ffe066"
           position="0 1.0 0"
+          look-at="[camera]"
           scale="0.9 0.9 0.9">
         </a-text>
 
@@ -576,15 +588,21 @@ function electHost(){
   db.ref("meta/host").transaction(cur=>{if(!cur)return playerId;},(err,committed)=>{
     if(committed){
       isHost=true;
+      document.getElementById('dbg-host').textContent='YOU';
+      document.getElementById('debug-panel').style.display='block';
       const init={}; for(let i=0;i<N;i++) init[i]=100;
       db.ref("petals").set(init);
+    } else {
+      document.getElementById('dbg-host').textContent='other';
+      document.getElementById('debug-panel').style.display='block';
     }
     db.ref("petals").on("value",snap=>{
       const d=snap.val(); if(!d) return;
       for(let i=0;i<N;i++) if(d[i]!==undefined) petals[i]=d[i];
       updateVisuals();
     });
-    gameActive=true; runLoop();
+    gameActive=true;
+    runLoop();
   });
 }
 
@@ -599,9 +617,19 @@ function runLoop(){
       setTimeout(()=>{$storm.style.display="none";},3000);
       setTimeout(()=>{stormActive=false;},20000);
     }
+
+    // Score runs on ALL phones — count seconds guarding any marker
     for(let i=0;i<N;i++) if(visible[i]) myScore++;
     $pts.textContent=myScore;
     db.ref("players/"+playerId+"/score").set(myScore);
+
+    // Update debug panel
+    for(let i=0;i<4;i++){
+      const el=document.getElementById('dbg-p'+i);
+      if(el) el.textContent=Math.round(petals[i]);
+    }
+
+    // Only host fades petals
     if(isHost){
       for(let i=0;i<N;i++){
         if(!visible[i]){
