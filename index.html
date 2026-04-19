@@ -426,10 +426,7 @@ function buildScene() {
 
     marker.innerHTML = `
       <a-entity id="pe${i}">
-        <a-plane id="yaksha-${i}" src="#yaksha-tex" width="0.9" height="0.9" transparent="true" opacity="0" side="double" position="0 0.5 0" scale="1 1 1" look-at="[camera]"
-          animation__float="property:position; from:0 0.45 0; to:0 0.62 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
-          animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
-        </a-plane>
+
         <a-plane id="lotus-plane-${i}" src="#tex${i}" width="1.5" height="1.5" transparent="true" opacity="1" side="double" position="0 0 0" look-at="[camera]"
           animation__spin="property:rotation; from:0 0 0; to:0 0 360; loop:true; dur:12000; easing:linear"
           animation__pulse="property:scale; from:1 1 1; to:1.08 1.08 1.08; dir:alternate; loop:true; dur:1500">
@@ -545,16 +542,7 @@ function startGame() {
   setupMarkers();
   $statusCard.style.display = "block";
 
-  // Force-hide all Yaksha planes — A-Frame may override initial opacity="0"
-  const hideYakshas = () => {
-    for (let i = 0; i < N; i++) {
-      const y = document.getElementById("yaksha-" + i);
-      if (y) { y.setAttribute("visible","false"); y.setAttribute("opacity","0"); }
-    }
-  };
-  hideYakshas();
-  setTimeout(hideYakshas, 500);
-  setTimeout(hideYakshas, 1500);
+
 
   // ── Always initialise locally ──
   petals     = Array(N).fill(100);
@@ -645,7 +633,34 @@ function runLoop() {
       stormPetals = shuffle([0,1,2,3,4,5,6,7]).slice(0, STORM_COUNT);
       $storm.style.display = "block";
       setTimeout(() => { $storm.style.display = "none"; }, 3000);
-      setTimeout(() => { stormActive = false; }, 20000);
+
+      // Inject Yaksha plane onto storm petals only
+      stormPetals.forEach(idx => {
+        const entity = document.getElementById("pe" + idx);
+        if (!entity) return;
+        const el = document.createElement("a-plane");
+        el.id = "yaksha-storm-" + idx;
+        el.setAttribute("src", "#yaksha-tex");
+        el.setAttribute("width", "0.9");
+        el.setAttribute("height", "0.9");
+        el.setAttribute("transparent", "true");
+        el.setAttribute("opacity", "0.95");
+        el.setAttribute("side", "double");
+        el.setAttribute("position", "0 0.5 0");
+        el.setAttribute("look-at", "[camera]");
+        el.setAttribute("animation__float", "property:position; from:0 0.45 0; to:0 0.62 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine");
+        el.setAttribute("animation__rock", "property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine");
+        entity.appendChild(el);
+      });
+
+      setTimeout(() => {
+        stormActive = false;
+        // Remove Yaksha planes after storm ends
+        stormPetals.forEach(idx => {
+          const el = document.getElementById("yaksha-storm-" + idx);
+          if (el) el.parentNode.removeChild(el);
+        });
+      }, 20000);
     }
 
     // ── Guard score: purely local, runs on every phone ──
@@ -665,8 +680,6 @@ function runLoop() {
           petals[i]  = Math.max(0, petals[i] - rate);
         }
       }
-      updateVisuals();
-
       // Push to Firebase for other players
       if (db) {
         try {
@@ -676,7 +689,9 @@ function runLoop() {
         } catch(e) {}
       }
     }
-    // Non-host visuals are updated via Firebase listener above
+
+    // Always update visuals every tick on every device
+    updateVisuals();
 
     if (timeLeft <= 0) { clearInterval(iv); endGame(); }
   }, 1000);
@@ -711,22 +726,15 @@ function updateVisuals() {
       plane.setAttribute("color",   g ? "#aaddff" : "#ffffff");
     }
 
-    // AR yaksha — only appears on storm petals during the storm
-    const yaksha = document.getElementById("yaksha-" + i);
+    // AR yaksha — dynamically injected only on storm petals during storm
+    const yaksha = document.getElementById("yaksha-storm-" + i);
     if (yaksha) {
-      const isStormTarget = stormActive && stormPetals.includes(i);
-      if (!isStormTarget) {
-        yaksha.setAttribute("visible","false");
-        yaksha.setAttribute("opacity","0");
+      if (g) {
+        yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2");
+      } else if (b < 35) {
+        yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");
       } else {
-        yaksha.setAttribute("visible","true");
-        if (g) {
-          yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2");
-        } else if (b < 35) {
-          yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");
-        } else {
-          yaksha.setAttribute("scale","1 1 1"); yaksha.setAttribute("opacity","0.85");
-        }
+        yaksha.setAttribute("scale","1 1 1"); yaksha.setAttribute("opacity","0.85");
       }
     }
 
