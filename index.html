@@ -562,23 +562,21 @@ function startGame() {
       db.ref("meta/host").transaction(cur => { if (!cur) return playerId; }, (err, committed) => {
         if (err) { console.warn("Host tx failed, staying solo host"); return; }
         if (!committed) {
-          // Someone else is host — read petals from Firebase instead of fading locally
+          // Someone else is host — they push petal state, we just read it
           isHost = false;
           db.ref("petals").on("value", snap => {
             const d = snap.val();
             if (!d) return;
-            for (let i = 0; i < N; i++) if (d[i] !== undefined) petals[i] = d[i];
-            updateVisuals();
+            // Only sync DOWN from Firebase, never let it push 100s back
+            for (let i = 0; i < N; i++) {
+              if (d[i] !== undefined) petals[i] = Math.min(petals[i], d[i]);
+            }
           });
         } else {
-          // We are host — push initial petal state
-          const init = {};
-          for (let i = 0; i < N; i++) init[i] = 100;
-          db.ref("petals").set(init);
-          // Subscribe to guard signals from other players
+          // We are host — subscribe to guard signals from other players only
+          // Do NOT write petals to Firebase here — local fading already started
           db.ref("guard").on("value", snap => {
             const d = snap.val() || {};
-            // merge other players' guard signals into visible[] for fading logic
             const remoteGuarded = new Set();
             Object.keys(d).forEach(k => { const idx = parseInt(k.split("_").pop()); if (!isNaN(idx)) remoteGuarded.add(idx); });
             remoteGuardedSet = remoteGuarded;
@@ -679,6 +677,7 @@ function runLoop() {
         petals[i]  = Math.max(0, petals[i] - rate);
       }
     }
+    console.log("TICK t="+timeLeft+" p0="+Math.round(petals[0])+" vis="+visible[0]+" gameActive="+gameActive);
     // Host pushes to Firebase so other players can sync
     if (isHost && db) {
       try {
