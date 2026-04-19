@@ -281,7 +281,7 @@ const PALETTES = [
   { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff' },
 ];
 // Kannada colour names (written in English) for each palette
-const PETAL_NAMES = ['Kesari','Gulabi','Hasiru','Neeli','Kempu','Firozi','Arakku','Nerale'];
+const PETAL_NAMES = ['Kesari','Gulabi','Hasiru','Neeli','Kempu','Pacche','Halidi','Nerale'];
 // Off-screen canvases holding each lotus image for the UI cards
 const lotusCardCanvases = [];
 
@@ -426,7 +426,7 @@ function buildScene() {
 
     marker.innerHTML = `
       <a-entity id="pe${i}">
-        <a-plane id="yaksha-${i}" src="#yaksha-tex" width="0.9" height="0.9" transparent="true" opacity="0.95" side="double" position="0 0.5 0" scale="1 1 1" look-at="[camera]"
+        <a-plane id="yaksha-${i}" src="#yaksha-tex" width="0.9" height="0.9" transparent="true" opacity="0" side="double" position="0 0.5 0" scale="1 1 1" look-at="[camera]"
           animation__float="property:position; from:0 0.45 0; to:0 0.62 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
           animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
         </a-plane>
@@ -700,13 +700,20 @@ function updateVisuals() {
       plane.setAttribute("color",   g ? "#aaddff" : "#ffffff");
     }
 
-    // AR yaksha
+    // AR yaksha — only appears on storm petals during the storm
     const yaksha = document.getElementById("yaksha-" + i);
     if (yaksha) {
-      if      (g)    { yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2"); }
-      else if (b<35) { yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");   }
-      else if (b<65) { yaksha.setAttribute("scale","1 1 1");       yaksha.setAttribute("opacity","0.85"); }
-      else           { yaksha.setAttribute("scale","0.7 0.7 0.7"); yaksha.setAttribute("opacity","0.6"); }
+      const isStormTarget = stormActive && stormPetals.includes(i);
+      if (!isStormTarget) {
+        yaksha.setAttribute("opacity", "0");
+      } else if (g) {
+        // Guarded storm petal — Yaksha retreats
+        yaksha.setAttribute("scale","0.3 0.3 0.3"); yaksha.setAttribute("opacity","0.2");
+      } else if (b < 35) {
+        yaksha.setAttribute("scale","1.4 1.4 1.4"); yaksha.setAttribute("opacity","1");
+      } else {
+        yaksha.setAttribute("scale","1 1 1"); yaksha.setAttribute("opacity","0.85");
+      }
     }
 
     const txt = document.getElementById("pt" + i);
