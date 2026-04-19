@@ -692,6 +692,8 @@ function runLoop() {
 
     // Always update visuals every tick on every device
     updateVisuals();
+    // Debug: log petal values every 5 seconds
+    if (timeLeft % 5 === 0) console.log("petals:", petals.map(p=>Math.round(p)), "visible:", visible);
 
     if (timeLeft <= 0) { clearInterval(iv); endGame(); }
   }, 1000);
@@ -747,6 +749,7 @@ function updateVisuals() {
     const pct  = document.getElementById("ppct"  + i);
     const cv   = document.getElementById("pcv"   + i);
 
+    if (i === 0 && !bar) console.warn("pbar0 not found in DOM");
     if (card) {
       card.className = "pcard" + (g ? " guarded" : b <= 35 ? " low" : "");
     }
