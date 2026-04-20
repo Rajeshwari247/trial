@@ -133,6 +133,8 @@
       overflow:hidden;
     }
     a-scene{position:fixed;inset:0;}
+    @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    @keyframes levelFlash{0%,100%{opacity:1}50%{opacity:0.3}}
   </style>
 </head>
 <body>
@@ -209,9 +211,29 @@
 <div id="flower-panel">
   <div id="status-strip">
     <div id="status">Point camera at a pillar marker…</div>
-    <div id="myscore">Score: <strong id="pts">0</strong></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div id="level-badge" style="font-size:.65rem;background:rgba(245,169,35,.15);
+        border:1px solid rgba(245,169,35,.3);border-radius:6px;padding:2px 6px;color:#f5a623;"></div>
+      <div id="myscore">Score: <strong id="pts">0</strong></div>
+    </div>
   </div>
   <div class="flower-grid" id="flower-grid"></div>
+  <div id="bonus-panel" style="padding:.3rem .2rem 0;border-top:1px solid rgba(245,169,35,.1);margin-top:4px;"></div>
+</div>
+
+<!-- LEVEL TRANSITION -->
+<div id="level-transition" style="
+  position:fixed;inset:0;z-index:8000;
+  background:radial-gradient(ellipse at center,#1a0800,#000);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  color:#f5c97a;text-align:center;padding:2rem;">
+  <div style="font-size:.8rem;letter-spacing:.15em;color:#b8864a;margin-bottom:.5rem;">LEVEL COMPLETE</div>
+  <div id="lt-title" style="font-size:2rem;font-weight:bold;margin-bottom:.4rem;"></div>
+  <div id="lt-avg" style="font-size:3rem;color:#f5a623;font-weight:bold;"></div>
+  <div id="lt-msg" style="font-style:italic;color:#b8864a;margin:.5rem 0 1.5rem;"></div>
+  <div style="font-size:.85rem;color:#888;margin-bottom:.5rem;">Next level starting in</div>
+  <div id="lt-countdown" style="font-size:2.5rem;font-weight:bold;color:#f5a623;">3</div>
+  <div id="lt-next-name" style="font-size:.9rem;color:#b8864a;margin-top:.5rem;"></div>
 </div>
 
 <!-- STORM -->
@@ -573,11 +595,185 @@ const db=firebase.database();
 // ─────────────────────────────────────────
 // GAME STATE
 // ─────────────────────────────────────────
-const GAME_DURATION=180,FADE_RATE=0.7,STORM_RATE=2.2,STORM_AT=90,STORM_COUNT=3,N=8;
+// ─────────────────────────────────────────
+// LEVELS
+// ─────────────────────────────────────────
+const LEVELS = [
+  { num:1, name:"Awakening",   duration:180, fadeRate:0.7,  stormRate:2.2, stormAt:90,  stormCount:3, winThreshold:60, bonusGoal:5  },
+  { num:2, name:"The Yaksha's Fury", duration:150, fadeRate:1.2,  stormRate:3.5, stormAt:75,  stormCount:4, winThreshold:65, bonusGoal:8  },
+  { num:3, name:"Wrath of Darkness", duration:120, fadeRate:2.0,  stormRate:5.0, stormAt:60,  stormCount:5, winThreshold:70, bonusGoal:12 },
+];
+let currentLevel = 0; // index into LEVELS
+let levelScores  = []; // avg brightness per level
+
+const N = 8;
+
+// ─────────────────────────────────────────
+// SOUND ENGINE — Web Audio API, no files needed
+// ─────────────────────────────────────────
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, type, dur, vol=0.3, delay=0){
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type; osc.frequency.setValueAtTime(freq, ctx.currentTime+delay);
+    gain.gain.setValueAtTime(0, ctx.currentTime+delay);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime+delay+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+dur);
+    osc.start(ctx.currentTime+delay);
+    osc.stop(ctx.currentTime+delay+dur+0.05);
+  } catch(e){}
+}
+
+const SFX = {
+  // Soft chime when guarding a petal
+  guard: ()=>{
+    playTone(523, 'sine', 0.3, 0.25);
+    playTone(659, 'sine', 0.3, 0.2, 0.1);
+    playTone(784, 'sine', 0.4, 0.2, 0.2);
+  },
+  // Low rumble when marker is lost
+  lose: ()=>{
+    playTone(180, 'sawtooth', 0.4, 0.15);
+    playTone(140, 'sawtooth', 0.4, 0.12, 0.1);
+  },
+  // Dramatic storm alert
+  storm: ()=>{
+    [0,0.1,0.2,0.3,0.4].forEach((d,i)=>{
+      playTone(100+i*30, 'sawtooth', 0.25, 0.2, d);
+    });
+    playTone(80, 'sine', 0.8, 0.3, 0.5);
+  },
+  // Bonus point earned — bright sparkle
+  bonus: ()=>{
+    playTone(880, 'sine', 0.15, 0.3);
+    playTone(1108, 'sine', 0.15, 0.25, 0.08);
+    playTone(1318, 'sine', 0.2, 0.2, 0.16);
+  },
+  // Level complete fanfare
+  levelUp: ()=>{
+    const notes=[523,659,784,1047];
+    notes.forEach((f,i)=>playTone(f,'sine',0.4,0.3,i*0.12));
+    playTone(1047,'sine',0.6,0.35,0.6);
+  },
+  // Victory fanfare
+  victory: ()=>{
+    [523,659,784,659,784,1047].forEach((f,i)=>playTone(f,'sine',0.35,0.3,i*0.1));
+    playTone(1319,'sine',0.8,0.35,0.7);
+  },
+  // Defeat sound
+  defeat: ()=>{
+    playTone(400,'sawtooth',0.3,0.3);
+    playTone(300,'sawtooth',0.4,0.3,0.2);
+    playTone(200,'sawtooth',0.6,0.3,0.5);
+  },
+  // Critical petal warning
+  critical: ()=>{
+    playTone(220,'square',0.15,0.2);
+    playTone(220,'square',0.15,0.2,0.2);
+  },
+  // Petal fully faded
+  dead: ()=>{ playTone(100,'sawtooth',0.5,0.25); },
+};
+
+// ─────────────────────────────────────────
+// BONUS SYSTEM
+// ─────────────────────────────────────────
+// Bonus tasks shown to player — complete for extra points
+const BONUS_TASKS = [
+  { id:'b1', text:'Guard 3 petals in 10 seconds',  pts:50,  check: ()=> visible.filter(Boolean).length >= 3 },
+  { id:'b2', text:'Keep all petals above 80%',     pts:75,  check: ()=> petals.every(p=>p>=80) },
+  { id:'b3', text:'Sprint to a storm petal!',      pts:100, check: ()=> stormActive && stormPetals.some(i=>visible[i]) },
+  { id:'b4', text:'Guard same petal for 15s',      pts:60,  check: null }, // handled separately
+  { id:'b5', text:'Save a petal below 20%',        pts:80,  check: ()=> petals.some((p,i)=>p<20&&visible[i]) },
+];
+let bonusCompleted = new Set();
+let consecutiveGuardTime = 0;
+let consecutiveGuardPetal = -1;
+let bonusScore = 0;
+
+function checkBonuses(){
+  BONUS_TASKS.forEach(task=>{
+    if(bonusCompleted.has(task.id)) return;
+    let earned = false;
+    if(task.id==='b4'){
+      // Track consecutive guard on same petal
+      const guardedIdx = visible.findIndex(v=>v);
+      if(guardedIdx>=0 && guardedIdx===consecutiveGuardPetal){
+        consecutiveGuardTime++;
+        if(consecutiveGuardTime>=15) earned=true;
+      } else {
+        consecutiveGuardPetal=guardedIdx;
+        consecutiveGuardTime=guardedIdx>=0?1:0;
+      }
+    } else if(task.check && task.check()){
+      earned=true;
+    }
+    if(earned){
+      bonusCompleted.add(task.id);
+      bonusScore+=task.pts;
+      myScore+=task.pts;
+      $pts.textContent=myScore;
+      SFX.bonus();
+      showBonusToast(task.text, task.pts);
+      updateBonusPanel();
+    }
+  });
+}
+
+function showBonusToast(text, pts){
+  const toast=document.createElement('div');
+  toast.style.cssText=`
+    position:fixed;top:30%;left:50%;transform:translateX(-50%);
+    z-index:500;background:rgba(0,200,100,0.95);
+    border:2px solid #00ff88;border-radius:12px;
+    padding:.7rem 1.4rem;color:#003300;font-weight:bold;
+    font-size:.95rem;text-align:center;pointer-events:none;
+    animation:toastIn .3s ease;`;
+  toast.innerHTML=`⭐ BONUS! +${pts} pts<br><span style="font-size:.75rem;font-weight:normal">${text}</span>`;
+  document.body.appendChild(toast);
+  setTimeout(()=>{ toast.style.opacity='0'; toast.style.transition='opacity .5s'; setTimeout(()=>toast.remove(),500); },2500);
+}
+
+function buildBonusPanel(){
+  const lev = LEVELS[currentLevel];
+  const panel=document.getElementById('bonus-panel');
+  if(!panel) return;
+  panel.innerHTML=`<div style="font-size:.62rem;color:#b8864a;letter-spacing:.06em;margin-bottom:4px;">⭐ BONUS CHALLENGES</div>`+
+    BONUS_TASKS.slice(0, lev.bonusGoal > 5 ? 5 : lev.bonusGoal).map(t=>`
+      <div id="bp-${t.id}" style="display:flex;justify-content:space-between;align-items:center;
+        font-size:.62rem;color:${bonusCompleted.has(t.id)?'#00e676':'#888'};
+        margin-bottom:2px;gap:4px;">
+        <span>${bonusCompleted.has(t.id)?'✓':''} ${t.text}</span>
+        <span style="color:#f5a623;white-space:nowrap">+${t.pts}</span>
+      </div>`).join('');
+}
+
+function updateBonusPanel(){
+  BONUS_TASKS.forEach(t=>{
+    const el=document.getElementById('bp-'+t.id);
+    if(el&&bonusCompleted.has(t.id)){
+      el.style.color='#00e676';
+      el.querySelector('span').textContent='✓ '+t.text;
+    }
+  });
+}
+
+// ─────────────────────────────────────────
+// GAME STATE
+// ─────────────────────────────────────────
 let playerName="Guardian",playerId="p_"+Math.random().toString(36).substr(2,6);
-let gameActive=false,timeLeft=GAME_DURATION,myScore=0;
+let gameActive=false,timeLeft=0,myScore=0;
 let petals=Array(N).fill(100),visible=Array(N).fill(false);
 let stormPetals=[],stormActive=false,stormShown=false,isHost=false;
+let lastCritical=Array(N).fill(false); // track petal state changes for sfx
 
 const $timer=document.getElementById("timer");
 const $status=document.getElementById("status");
@@ -678,14 +874,35 @@ function setupTutSwipe(){
 // ─────────────────────────────────────────
 function startGame(){
   playerName=document.getElementById('name-input').value.trim()||'Guardian';
+  currentLevel=0;
+  myScore=0; bonusScore=0; bonusCompleted=new Set();
+  startLevel();
+}
+window.startGame=startGame;
+
+function startLevel(){
+  const lev=LEVELS[currentLevel];
+  timeLeft=lev.duration;
+  petals=Array(N).fill(100);
+  visible=Array(N).fill(false);
+  stormPetals=[]; stormActive=false; stormShown=false;
+  lastCritical=Array(N).fill(false);
+  consecutiveGuardTime=0; consecutiveGuardPetal=-1;
+
   $hud.style.display='block';
   $panel.style.display='block';
   $scene.style.display='block';
+  document.getElementById('level-transition').style.display='none';
+
+  // Update level badge
+  const badge=document.getElementById('level-badge');
+  if(badge) badge.textContent=`LV${lev.num} — ${lev.name}`;
+
   buildFlowerGrid();
+  buildBonusPanel();
   setupMarkers();
   electHost();
 }
-window.startGame=startGame;
 
 function setupMarkers(){
   for(let i=0;i<N;i++){
@@ -695,10 +912,12 @@ function setupMarkers(){
     m.addEventListener("markerFound",()=>{
       visible[idx]=true;
       $status.textContent=`🪷 Guarding ${PALETTES[idx].name} petal…`;
+      SFX.guard();
     });
     m.addEventListener("markerLost",()=>{
       visible[idx]=false;
       $status.textContent='Point camera at a pillar marker…';
+      SFX.lose();
     });
   }
 }
@@ -738,54 +957,58 @@ function startListeningAndPlaying(){
 // If solo (single phone), still fades correctly.
 // ─────────────────────────────────────────
 function runLoop(){
+  const lev=LEVELS[currentLevel];
   const iv=setInterval(()=>{
     if(!gameActive){clearInterval(iv);return;}
     timeLeft--; updateTimer();
-    // Confirm loop is alive — show tick in status
+
     if(!stormShown) $status.textContent = visible.some(v=>v)
       ? `🪷 Guarding — ${timeLeft}s left`
       : `⚠️ No petal guarded — ${timeLeft}s left`;
 
-    // Storm at 90s
-    if(!stormShown&&timeLeft<=STORM_AT){
+    // Storm trigger
+    if(!stormShown&&timeLeft<=lev.stormAt){
       stormShown=true; stormActive=true;
-      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,STORM_COUNT);
+      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,lev.stormCount);
       $storm.style.display="block";
+      SFX.storm();
       setTimeout(()=>{$storm.style.display="none";},3000);
-      setTimeout(()=>{stormActive=false;},20000);
-      // Show Yaksha on storm petals
+      setTimeout(()=>{ stormActive=false; hideAllYakshas(); },20000);
       showYakshaOnStormPetals();
     }
 
-    // Score on every phone
+    // Score
     for(let i=0;i<N;i++) if(visible[i]) myScore++;
     $pts.textContent=myScore;
     db.ref("players/"+playerId+"/score").set(myScore);
 
-    // FADING: always fade every petal every second
-    // visible[i] being true only PAUSES that petal's fade
+    // Fading
     for(let i=0;i<N;i++){
       if(visible[i]){
-        // actively guarding — hold or slowly recover (max 100)
         petals[i]=Math.min(100,petals[i]+0.3);
       } else {
-        // not guarding — always fade
-        const rate=(stormActive&&stormPetals.includes(i))?STORM_RATE:FADE_RATE;
+        const rate=(stormActive&&stormPetals.includes(i))?lev.stormRate:lev.fadeRate;
         petals[i]=Math.max(0,petals[i]-rate);
       }
+      // Sound cues
+      const isCrit=petals[i]<20;
+      if(isCrit&&!lastCritical[i]) SFX.critical();
+      if(petals[i]<=0&&lastCritical[i]===false) SFX.dead();
+      lastCritical[i]=isCrit;
     }
 
-    // Update local visuals immediately (don't wait for Firebase round-trip)
+    // Check bonus tasks
+    checkBonuses();
+
     updateARVisuals();
     updateFlowerGrid();
 
-    // Host writes to Firebase to sync other phones
     if(isHost){
       const upd={}; for(let i=0;i<N;i++) upd[i]=parseFloat(petals[i].toFixed(1));
       db.ref("petals").set(upd);
     }
 
-    if(timeLeft<=0){clearInterval(iv);endGame();}
+    if(timeLeft<=0){clearInterval(iv); endLevel();}
   },1000);
 }
 
@@ -841,19 +1064,85 @@ function updateTimer(){
 // ─────────────────────────────────────────
 // END GAME
 // ─────────────────────────────────────────
-async function endGame(){
+function hideAllYakshas(){
+  for(let i=0;i<N;i++){
+    const y=document.getElementById("yaksha-"+i);
+    if(y){y.setAttribute("visible","false");y.setAttribute("opacity","0");}
+  }
+}
+
+async function endLevel(){
   gameActive=false;
   const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
+  const lev=LEVELS[currentLevel];
+  levelScores.push(avg);
+  const passed = avg >= lev.winThreshold;
+
+  if(passed) SFX.levelUp(); else SFX.defeat();
+
+  // Show level complete screen
+  const lt=document.getElementById('level-transition');
+  document.getElementById('lt-title').textContent=`${lev.name} — ${avg}%`;
+  document.getElementById('lt-avg').textContent=passed?'✓ Passed':'✗ Failed';
+  document.getElementById('lt-avg').style.color=passed?'#00e676':'#ff4444';
+  document.getElementById('lt-msg').textContent=passed
+    ? `The lotus held at ${avg}%. The Yaksha retreats…`
+    : `The lotus fell to ${avg}%. The Yaksha grows stronger…`;
+
+  $hud.style.display='none';
+  $panel.style.display='none';
+  $scene.style.display='none';
+  lt.style.display='flex';
+
+  const isLastLevel = currentLevel >= LEVELS.length-1;
+
+  if(isLastLevel || !passed){
+    // Game over — show final end screen
+    document.getElementById('lt-next-name').textContent='';
+    let countdown=3;
+    document.getElementById('lt-countdown').textContent=countdown;
+    const civ=setInterval(()=>{
+      countdown--;
+      document.getElementById('lt-countdown').textContent=countdown;
+      if(countdown<=0){
+        clearInterval(civ);
+        lt.style.display='none';
+        endGame();
+      }
+    },1000);
+  } else {
+    // Advance to next level
+    const nextLev=LEVELS[currentLevel+1];
+    document.getElementById('lt-next-name').textContent=`Next: Level ${nextLev.num} — ${nextLev.name}`;
+    let countdown=4;
+    document.getElementById('lt-countdown').textContent=countdown;
+    const civ=setInterval(()=>{
+      countdown--;
+      document.getElementById('lt-countdown').textContent=countdown;
+      if(countdown<=0){
+        clearInterval(civ);
+        currentLevel++;
+        isHost=false; // re-elect for next level
+        startLevel();
+      }
+    },1000);
+  }
+}
+
+async function endGame(){
+  const overallAvg=Math.round(levelScores.reduce((a,b)=>a+b,0)/levelScores.length);
+  const levelsCleared=levelScores.filter((s,i)=>s>=LEVELS[i].winThreshold).length;
   setTimeout(async()=>{
     const snap=await db.ref("players").once("value");
     const data=snap.val()||{};
     const scores=Object.values(data).sort((a,b)=>b.score-a.score);
     db.ref("meta").remove();db.ref("petals").remove();db.ref("players").remove();
-    showEnd(avg,scores);
-  },1800);
+    if(overallAvg>=60) SFX.victory(); else SFX.defeat();
+    showEnd(overallAvg, scores, levelsCleared);
+  },1000);
 }
 
-function showEnd(avg, scores){
+function showEnd(avg, scores, levelsCleared=0){
   $scene.style.display="none";
   $hud.style.display="none";
   $panel.style.display="none";
@@ -974,16 +1263,37 @@ function showEnd(avg, scores){
     grid.appendChild(card);
   });
 
-  // ── Leaderboard ──
+  // ── Leaderboard + level breakdown ──
   const board=document.getElementById("board");
   const medals=["🥇","🥈","🥉"];
-  board.innerHTML=`<div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin-bottom:.6rem;text-align:center;">GUARDIAN SCORES</div>`+
-    scores.map((p,i)=>`
+
+  // Level scores summary
+  const levelRows = levelScores.map((s,i)=>{
+    const lev=LEVELS[i];
+    const passed=s>=lev.winThreshold;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;
+      padding:.3rem .2rem;border-bottom:1px solid rgba(245,169,35,.08);font-size:.82rem;">
+      <span style="color:#b8864a;">Lv${lev.num} ${lev.name}</span>
+      <span style="color:${passed?"#00e676":"#ff4444"};font-weight:bold;">${s}% ${passed?"✓":"✗"}</span>
+    </div>`;
+  }).join('');
+
+  board.innerHTML=`
+    <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin-bottom:.6rem;text-align:center;">
+      LEVELS CLEARED: ${levelsCleared}/${LEVELS.length}
+    </div>
+    ${levelRows}
+    <div style="display:flex;justify-content:space-between;padding:.4rem .2rem;
+      border-bottom:1px solid rgba(245,169,35,.08);font-size:.82rem;color:#f5a623;">
+      <span>⭐ Bonus points</span><span>+${bonusScore}</span>
+    </div>
+    <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin:.6rem 0 .4rem;text-align:center;">GUARDIAN SCORES</div>
+    ${scores.map((p,i)=>`
       <div style="display:flex;justify-content:space-between;align-items:center;
         padding:.4rem .2rem;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.1)":"none"};">
         <span style="font-size:.9rem;">${medals[i]||"  "} ${p.name}</span>
         <span style="font-size:.9rem;color:#f5a623;font-weight:bold;">${p.score} pts</span>
-      </div>`).join("");
+      </div>`).join('')}`;
 }
 
 // ── Helper: hex to rgb for rgba() use ──
