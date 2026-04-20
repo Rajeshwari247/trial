@@ -11,41 +11,27 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{overflow:hidden;font-family:Arial,sans-serif;background:#000;}
-
-    /* ── SPLASH ── */
-    #splash{
-      position:fixed;inset:0;z-index:9999;
-      background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      color:#f5c97a;padding:2rem;text-align:center;
-    }
+    #splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f5c97a;padding:2rem;text-align:center;}
     #splash h1{font-size:2rem;margin-bottom:.3rem;}
     #splash .sub{font-style:italic;color:#b8864a;margin-bottom:1.2rem;}
-    #splash .story{
-      background:rgba(245,169,35,.08);border:1px solid rgba(245,169,35,.25);
-      border-radius:12px;padding:1rem 1.2rem;font-size:.88rem;color:#d4a85a;
-      line-height:1.7;max-width:320px;margin-bottom:1.4rem;
-    }
-    #splash input{
-      width:100%;max-width:260px;padding:.7rem 1rem;
-      background:rgba(245,169,35,.1);border:1px solid rgba(245,169,35,.35);
-      border-radius:8px;color:#f5c97a;font-size:1rem;text-align:center;
-      outline:none;margin-bottom:1rem;
-    }
+    #splash .story{background:rgba(245,169,35,.08);border:1px solid rgba(245,169,35,.25);border-radius:12px;padding:1rem 1.2rem;font-size:.88rem;color:#d4a85a;line-height:1.7;max-width:320px;margin-bottom:1.4rem;}
+    #splash input{width:100%;max-width:260px;padding:.7rem 1rem;background:rgba(245,169,35,.1);border:1px solid rgba(245,169,35,.35);border-radius:8px;color:#f5c97a;font-size:1rem;text-align:center;outline:none;margin-bottom:1rem;}
     #splash input::placeholder{color:rgba(245,169,35,.4);}
-    #splash button{
-      background:linear-gradient(135deg,#c8780a,#f5a623);border:none;
-      border-radius:10px;padding:.8rem 2.2rem;font-size:.95rem;
-      font-weight:bold;color:#1a0800;cursor:pointer;
-    }
+    #splash button{background:linear-gradient(135deg,#c8780a,#f5a623);border:none;border-radius:10px;padding:.8rem 2.2rem;font-size:.95rem;font-weight:bold;color:#1a0800;cursor:pointer;}
 
-    /* ── TUTORIAL ── */
-    #tutorial{
-      position:fixed;inset:0;z-index:9998;
-      background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);
-      display:none;flex-direction:column;align-items:center;justify-content:space-between;
-      color:#f5c97a;padding:2rem 1.5rem 2.5rem;touch-action:pan-x;
-    }
+    /* SEASON SCREEN */
+    #season-screen{position:fixed;inset:0;z-index:9990;display:none;flex-direction:column;align-items:center;justify-content:center;color:#f5c97a;text-align:center;padding:2rem;}
+    #season-screen.dawn{background:radial-gradient(ellipse at center,#2a1400 0%,#000 100%);}
+    #season-screen.dusk{background:radial-gradient(ellipse at center,#1a0022 0%,#000 100%);}
+    #season-screen.night{background:radial-gradient(ellipse at center,#00051a 0%,#000 100%);}
+    #season-icon{font-size:4rem;margin-bottom:1rem;}
+    #season-name{font-size:2rem;font-weight:bold;margin-bottom:.4rem;}
+    #season-subtitle{font-style:italic;color:#b8864a;margin-bottom:1rem;font-size:1rem;}
+    #season-desc{font-size:.88rem;color:#d4a85a;line-height:1.7;max-width:300px;margin-bottom:1.6rem;background:rgba(245,169,35,.07);border:1px solid rgba(245,169,35,.15);border-radius:12px;padding:1rem;}
+    #season-btn{background:linear-gradient(135deg,#c8780a,#f5a623);border:none;border-radius:10px;padding:.8rem 2rem;font-size:.95rem;font-weight:bold;color:#1a0800;cursor:pointer;}
+
+    /* TUTORIAL */
+    #tutorial{position:fixed;inset:0;z-index:9998;background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:space-between;color:#f5c97a;padding:2rem 1.5rem 2.5rem;touch-action:pan-x;}
     #tutorial.visible{display:flex;}
     .tut-dots{display:flex;gap:10px;margin-top:.5rem;}
     .tut-dot{width:8px;height:8px;border-radius:50%;background:rgba(245,169,35,.3);transition:background .3s,transform .3s;}
@@ -60,110 +46,86 @@
     .tut-body{font-size:.9rem;color:#d4a85a;line-height:1.7;max-width:280px;}
     .tut-body strong{color:#f5c97a;}
     .tut-nav{display:flex;width:100%;justify-content:space-between;align-items:center;gap:1rem;}
-    .tut-btn{padding:.7rem 1.4rem;border-radius:10px;font-size:.9rem;font-weight:bold;cursor:pointer;border:none;transition:opacity .2s,transform .15s;}
-    .tut-btn:active{transform:scale(.96);}
+    .tut-btn{padding:.7rem 1.4rem;border-radius:10px;font-size:.9rem;font-weight:bold;cursor:pointer;border:none;}
     .tut-btn.secondary{background:rgba(245,169,35,.12);color:#b8864a;border:1px solid rgba(245,169,35,.2);}
     .tut-btn.secondary:disabled{opacity:.3;cursor:default;}
     .tut-btn.primary{background:linear-gradient(135deg,#c8780a,#f5a623);color:#1a0800;flex:1;}
     .swipe-hint{font-size:.72rem;color:#b8864a;font-style:italic;margin-top:.4rem;opacity:.7;}
 
-    /* ── HUD TOP ── */
-    #hud{
-      position:fixed;top:0;left:0;right:0;z-index:100;display:none;
-      background:linear-gradient(180deg,rgba(0,0,0,.9) 0%,transparent 100%);
-      padding:.6rem 1rem .8rem;color:#f5c97a;pointer-events:none;
-    }
+    /* HUD */
+    #hud{position:fixed;top:0;left:0;right:0;z-index:100;display:none;background:linear-gradient(180deg,rgba(0,0,0,.9) 0%,transparent 100%);padding:.6rem 1rem .8rem;color:#f5c97a;pointer-events:none;}
     .hud-top{display:flex;justify-content:space-between;align-items:center;}
     .hud-title{font-size:.75rem;letter-spacing:.08em;color:#b8864a;}
+    #season-badge{font-size:.65rem;font-weight:bold;padding:2px 8px;border-radius:8px;margin-left:6px;}
     #timer{font-size:1.5rem;font-weight:bold;}
     #timer.urgent{color:#ff4444;animation:blink .5s step-end infinite;}
     @keyframes blink{50%{opacity:.3;}}
-    /* overall lotus health bar */
     #overall-bar-wrap{margin-top:6px;}
     #overall-label{display:flex;justify-content:space-between;font-size:.72rem;color:#b8864a;margin-bottom:3px;}
     #overall-track{height:6px;background:#222;border-radius:3px;overflow:hidden;}
     #overall-fill{height:100%;background:#00e676;border-radius:3px;transition:width .8s,background .8s;}
+    #gps-strip{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
+    .gps-dot{width:8px;height:8px;border-radius:50%;background:#333;transition:background .5s,transform .3s;}
+    .gps-dot.near{background:#00ff88;transform:scale(1.5);}
+    .gps-dot.mid{background:#f5a623;}
+    .gps-dot.far{background:#333;}
 
-    /* ── FLOWER GRID PANEL ── */
-    #flower-panel{
-      position:fixed;bottom:0;left:0;right:0;z-index:100;display:none;
-      background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.7) 100%);
-      padding:.5rem .6rem .8rem;
-    }
-    .flower-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:5px;
-    }
-    .flower-card{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:10px;padding:5px 4px 4px;
-      display:flex;flex-direction:column;align-items:center;
-      transition:border-color .3s;
-    }
+    /* FLOWER PANEL */
+    #flower-panel{position:fixed;bottom:0;left:0;right:0;z-index:100;display:none;background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.7) 100%);padding:.5rem .6rem .8rem;}
+    .flower-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+    .flower-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:5px 4px 4px;display:flex;flex-direction:column;align-items:center;transition:border-color .3s,background .3s;}
     .flower-card.guarded{border-color:#00e5ff;background:rgba(0,229,255,.08);}
+    .flower-card.gps-boost{border-color:#00ff88;background:rgba(0,255,136,.06);}
     .flower-card.critical{border-color:#ff4444;background:rgba(255,60,0,.08);}
     .flower-card canvas{width:52px;height:52px;border-radius:6px;display:block;}
     .flower-name{font-size:.6rem;color:#d4a85a;margin-top:3px;letter-spacing:.03em;text-align:center;font-weight:bold;}
     .flower-pct{font-size:.65rem;color:#f5c97a;margin-top:1px;}
     .flower-bar-track{width:100%;height:3px;background:#333;border-radius:2px;margin-top:2px;overflow:hidden;}
     .flower-bar-fill{height:100%;border-radius:2px;transition:width .8s,background .5s;}
-
-    /* status strip above grid */
-    #status-strip{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:.3rem .2rem .4rem;
-    }
+    #status-strip{display:flex;justify-content:space-between;align-items:center;padding:.3rem .2rem .4rem;}
     #status{font-size:.78rem;color:#d4a85a;font-style:italic;}
     #myscore{font-size:.78rem;color:#f5c97a;}
 
-    /* ── STORM ── */
-    #storm{
-      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;
-      background:rgba(160,10,0,.92);border:2px solid #ff3322;border-radius:12px;
-      padding:1rem 1.8rem;color:#fff;text-align:center;font-size:1rem;
-      font-weight:bold;display:none;
-    }
+    #storm{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:rgba(160,10,0,.92);border:2px solid #ff3322;border-radius:12px;padding:1rem 1.8rem;color:#fff;text-align:center;font-size:1rem;font-weight:bold;display:none;pointer-events:none;}
 
-    /* ── END SCREEN ── */
-    #endscreen{
-      position:fixed;inset:0;z-index:9999;
-      background:radial-gradient(ellipse at center,#1a0800,#000);
-      display:none;flex-direction:column;align-items:center;justify-content:center;
-      color:#f5c97a;padding:2rem;text-align:center;
-    }
+    #sound-btn{position:fixed;top:.7rem;right:1rem;z-index:150;background:rgba(10,6,2,.8);border:1px solid rgba(245,169,35,.25);border-radius:8px;padding:4px 10px;font-size:1.1rem;cursor:pointer;color:#f5c97a;display:none;}
+
+    /* END SCREEN */
+    #endscreen{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#1a0800,#000);display:none;flex-direction:column;align-items:center;justify-content:center;color:#f5c97a;padding:2rem;text-align:center;overflow-y:auto;}
     #endscreen h2{font-size:1.6rem;margin-bottom:.4rem;}
     #final-pct{font-size:3.5rem;margin:.4rem 0;color:#f5a623;}
-    #verdict{font-style:italic;color:#b8864a;margin-bottom:1.2rem;}
-    #board{
-      background:rgba(245,169,35,.07);border:1px solid rgba(245,169,35,.2);
-      border-radius:10px;padding:.9rem 1.4rem;margin-bottom:1.2rem;
-      width:100%;max-width:300px;font-size:.9rem;line-height:1.9;
-    }
+    #verdict{font-style:italic;color:#b8864a;margin-bottom:.8rem;}
+    #season-summary{font-size:.82rem;color:#d4a85a;margin-bottom:1rem;line-height:2;}
+    #board{background:rgba(245,169,35,.07);border:1px solid rgba(245,169,35,.2);border-radius:10px;padding:.9rem 1.4rem;margin-bottom:1.2rem;width:100%;max-width:300px;font-size:.9rem;line-height:1.9;}
     .srow{display:flex;justify-content:space-between;}
-    #endscreen button{
-      background:linear-gradient(135deg,#c8780a,#f5a623);border:none;
-      border-radius:10px;padding:.8rem 2rem;font-size:.95rem;
-      font-weight:bold;color:#1a0800;cursor:pointer;
-    }
+    .end-btns{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;}
+    .end-btns button{background:linear-gradient(135deg,#c8780a,#f5a623);border:none;border-radius:10px;padding:.8rem 1.6rem;font-size:.9rem;font-weight:bold;color:#1a0800;cursor:pointer;}
+    .end-btns button.secondary{background:rgba(245,169,35,.15);color:#f5c97a;border:1px solid rgba(245,169,35,.3);}
     a-scene{position:fixed;inset:0;}
   </style>
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
   <h1>🪷 Ashtadala</h1>
   <p class="sub">The Fading Lotus</p>
   <div class="story">
     A mischievous <strong>Yaksha</strong> is erasing the sacred lotus protecting this pavilion.
     Each petal is anchored to a pillar — all slowly <strong>fading</strong>.<br><br>
-    Stand near a pillar to <strong>guard its petal</strong>. Keep the lotus alive for <strong>3 minutes</strong>.
+    Survive <strong>three watches</strong> of the pavilion: Pratah, Madhyahna, and Sandhya.
   </div>
   <input id="name-input" type="text" placeholder="Your guardian name…" maxlength="16"/>
   <button onclick="openTutorial()">Begin the Ritual</button>
 </div>
 
-<!-- TUTORIAL -->
+<div id="season-screen" class="dawn">
+  <div id="season-icon">🌅</div>
+  <div id="season-name">Pratah</div>
+  <div id="season-subtitle">Dawn — The First Watch</div>
+  <div id="season-desc">The lotus awakens. The Yaksha is gentle at this hour — petals fade slowly. Guard what you can.</div>
+  <button id="season-btn" onclick="beginSeason()">Begin Watch</button>
+</div>
+
 <div id="tutorial">
   <div class="tut-dots">
     <div class="tut-dot active" id="dot0"></div>
@@ -175,22 +137,13 @@
         <div class="tut-illustration"><canvas id="tut-canvas-0"></canvas></div>
         <div class="tut-step-num">Step 1 of 2</div>
         <div class="tut-title">Point & guard your petal</div>
-        <div class="tut-body">
-          Point your camera at any pillar card.
-          A <strong>glowing lotus petal</strong> appears in AR.
-          Stay close to <strong>guard it</strong> from fading —
-          the longer you stay, the more points you earn.
-        </div>
+        <div class="tut-body">Point your camera at any pillar card. A <strong>glowing lotus petal</strong> appears in AR. Stay close to <strong>guard it</strong> from fading.</div>
       </div>
       <div class="tut-slide">
         <div class="tut-illustration"><canvas id="tut-canvas-1"></canvas></div>
         <div class="tut-step-num">Step 2 of 2</div>
-        <div class="tut-title">Sprint, decide, survive!</div>
-        <div class="tut-body">
-          You can't guard all 8 petals at once — <strong>decide which to save</strong>.
-          At 90 seconds the <strong>Yaksha storms</strong> — 3 petals fade twice as fast.
-          Keep the lotus above <strong>60%</strong> for 3 minutes to win!
-        </div>
+        <div class="tut-title">Three cycles. Growing danger.</div>
+        <div class="tut-body">Survive <strong>Pratah → Madhyahna → Sandhya</strong>. Each cycle the Yaksha grows stronger. Walking <strong>close to a pillar</strong> also slows its fading.</div>
       </div>
     </div>
   </div>
@@ -203,22 +156,20 @@
   </div>
 </div>
 
-<!-- HUD TOP -->
 <div id="hud">
   <div class="hud-top">
-    <span class="hud-title">🪷 ASHTADALA</span>
-    <span id="timer">3:00</span>
+    <span class="hud-title">🪷 ASHTADALA <span id="season-badge" style="background:#3a1a00;color:#ffaa44;font-size:.65rem;font-weight:bold;padding:2px 8px;border-radius:8px;margin-left:6px;">Pratah</span></span>
+    <span id="timer">2:00</span>
   </div>
   <div id="overall-bar-wrap">
-    <div id="overall-label">
-      <span>Lotus Brightness</span>
-      <span id="overall-pct">100%</span>
-    </div>
+    <div id="overall-label"><span>Lotus Brightness</span><span id="overall-pct">100%</span></div>
     <div id="overall-track"><div id="overall-fill" style="width:100%"></div></div>
   </div>
+  <div id="gps-strip"></div>
 </div>
 
-<!-- FLOWER GRID PANEL -->
+<button id="sound-btn" onclick="toggleSound()">🔊</button>
+
 <div id="flower-panel">
   <div id="status-strip">
     <div id="status">Point camera at a pillar marker…</div>
@@ -227,20 +178,21 @@
   <div class="flower-grid" id="flower-grid"></div>
 </div>
 
-<!-- STORM -->
 <div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
 
-<!-- END SCREEN -->
 <div id="endscreen">
   <div style="font-size:3rem;margin-bottom:.3rem">🪷</div>
   <h2 id="end-title">The Lotus Endures</h2>
   <div id="final-pct">72%</div>
   <div id="verdict">The Yaksha retreats… for now.</div>
+  <div id="season-summary"></div>
   <div id="board"></div>
-  <button onclick="location.reload()">Play Again</button>
+  <div class="end-btns">
+    <button onclick="location.reload()">Play Again</button>
+    <button class="secondary" id="next-season-btn" onclick="continueToNextSeason()">Next Season →</button>
+  </div>
 </div>
 
-<!-- AR SCENE -->
 <a-scene embedded
   arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;"
   vr-mode-ui="enabled:false"
@@ -251,60 +203,174 @@
 </a-scene>
 
 <script>
-// ─────────────────────────────────────────
-// PALETTE — Kannada colour names
-// ─────────────────────────────────────────
-const PALETTES = [
-  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600', name:'Kesari'   }, // saffron
-  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff', name:'Jambuneya'}, // magenta/plum
-  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55', name:'Hasiru'   }, // green
-  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff', name:'Neeli'    }, // blue
-  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333', name:'Kempu'    }, // red
-  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc', name:'Firozi'   }, // teal
-  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00', name:'Haladi'   }, // turmeric/yellow
-  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff', name:'Neli'     }, // violet
+// ══════════════════════════════════════════
+// SEASONS
+// ══════════════════════════════════════════
+const SEASONS = [
+  { id:'dawn',  name:'Pratah',    subtitle:'Dawn — The First Watch',   icon:'🌅',
+    desc:'The lotus awakens. The Yaksha is gentle at this hour — petals fade slowly. Guard what you can.',
+    fadeRate:0.5, stormRate:1.8, stormAt:70, duration:120, winThreshold:55 },
+  { id:'dusk',  name:'Madhyahna', subtitle:'Dusk — The Second Watch',  icon:'🌆',
+    desc:'Shadows lengthen. The Yaksha grows bolder. Petals fade faster — move quickly between pillars.',
+    fadeRate:0.9, stormRate:2.8, stormAt:60, duration:120, winThreshold:60 },
+  { id:'night', name:'Sandhya',   subtitle:'Night — The Final Watch',  icon:'🌑',
+    desc:'Darkness claims the pavilion. The Yaksha is at full power. This is the last defence of the lotus.',
+    fadeRate:1.4, stormRate:3.5, stormAt:50, duration:120, winThreshold:65 },
 ];
 
-// ─────────────────────────────────────────
-// DRAW LOTUS TEXTURE
-// ─────────────────────────────────────────
-function drawLotus(canvas, pal) {
-  const S=512; canvas.width=S; canvas.height=S;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,S,S);
-  const cx=S/2, cy=S/2;
+let currentSeasonIdx = 0;
+let seasonScores = [];
 
+// ══════════════════════════════════════════
+// PALETTES
+// ══════════════════════════════════════════
+const PALETTES = [
+  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600', name:'Kesari' },
+  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff', name:'Gulabi' },
+  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55', name:'Hasiru' },
+  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff', name:'Neeli'  },
+  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333', name:'Kempu'  },
+  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc', name:'Pacche' },
+  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00', name:'Halidi' },
+  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff', name:'Nerale' },
+];
+
+// ══════════════════════════════════════════
+// SOUND ENGINE
+// ══════════════════════════════════════════
+let audioCtx=null, droneOsc=null, droneGain=null, dissonanceOsc=null, dissonanceGain=null;
+let soundEnabled=true;
+const SEASON_FREQS = [110, 82, 55];
+
+function initAudio(){
+  try {
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const master = audioCtx.createGain(); master.gain.value=0.15; master.connect(audioCtx.destination);
+    droneOsc = audioCtx.createOscillator(); droneOsc.type='sine'; droneOsc.frequency.value=110;
+    droneGain = audioCtx.createGain(); droneGain.gain.value=0.6;
+    droneOsc.connect(droneGain); droneGain.connect(master); droneOsc.start();
+    dissonanceOsc = audioCtx.createOscillator(); dissonanceOsc.type='sawtooth'; dissonanceOsc.frequency.value=117;
+    dissonanceGain = audioCtx.createGain(); dissonanceGain.gain.value=0;
+    dissonanceOsc.connect(dissonanceGain); dissonanceGain.connect(master); dissonanceOsc.start();
+  } catch(e){ soundEnabled=false; }
+}
+
+function updateAmbientSound(healthPct){
+  if(!audioCtx||!soundEnabled) return;
+  const danger = Math.max(0,1-healthPct/100);
+  const baseFreq = SEASON_FREQS[currentSeasonIdx];
+  dissonanceGain.gain.setTargetAtTime(danger*0.45, audioCtx.currentTime, 0.8);
+  droneOsc.frequency.setTargetAtTime(baseFreq+danger*10, audioCtx.currentTime, 1.0);
+}
+
+function setSeasonDrone(idx){
+  if(!audioCtx) return;
+  const f = SEASON_FREQS[idx];
+  droneOsc.frequency.setTargetAtTime(f, audioCtx.currentTime, 0.5);
+  dissonanceOsc.frequency.setTargetAtTime(f*1.07, audioCtx.currentTime, 0.5);
+}
+
+function playStormSound(){
+  if(!audioCtx||!soundEnabled) return;
+  const o=audioCtx.createOscillator(), e=audioCtx.createGain();
+  o.type='sawtooth'; o.frequency.value=180;
+  e.gain.setValueAtTime(0.4,audioCtx.currentTime);
+  e.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.9);
+  o.connect(e); e.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.9);
+}
+
+function playGuardSound(){
+  if(!audioCtx||!soundEnabled) return;
+  const o=audioCtx.createOscillator(), e=audioCtx.createGain();
+  o.type='sine'; o.frequency.value=528;
+  e.gain.setValueAtTime(0.12,audioCtx.currentTime);
+  e.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.5);
+  o.connect(e); e.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.5);
+}
+
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  document.getElementById('sound-btn').textContent=soundEnabled?'🔊':'🔇';
+  if(droneGain) droneGain.gain.value=soundEnabled?0.6:0;
+  if(dissonanceGain) dissonanceGain.gain.value=0;
+}
+
+// ══════════════════════════════════════════
+// GPS PROXIMITY
+// Set PILLAR_COORDS to your actual pavilion GPS coordinates
+// ══════════════════════════════════════════
+const PILLAR_COORDS = [
+  [12.6800,77.4200],[12.6802,77.4202],[12.6804,77.4200],[12.6806,77.4202],
+  [12.6800,77.4206],[12.6802,77.4208],[12.6804,77.4206],[12.6806,77.4208],
+];
+const GPS_NEAR_METRES = 4;
+let playerLat=null, playerLng=null, gpsNearby=Array(8).fill(false), gpsWatchId=null;
+
+function haversine(la1,lo1,la2,lo2){
+  const R=6371000,dLa=(la2-la1)*Math.PI/180,dLo=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function startGPS(){
+  if(!navigator.geolocation) return;
+  gpsWatchId=navigator.geolocation.watchPosition(pos=>{
+    playerLat=pos.coords.latitude; playerLng=pos.coords.longitude;
+    for(let i=0;i<8;i++) gpsNearby[i]=haversine(playerLat,playerLng,PILLAR_COORDS[i][0],PILLAR_COORDS[i][1])<=GPS_NEAR_METRES;
+    updateGPSDots();
+  },()=>{},{ enableHighAccuracy:true, maximumAge:2000 });
+}
+
+function stopGPS(){ if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; } }
+
+function buildGPSDots(){
+  const strip=document.getElementById('gps-strip'); strip.innerHTML='';
+  for(let i=0;i<8;i++){
+    const d=document.createElement('div'); d.className='gps-dot far'; d.id='gpsdot-'+i; strip.appendChild(d);
+  }
+}
+
+function updateGPSDots(){
+  if(playerLat===null) return;
+  for(let i=0;i<8;i++){
+    const d=document.getElementById('gpsdot-'+i); if(!d) continue;
+    const dist=haversine(playerLat,playerLng,PILLAR_COORDS[i][0],PILLAR_COORDS[i][1]);
+    d.className='gps-dot '+(dist<GPS_NEAR_METRES?'near':dist<GPS_NEAR_METRES*3?'mid':'far');
+  }
+}
+
+// ══════════════════════════════════════════
+// DRAW LOTUS
+// ══════════════════════════════════════════
+function drawLotus(canvas,pal){
+  const S=512; canvas.width=S; canvas.height=S;
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,S,S);
+  const cx=S/2,cy=S/2;
   function drawPetal(ctx,cx,cy,angle,len,width,col1,col2){
     ctx.save(); ctx.translate(cx,cy); ctx.rotate(angle);
-    const tip=-len, base=0, hw=width/2;
-    ctx.beginPath();
-    ctx.moveTo(0,tip);
+    const tip=-len,base=0,hw=width/2;
+    ctx.beginPath(); ctx.moveTo(0,tip);
     ctx.bezierCurveTo(hw*1.1,tip*0.5,hw*1.2,base*0.3,0,base);
     ctx.bezierCurveTo(-hw*1.2,base*0.3,-hw*1.1,tip*0.5,0,tip);
     ctx.closePath();
     const g=ctx.createLinearGradient(0,base,0,tip);
     g.addColorStop(0,col1); g.addColorStop(0.5,col2); g.addColorStop(1,'#fff');
     ctx.fillStyle=g; ctx.fill();
-    ctx.strokeStyle=col2; ctx.lineWidth=2; ctx.globalAlpha=0.5; ctx.stroke();
-    ctx.globalAlpha=1;
+    ctx.strokeStyle=col2; ctx.lineWidth=2; ctx.globalAlpha=0.5; ctx.stroke(); ctx.globalAlpha=1;
     ctx.beginPath(); ctx.moveTo(0,base-4); ctx.lineTo(0,tip+10);
-    ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=2; ctx.stroke();
-    ctx.restore();
+    ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=2; ctx.stroke(); ctx.restore();
   }
-
   const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,S*.48);
   glow.addColorStop(0,pal.glow+'aa'); glow.addColorStop(0.5,pal.glow+'44'); glow.addColorStop(1,'transparent');
   ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(cx,cy,S*.48,0,Math.PI*2); ctx.fill();
-
   for(let i=0;i<8;i++) drawPetal(ctx,cx,cy,(i/8)*Math.PI*2,S*.42,S*.22,pal.base,pal.mid);
   for(let i=0;i<8;i++) drawPetal(ctx,cx,cy,((i+.5)/8)*Math.PI*2,S*.27,S*.16,pal.mid,pal.light);
-
   const sr=ctx.createRadialGradient(cx,cy,0,cx,cy,S*.1);
   sr.addColorStop(0,'#fffde7'); sr.addColorStop(0.6,'#ffe066'); sr.addColorStop(1,'#cc8800');
   ctx.beginPath(); ctx.arc(cx,cy,S*.1,0,Math.PI*2); ctx.fillStyle=sr; ctx.fill();
   ctx.strokeStyle='#ffaa00'; ctx.lineWidth=3; ctx.stroke();
   for(let i=0;i<12;i++){
-    const a=(i/12)*Math.PI*2, r=S*.075;
+    const a=(i/12)*Math.PI*2,r=S*.075;
     ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,4,0,Math.PI*2);
     ctx.fillStyle='#ffee44'; ctx.fill();
   }
@@ -313,13 +379,12 @@ function drawLotus(canvas, pal) {
   ctx.beginPath(); ctx.arc(cx,cy,S*.04,0,Math.PI*2); ctx.fillStyle=gem; ctx.fill();
 }
 
-// ─────────────────────────────────────────
-// DRAW YAKSHA MASK
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
+// DRAW YAKSHA
+// ══════════════════════════════════════════
 function drawYaksha(canvas){
   const S=256; canvas.width=S; canvas.height=S;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,S,S);
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,S,S);
   const cx=S/2,cy=S/2;
   const aura=ctx.createRadialGradient(cx,cy,20,cx,cy,S*.48);
   aura.addColorStop(0,'rgba(180,0,0,0.5)'); aura.addColorStop(0.6,'rgba(120,0,80,0.3)'); aura.addColorStop(1,'transparent');
@@ -340,8 +405,7 @@ function drawYaksha(canvas){
   });
   [-28,28].forEach((dx,side)=>{
     const ex=cx+dx,ey=cy-15;
-    ctx.beginPath(); ctx.ellipse(ex,ey,22,14,side===0?.3:-.3,0,Math.PI*2);
-    ctx.fillStyle='#ffe066'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(ex,ey,22,14,side===0?.3:-.3,0,Math.PI*2); ctx.fillStyle='#ffe066'; ctx.fill();
     ctx.beginPath(); ctx.arc(ex,ey,9,0,Math.PI*2); ctx.fillStyle='#cc0000'; ctx.fill();
     ctx.beginPath(); ctx.arc(ex,ey,4,0,Math.PI*2); ctx.fillStyle='#000'; ctx.fill();
     ctx.beginPath(); ctx.arc(ex-3,ey-3,2,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.fill();
@@ -353,193 +417,111 @@ function drawYaksha(canvas){
   ctx.beginPath(); ctx.moveTo(cx-35,cy+38); ctx.quadraticCurveTo(cx,cy+60,cx+35,cy+38);
   ctx.quadraticCurveTo(cx,cy+52,cx-35,cy+38); ctx.fillStyle='#1a0000'; ctx.fill();
   ctx.fillStyle='#fffde7';
-  [[cx-20,cy+40],[cx+20,cy+40]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.moveTo(fx-7,fy); ctx.lineTo(fx,fy+16); ctx.lineTo(fx+7,fy);
-    ctx.closePath(); ctx.fill();
-  });
+  [[cx-20,cy+40],[cx+20,cy+40]].forEach(([fx,fy])=>{ctx.beginPath();ctx.moveTo(fx-7,fy);ctx.lineTo(fx,fy+16);ctx.lineTo(fx+7,fy);ctx.closePath();ctx.fill();});
   ctx.strokeStyle='#1a0800'; ctx.lineWidth=4; ctx.lineCap='round';
   ctx.beginPath(); ctx.moveTo(cx,cy+30); ctx.bezierCurveTo(cx-15,cy+28,cx-35,cy+22,cx-42,cy+30);
   ctx.bezierCurveTo(cx-48,cy+38,cx-40,cy+48,cx-30,cy+42); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(cx,cy+30); ctx.bezierCurveTo(cx+15,cy+28,cx+35,cy+22,cx+42,cy+30);
   ctx.bezierCurveTo(cx+48,cy+38,cx+40,cy+48,cx+30,cy+42); ctx.stroke();
   [-72,72].forEach(dx=>{
-    ctx.beginPath(); ctx.arc(cx+dx,cy+15,10,0,Math.PI*2);
-    ctx.fillStyle='#cc8800'; ctx.fill(); ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx+dx,cy+15,10,0,Math.PI*2); ctx.fillStyle='#cc8800'; ctx.fill();
+    ctx.strokeStyle='#ffcc00'; ctx.lineWidth=1.5; ctx.stroke();
     ctx.beginPath(); ctx.arc(cx+dx,cy+15,5,0,Math.PI*2); ctx.fillStyle='#ff2200'; ctx.fill();
   });
   ctx.beginPath(); ctx.moveTo(cx,cy-42); ctx.lineTo(cx-6,cy-30); ctx.lineTo(cx+6,cy-30);
   ctx.closePath(); ctx.fillStyle='#ff4400'; ctx.fill();
 }
 
-// ─────────────────────────────────────────
-// BUILD FLOWER CARD GRID (HTML panel)
-// ─────────────────────────────────────────
-const cardCanvases = []; // store mini canvas refs for updating
-
+// ══════════════════════════════════════════
+// FLOWER GRID
+// ══════════════════════════════════════════
+const cardCanvases=[];
 function buildFlowerGrid(){
-  const grid=document.getElementById('flower-grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('flower-grid'); grid.innerHTML='';
   PALETTES.forEach((pal,i)=>{
-    // Mini lotus canvas for the card
-    const c=document.createElement('canvas');
-    c.width=104; c.height=104;
-    drawLotus(c,pal);
-    cardCanvases[i]=c;
-
-    const card=document.createElement('div');
-    card.className='flower-card';
-    card.id='fcard-'+i;
-
-    const barId='fbar-'+i;
-    const pctId='fpct-'+i;
-
-    card.innerHTML=`
-      <canvas width="104" height="104" id="fcv-${i}" style="width:52px;height:52px;border-radius:6px;"></canvas>
+    const c=document.createElement('canvas'); c.width=104; c.height=104;
+    drawLotus(c,pal); cardCanvases[i]=c;
+    const card=document.createElement('div'); card.className='flower-card'; card.id='fcard-'+i;
+    card.innerHTML=`<canvas width="104" height="104" id="fcv-${i}" style="width:52px;height:52px;border-radius:6px;"></canvas>
       <div class="flower-name">${pal.name}</div>
-      <div class="flower-pct" id="${pctId}">100%</div>
-      <div class="flower-bar-track">
-        <div class="flower-bar-fill" id="${barId}" style="width:100%;background:${pal.glow}"></div>
-      </div>`;
-
+      <div class="flower-pct" id="fpct-${i}">100%</div>
+      <div class="flower-bar-track"><div class="flower-bar-fill" id="fbar-${i}" style="width:100%;background:${pal.glow}"></div></div>`;
     grid.appendChild(card);
-
-    // Draw the mini lotus into the card's canvas
-    const cardCtx=card.querySelector(`#fcv-${i}`).getContext('2d');
-    cardCtx.drawImage(c,0,0,52,52);
+    card.querySelector('#fcv-'+i).getContext('2d').drawImage(c,0,0,52,52);
   });
 }
 
-// ─────────────────────────────────────────
-// UPDATE FLOWER GRID each tick
-// ─────────────────────────────────────────
 function updateFlowerGrid(){
   let total=0;
   for(let i=0;i<N;i++){
-    const b=Math.round(petals[i]);
-    const g=visible[i];
+    const b=Math.round(petals[i]),g=visible[i],gps=gpsNearby[i];
     total+=b;
-
     const card=document.getElementById('fcard-'+i);
     const bar=document.getElementById('fbar-'+i);
     const pct=document.getElementById('fpct-'+i);
     if(!card) continue;
-
-    // Card border state
-    if(g)       card.className='flower-card guarded';
-    else if(b<35) card.className='flower-card critical';
-    else          card.className='flower-card';
-
-    // Pct label colour
-    if(pct){
-      pct.textContent=b+'%';
-      pct.style.color=b>65?'#00e676':b>35?'#f5a623':'#ff4444';
-    }
-
-    // Bar width + colour
-    if(bar){
-      bar.style.width=b+'%';
-      bar.style.background=g?'#00e5ff':b>65?PALETTES[i].glow:b>35?'#f5a623':'#ff4444';
-    }
+    card.className='flower-card'+(g?' guarded':gps?' gps-boost':b<35?' critical':'');
+    if(pct){ pct.textContent=b+'%'; pct.style.color=b>65?'#00e676':b>35?'#f5a623':'#ff4444'; }
+    if(bar){ bar.style.width=b+'%'; bar.style.background=g?'#00e5ff':gps?'#00ff88':b>65?PALETTES[i].glow:b>35?'#f5a623':'#ff4444'; }
   }
-
-  // Overall health bar
   const avg=Math.round(total/N);
-  const fill=document.getElementById('overall-fill');
-  const opct=document.getElementById('overall-pct');
-  if(fill){
-    fill.style.width=avg+'%';
-    fill.style.background=avg>65?'#00e676':avg>35?'#f5a623':'#ff4444';
-  }
+  const fill=document.getElementById('overall-fill'),opct=document.getElementById('overall-pct');
+  if(fill){ fill.style.width=avg+'%'; fill.style.background=avg>65?'#00e676':avg>35?'#f5a623':'#ff4444'; }
   if(opct) opct.textContent=avg+'%';
+  updateAmbientSound(avg);
 }
 
-// ─────────────────────────────────────────
-// BUILD AR SCENE — ONE Yaksha on marker 0 only
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
+// BUILD AR SCENE
+// ══════════════════════════════════════════
 function buildScene(){
-  const assets=document.getElementById('assets');
-  const scene=document.getElementById('ar-scene');
-
-  // Yaksha texture (used once on marker 0)
-  const yc=document.createElement('canvas');
-  drawYaksha(yc);
-  const yi=document.createElement('img');
-  yi.id='yaksha-tex'; yi.src=yc.toDataURL('image/png');
+  const assets=document.getElementById('assets'),scene=document.getElementById('ar-scene');
+  const yc=document.createElement('canvas'); drawYaksha(yc);
+  const yi=document.createElement('img'); yi.id='yaksha-tex'; yi.src=yc.toDataURL('image/png');
   assets.appendChild(yi);
-
   PALETTES.forEach((pal,i)=>{
-    const c=document.createElement('canvas');
-    drawLotus(c,pal);
-    const img=document.createElement('img');
-    img.id='tex'+i; img.src=c.toDataURL('image/png');
+    const c=document.createElement('canvas'); drawLotus(c,pal);
+    const img=document.createElement('img'); img.id='tex'+i; img.src=c.toDataURL('image/png');
     assets.appendChild(img);
-
     const marker=document.createElement('a-marker');
-    marker.setAttribute('type','barcode');
-    marker.setAttribute('value',String(i));
-    marker.setAttribute('smooth','true');
-    marker.setAttribute('smoothCount','5');
-
-    // Yaksha only on marker 0
-    const yakshaHTML = i===0 ? `
-      <a-plane id="yaksha-plane"
-        src="#yaksha-tex"
-        width="0.9" height="0.9"
-        transparent="true" opacity="0.95" side="double"
-        position="0 0.52 0"
-        look-at="[camera]"
-        animation__float="property:position; from:0 0.48 0; to:0 0.65 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
-        animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
-      </a-plane>` : '';
-
+    marker.setAttribute('type','barcode'); marker.setAttribute('value',String(i));
+    marker.setAttribute('smooth','true'); marker.setAttribute('smoothCount','5');
     marker.innerHTML=`
       <a-entity id="pe${i}">
-        ${yakshaHTML}
-        <a-plane id="lotus-plane-${i}"
-          src="#tex${i}"
-          width="1.5" height="1.5"
-          transparent="true" opacity="1" side="double"
-          position="0 0 0"
-          look-at="[camera]"
+        <a-plane id="yaksha-${i}" src="#yaksha-tex" width="0.9" height="0.9"
+          transparent="true" opacity="0" side="double" position="0 0.52 0" visible="false" look-at="[camera]"
+          animation__float="property:position; from:0 0.48 0; to:0 0.65 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
+          animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
+        </a-plane>
+        <a-plane id="lotus-plane-${i}" src="#tex${i}" width="1.5" height="1.5"
+          transparent="true" opacity="1" side="double" position="0 0 0" look-at="[camera]"
           animation__spin="property:rotation; from:0 0 0; to:0 0 360; loop:true; dur:12000; easing:linear"
           animation__pulse="property:scale; from:1 1 1; to:1.08 1.08 1.08; dir:alternate; loop:true; dur:1500">
         </a-plane>
-        <a-ring radius-inner="0.55" radius-outer="0.72"
-          color="${pal.glow}" emissive="${pal.glow}" emissive-intensity="0.5"
-          opacity="0.35" position="0 0 0" look-at="[camera]"
+        <a-ring radius-inner="0.55" radius-outer="0.72" color="${pal.glow}" emissive="${pal.glow}"
+          emissive-intensity="0.5" opacity="0.35" position="0 0 0" look-at="[camera]"
           animation="property:rotation; from:0 0 0; to:0 0 -360; loop:true; dur:8000; easing:linear">
         </a-ring>
-        <a-text id="pt${i}" value="${pal.name}  100%"
-          align="center" color="#ffe066"
-          position="0 1.0 0" look-at="[camera]" scale="0.9 0.9 0.9">
-        </a-text>
+        <a-text id="pt${i}" value="${pal.name}  100%" align="center" color="#ffe066"
+          position="0 1.0 0" look-at="[camera]" scale="0.9 0.9 0.9"></a-text>
       </a-entity>`;
-
     scene.appendChild(marker);
   });
 }
 
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 // FIREBASE
-// ─────────────────────────────────────────
-const firebaseConfig={
-  apiKey:"AIzaSyA4gpps6atNsq8dV3DB2USb7Bs5qvbF3Jk",
-  authDomain:"ashtadala.firebaseapp.com",
-  databaseURL:"https://ashtadala-default-rtdb.firebaseio.com",
-  projectId:"ashtadala",
-  storageBucket:"ashtadala.firebasestorage.app",
-  messagingSenderId:"584325446650",
-  appId:"1:584325446650:web:c3236007ae63df89654243"
-};
+// ══════════════════════════════════════════
+const firebaseConfig={apiKey:"AIzaSyA4gpps6atNsq8dV3DB2USb7Bs5qvbF3Jk",authDomain:"ashtadala.firebaseapp.com",databaseURL:"https://ashtadala-default-rtdb.firebaseio.com",projectId:"ashtadala",storageBucket:"ashtadala.firebasestorage.app",messagingSenderId:"584325446650",appId:"1:584325446650:web:c3236007ae63df89654243"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 // GAME STATE
-// ─────────────────────────────────────────
-const GAME_DURATION=180,FADE_RATE=0.7,STORM_RATE=2.2,STORM_AT=90,STORM_COUNT=3,N=8;
+// ══════════════════════════════════════════
+const N=8;
 let playerName="Guardian",playerId="p_"+Math.random().toString(36).substr(2,6);
-let gameActive=false,timeLeft=GAME_DURATION,myScore=0;
+let gameActive=false,timeLeft=120,myScore=0,totalScore=0;
 let petals=Array(N).fill(100),visible=Array(N).fill(false);
 let stormPetals=[],stormActive=false,stormShown=false,isHost=false;
 
@@ -551,15 +533,13 @@ const $hud=document.getElementById("hud");
 const $panel=document.getElementById("flower-panel");
 const $scene=document.getElementById("ar-scene");
 
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 // TUTORIAL
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 let tutStep=0;
 function drawTutIllustrations(){
-  // Slide 0: phone → pillar → lotus
   (function(){
-    const c=document.getElementById('tut-canvas-0');
-    c.width=180;c.height=180;
+    const c=document.getElementById('tut-canvas-0'); c.width=180; c.height=180;
     const ctx=c.getContext('2d');
     ctx.fillStyle='#222';ctx.beginPath();ctx.roundRect(100,40,55,100,8);ctx.fill();
     ctx.fillStyle='#334';ctx.beginPath();ctx.roundRect(105,50,45,80,4);ctx.fill();
@@ -567,35 +547,23 @@ function drawTutIllustrations(){
     ctx.font='18px Arial';ctx.fillText('🪷',116,96);
     ctx.setLineDash([4,3]);ctx.strokeStyle='#f5a623';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.moveTo(100,90);ctx.lineTo(65,90);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='#666';ctx.fillRect(30,30,28,130);
-    ctx.fillStyle='#888';ctx.fillRect(32,30,6,130);
+    ctx.fillStyle='#666';ctx.fillRect(30,30,28,130); ctx.fillStyle='#888';ctx.fillRect(32,30,6,130);
     ctx.font='26px Arial';ctx.fillText('🪷',26,75);
     ctx.strokeStyle='rgba(255,170,0,0.4)';ctx.lineWidth=2;
     for(let r=18;r<=30;r+=6){ctx.beginPath();ctx.arc(39,63,r,0,Math.PI*2);ctx.stroke();}
   })();
-  // Slide 1: pavilion map
   (function(){
-    const c=document.getElementById('tut-canvas-1');
-    c.width=180;c.height=180;
+    const c=document.getElementById('tut-canvas-1'); c.width=180; c.height=180;
     const ctx=c.getContext('2d');
-    const cx=90,cy=85,R=65;
-    ctx.strokeStyle='rgba(245,169,35,0.2)';ctx.lineWidth=1;ctx.beginPath();
-    for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2-Math.PI/8;i===0?ctx.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R):ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);}
-    ctx.closePath();ctx.stroke();
-    const cols=['#ff8800','#333','#cc44ff','#ff4444','#00cc88','#333','#2299ff','#ffcc00'];
-    const ems=['🪷','💀','🪷','⚡','🪷','💀','🪷','🪷'];
-    for(let i=0;i<8;i++){
-      const a=(i/8)*Math.PI*2-Math.PI/8;
-      const px=cx+Math.cos(a)*R,py=cy+Math.sin(a)*R;
-      ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fillStyle=cols[i];ctx.fill();
-      ctx.font='13px Arial';ctx.fillText(ems[i],px-7,py-10);
-    }
-    ctx.font='22px Arial';ctx.fillText('🏃',cx-11,cy+8);
-    ctx.strokeStyle='#f5a623';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+46,cy-46);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='rgba(245,169,35,0.15)';ctx.fillRect(10,158,160,12);
-    ctx.fillStyle='#f5a623';ctx.fillRect(10,158,112,12);
-    ctx.fillStyle='#1a0800';ctx.font='bold 9px Arial';ctx.fillText('lotus health  70%',14,168);
+    const seasons=[{col:'#ff8800',label:'Pratah'},{col:'#cc44ff',label:'Madhyahna'},{col:'#4488ff',label:'Sandhya'}];
+    seasons.forEach((s,idx)=>{
+      ctx.beginPath();ctx.arc(90,85,22+idx*26,0,Math.PI*2);
+      ctx.strokeStyle=s.col;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=s.col;ctx.font='bold 9px Arial';ctx.textAlign='center';
+      ctx.fillText(s.label,90,85-20-idx*26);
+    });
+    ctx.font='20px Arial';ctx.textAlign='center';ctx.fillText('🪷',90,90);
+    ctx.fillStyle='#b8864a';ctx.font='9px Arial';ctx.fillText('3 cycles · growing danger',90,162);
   })();
 }
 
@@ -609,8 +577,7 @@ function openTutorial(){
   }
   document.getElementById('splash').style.display='none';
   document.getElementById('tutorial').classList.add('visible');
-  drawTutIllustrations();
-  setupTutSwipe();
+  drawTutIllustrations(); setupTutSwipe();
 }
 window.openTutorial=openTutorial;
 
@@ -622,10 +589,8 @@ function tutNav(dir){
   const nb=document.getElementById('tut-next');
   if(tutStep===1){
     nb.textContent="I'm Ready! 🪷";
-    nb.onclick=()=>{document.getElementById('tutorial').classList.remove('visible');startGame();};
-  } else {
-    nb.textContent='Next →'; nb.onclick=()=>tutNav(1);
-  }
+    nb.onclick=()=>{document.getElementById('tutorial').classList.remove('visible');showSeasonScreen(0);};
+  } else { nb.textContent='Next →'; nb.onclick=()=>tutNav(1); }
 }
 window.tutNav=tutNav;
 
@@ -637,196 +602,209 @@ function setupTutSwipe(){
   track.addEventListener('touchend',e=>{if(!moved)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)tutNav(dx<0?1:-1);});
 }
 
-// ─────────────────────────────────────────
-// START GAME
-// ─────────────────────────────────────────
-function startGame(){
-  playerName=document.getElementById('name-input').value.trim()||'Guardian';
-  $hud.style.display='block';
-  $panel.style.display='block';
-  $scene.style.display='block';
-  buildFlowerGrid();
-  setupMarkers();
-  electHost();
+// ══════════════════════════════════════════
+// SEASON SCREEN
+// ══════════════════════════════════════════
+function showSeasonScreen(idx){
+  currentSeasonIdx=idx;
+  const s=SEASONS[idx];
+  const screen=document.getElementById('season-screen');
+  screen.className=s.id; screen.style.display='flex';
+  document.getElementById('season-icon').textContent=s.icon;
+  document.getElementById('season-name').textContent=s.name;
+  document.getElementById('season-subtitle').textContent=s.subtitle;
+  document.getElementById('season-desc').textContent=s.desc;
+  const badge=document.getElementById('season-badge');
+  badge.textContent=s.name;
+  if(s.id==='dawn'){badge.style.background='#3a1a00';badge.style.color='#ffaa44';}
+  else if(s.id==='dusk'){badge.style.background='#200030';badge.style.color='#cc88ff';}
+  else{badge.style.background='#00051a';badge.style.color='#4488ff';}
 }
+
+function beginSeason(){
+  document.getElementById('season-screen').style.display='none';
+  playerName=document.getElementById('name-input').value.trim()||'Guardian';
+  startSeasonGame();
+}
+window.beginSeason=beginSeason;
+
+// ══════════════════════════════════════════
+// START SEASON
+// ══════════════════════════════════════════
+function startSeasonGame(){
+  const season=SEASONS[currentSeasonIdx];
+  $hud.style.display='block'; $panel.style.display='block'; $scene.style.display='block';
+  document.getElementById('sound-btn').style.display='block';
+  petals=Array(N).fill(100); visible=Array(N).fill(false);
+  stormPetals=[]; stormActive=false; stormShown=false;
+  timeLeft=season.duration; myScore=0; gameActive=false;
+  buildFlowerGrid(); buildGPSDots(); setupMarkers();
+  if(!audioCtx) initAudio();
+  setSeasonDrone(currentSeasonIdx);
+  startGPS();
+  isHost=true;
+  const init={}; for(let i=0;i<N;i++) init[i]=100;
+  db.ref("petals").set(init);
+  db.ref("players/"+playerId).set({name:playerName,score:0});
+  db.ref("players/"+playerId).onDisconnect().remove();
+  gameActive=true;
+  updateTimer(); updateFlowerGrid();
+  runLoop();
+}
+
+function startGame(){ showSeasonScreen(0); }
 window.startGame=startGame;
 
 function setupMarkers(){
   for(let i=0;i<N;i++){
-    const m=document.querySelector(`a-marker[value="${i}"]`);
-    if(!m) continue;
+    const m=document.querySelector(`a-marker[value="${i}"]`); if(!m) continue;
+    const fresh=m.cloneNode(true); m.parentNode.replaceChild(fresh,m);
     const idx=i;
-    m.addEventListener("markerFound",()=>{
+    fresh.addEventListener("markerFound",()=>{
+      if(!gameActive) return;
       visible[idx]=true;
-      $status.textContent=`🪷 Guarding ${PALETTES[idx].name} petal…`;
+      $status.textContent=`🪷 Guarding ${PALETTES[idx].name}…`;
+      playGuardSound();
     });
-    m.addEventListener("markerLost",()=>{
+    fresh.addEventListener("markerLost",()=>{
       visible[idx]=false;
-      $status.textContent='Point camera at a pillar marker…';
+      if(!visible.some(v=>v)) $status.textContent='Point camera at a pillar marker…';
     });
   }
 }
 
-// ─────────────────────────────────────────
-// HOST ELECTION — with fallback timeout
-// ─────────────────────────────────────────
-function electHost(){
-  db.ref("players/"+playerId).set({name:playerName,score:0});
-  db.ref("players/"+playerId).onDisconnect().remove();
-
-  // Clear any stale session first, then elect
-  db.ref("meta/host").once("value", snap=>{
-    if(!snap.val()){
-      // No host — become host immediately
-      db.ref("meta/host").set(playerId).then(()=>{
-        becomeHost();
-      });
-    } else {
-      // Host exists — be a client
-      becomeClient();
-    }
-  });
-}
-
-function becomeHost(){
-  isHost=true;
-  console.log("I am HOST");
-  // Write initial petal values
-  const init={}; for(let i=0;i<N;i++) init[i]=100;
-  db.ref("petals").set(init);
-  // Also remove host record when disconnecting
-  db.ref("meta/host").onDisconnect().remove();
-  startListeningAndPlaying();
-}
-
-function becomeClient(){
-  isHost=false;
-  console.log("I am CLIENT");
-  startListeningAndPlaying();
-}
-
-function startListeningAndPlaying(){
-  // Listen for petal updates from Firebase
-  db.ref("petals").on("value",snap=>{
-    const d=snap.val(); if(!d) return;
-    for(let i=0;i<N;i++) if(d[i]!==undefined) petals[i]=d[i];
-    updateARVisuals();
-    updateFlowerGrid();
-  });
-  gameActive=true;
-  runLoop();
-}
-
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 // GAME LOOP
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
 function runLoop(){
+  const season=SEASONS[currentSeasonIdx];
   const iv=setInterval(()=>{
     if(!gameActive){clearInterval(iv);return;}
-    timeLeft--; updateTimer();
+    timeLeft--;
+    updateTimer();
 
-    // Storm at 90s
-    if(!stormShown&&timeLeft<=STORM_AT){
+    if(!stormShown&&timeLeft<=season.stormAt){
       stormShown=true; stormActive=true;
-      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,STORM_COUNT);
-      $storm.style.display="block";
+      stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,3);
+      $storm.style.display="block"; playStormSound();
       setTimeout(()=>{$storm.style.display="none";},3000);
-      setTimeout(()=>{stormActive=false;},20000);
+      showYakshaOnStormPetals();
+      setTimeout(()=>{stormActive=false;hideAllYakshas();},20000);
     }
 
-    // Score on every phone
     for(let i=0;i<N;i++) if(visible[i]) myScore++;
     $pts.textContent=myScore;
-    db.ref("players/"+playerId+"/score").set(myScore);
+    try{ db.ref("players/"+playerId+"/score").set(myScore); }catch(e){}
 
-    // Host fades petals every second
-    if(isHost){
-      let changed=false;
-      for(let i=0;i<N;i++){
-        if(!visible[i]){
-          const rate=(stormActive&&stormPetals.includes(i))?STORM_RATE:FADE_RATE;
-          petals[i]=Math.max(0,petals[i]-rate);
-          changed=true;
-        }
-      }
-      if(changed){
-        const upd={}; for(let i=0;i<N;i++) upd[i]=parseFloat(petals[i].toFixed(1));
-        db.ref("petals").set(upd);
+    // FADE — camera guard > GPS proximity > unguarded
+    for(let i=0;i<N;i++){
+      if(visible[i]){
+        petals[i]=Math.min(100,petals[i]+0.3);
+      } else if(gpsNearby[i]){
+        const rate=(stormActive&&stormPetals.includes(i))?season.stormRate:season.fadeRate;
+        petals[i]=Math.max(0,petals[i]-rate*0.25);
+      } else {
+        const rate=(stormActive&&stormPetals.includes(i))?season.stormRate:season.fadeRate;
+        petals[i]=Math.max(0,petals[i]-rate);
       }
     }
 
-    if(timeLeft<=0){clearInterval(iv);endGame();}
+    updateARVisuals(); updateFlowerGrid(); updateGPSDots();
+
+    if(isHost){
+      const upd={}; for(let i=0;i<N;i++) upd[i]=parseFloat(petals[i].toFixed(1));
+      try{ db.ref("petals").set(upd); }catch(e){}
+    }
+
+    if(timeLeft<=0){clearInterval(iv);endSeason();}
   },1000);
 }
 
-// ─────────────────────────────────────────
-// VISUALS
-// ─────────────────────────────────────────
+// ══════════════════════════════════════════
+// YAKSHA
+// ══════════════════════════════════════════
+function showYakshaOnStormPetals(){
+  hideAllYakshas();
+  stormPetals.forEach(idx=>{
+    const y=document.getElementById("yaksha-"+idx);
+    if(y){y.setAttribute("visible","true");y.setAttribute("opacity","0.95");y.setAttribute("scale","1 1 1");}
+  });
+}
+function hideAllYakshas(){
+  for(let i=0;i<N;i++){
+    const y=document.getElementById("yaksha-"+i);
+    if(y){y.setAttribute("visible","false");y.setAttribute("opacity","0");}
+  }
+}
+
+// ══════════════════════════════════════════
+// AR VISUALS
+// ══════════════════════════════════════════
 function updateARVisuals(){
   for(let i=0;i<N;i++){
-    const b=Math.round(petals[i]), g=visible[i];
+    const b=Math.round(petals[i]),g=visible[i];
     const plane=document.getElementById("lotus-plane-"+i);
-    if(plane){
-      plane.setAttribute("opacity",g?1.0:Math.max(0.06,b/100));
-      plane.setAttribute("color",g?"#aaddff":"#ffffff");
-    }
+    if(plane){plane.setAttribute("opacity",g?1.0:Math.max(0.06,b/100));plane.setAttribute("color",g?"#aaddff":"#ffffff");}
     const txt=document.getElementById("pt"+i);
-    if(txt) txt.setAttribute("value", g?`${PALETTES[i].name}  GUARDED`:`${PALETTES[i].name}  ${b}%`);
-  }
-  // Yaksha on marker 0 reacts to overall health
-  const yaksha=document.getElementById("yaksha-plane");
-  if(yaksha){
-    const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
-    if(visible[0]){
-      yaksha.setAttribute("scale","0.3 0.3 0.3");
-      yaksha.setAttribute("opacity","0.2");
-    } else if(avg<35){
-      yaksha.setAttribute("scale","1.5 1.5 1.5");
-      yaksha.setAttribute("opacity","1");
-    } else if(avg<65){
-      yaksha.setAttribute("scale","1 1 1");
-      yaksha.setAttribute("opacity","0.9");
-    } else {
-      yaksha.setAttribute("scale","0.8 0.8 0.8");
-      yaksha.setAttribute("opacity","0.65");
-    }
+    if(txt) txt.setAttribute("value",g?PALETTES[i].name+"  GUARDED":PALETTES[i].name+"  "+b+"%");
   }
 }
 
 function updateTimer(){
   const m=Math.floor(timeLeft/60),s=timeLeft%60;
-  $timer.textContent=`${m}:${s.toString().padStart(2,"0")}`;
+  $timer.textContent=m+":"+(s<10?"0":"")+s;
   $timer.className=timeLeft<=30?"urgent":"";
 }
 
-// ─────────────────────────────────────────
-// END GAME
-// ─────────────────────────────────────────
-async function endGame(){
-  gameActive=false;
+// ══════════════════════════════════════════
+// END SEASON
+// ══════════════════════════════════════════
+async function endSeason(){
+  gameActive=false; stopGPS(); hideAllYakshas();
   const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
+  seasonScores.push({season:SEASONS[currentSeasonIdx],avg,score:myScore});
+  totalScore+=myScore;
   setTimeout(async()=>{
-    const snap=await db.ref("players").once("value");
-    const data=snap.val()||{};
-    const scores=Object.values(data).sort((a,b)=>b.score-a.score);
-    db.ref("meta").remove();db.ref("petals").remove();db.ref("players").remove();
-    showEnd(avg,scores);
+    let scores=[{name:playerName,score:myScore}];
+    try{
+      const snap=await db.ref("players").once("value");
+      const data=snap.val()||{}; scores=Object.values(data).sort((a,b)=>b.score-a.score);
+      db.ref("petals").remove(); db.ref("players").remove();
+    }catch(e){}
+    showSeasonEnd(avg,scores);
   },1800);
 }
 
-function showEnd(avg,scores){
-  $scene.style.display="none";$hud.style.display="none";$panel.style.display="none";
+function showSeasonEnd(avg,scores){
+  $scene.style.display="none"; $hud.style.display="none"; $panel.style.display="none";
+  document.getElementById('sound-btn').style.display='none';
+  const season=SEASONS[currentSeasonIdx];
+  const isLast=currentSeasonIdx===SEASONS.length-1;
+  const won=avg>=season.winThreshold;
   document.getElementById("final-pct").textContent=avg+"%";
-  const [[,t,v]]=[[75,"The Lotus Endures! 🪷","The Yaksha flees in defeat."],
-                  [50,"The Lotus Wavers…","The Yaksha lingers. Try again."],
-                  [0,"The Lotus Fades 💀","The Yaksha has won."]].filter(([th])=>avg>=th);
-  document.getElementById("end-title").textContent=t;
-  document.getElementById("verdict").textContent=v;
+  let title,verdict;
+  if(won&&isLast){ title="The Lotus Endures! 🪷"; verdict="All three watches survived. The Yaksha is vanquished."; }
+  else if(won){ title=season.name+" Survived 🪷"; verdict="The lotus holds through "+season.name+". The next watch begins…"; }
+  else{ title="The Lotus Fades in "+season.name; verdict="The Yaksha prevails this watch. Can you reclaim it?"; }
+  document.getElementById("end-title").textContent=title;
+  document.getElementById("verdict").textContent=verdict;
+  document.getElementById("season-summary").innerHTML=seasonScores.map(s=>
+    `<span style="margin-right:10px">${s.season.icon} ${s.season.name}: <strong style="color:${s.avg>=s.season.winThreshold?'#00e676':'#ff4444'}">${s.avg}%</strong></span>`
+  ).join('');
   document.getElementById("board").innerHTML=
     "<strong style='display:block;margin-bottom:6px;color:#f5c97a'>Guardian Scores</strong>"+
     scores.map((p,i)=>`<div class="srow"><span>${["🥇","🥈","🥉"][i]||""} ${p.name}</span><span>${p.score} pts</span></div>`).join("");
+  document.getElementById("next-season-btn").style.display=(isLast||!won)?'none':'block';
   document.getElementById("endscreen").style.display="flex";
 }
+
+function continueToNextSeason(){
+  document.getElementById("endscreen").style.display="none";
+  const prevAvg=seasonScores[seasonScores.length-1].avg;
+  petals=Array(N).fill(Math.max(40,prevAvg));
+  showSeasonScreen(currentSeasonIdx+1);
+}
+window.continueToNextSeason=continueToNextSeason;
 
 function shuffle(arr){
   const a=[...arr];
@@ -834,7 +812,6 @@ function shuffle(arr){
   return a;
 }
 
-// Build AR scene on page load
 buildScene();
 </script>
 </body>
