@@ -145,8 +145,8 @@
   <p class="sub">The Fading Lotus</p>
   <div class="story">
     A mischievous <strong>Yaksha</strong> is erasing the sacred lotus protecting this pavilion.
-    Each petal is anchored to a pillar — all slowly <strong>fading</strong>.<br><br>
-    Stand near a pillar to <strong>guard its petal</strong>. Keep the lotus alive for <strong>3 minutes</strong>.
+    Each lotus is anchored to a pillar — all slowly <strong>fading</strong>.<br><br>
+    Stand near a pillar to <strong>guard its lotus</strong>. Keep the lotus alive for <strong>3 minutes</strong>.
   </div>
   <input id="name-input" type="text" placeholder="Your guardian name…" maxlength="16"/>
   <button onclick="openTutorial()">Begin the Ritual</button>
@@ -163,10 +163,10 @@
       <div class="tut-slide">
         <div class="tut-illustration"><canvas id="tut-canvas-0"></canvas></div>
         <div class="tut-step-num">Step 1 of 2</div>
-        <div class="tut-title">Point & guard your petal</div>
+        <div class="tut-title">Point & guard your lotus</div>
         <div class="tut-body">
           Point your camera at any pillar card.
-          A <strong>glowing lotus petal</strong> appears in AR.
+          A <strong>glowing lotus</strong> appears in AR.
           Stay close to <strong>guard it</strong> from fading —
           the longer you stay, the more points you earn.
         </div>
@@ -176,8 +176,8 @@
         <div class="tut-step-num">Step 2 of 2</div>
         <div class="tut-title">Sprint, decide, survive!</div>
         <div class="tut-body">
-          You can't guard all 8 petals at once — <strong>decide which to save</strong>.
-          At 90 seconds the <strong>Yaksha storms</strong> — 3 petals fade twice as fast.
+          You can't guard all 8 lotuses at once — <strong>decide which to save</strong>.
+          At 90 seconds the <strong>Yaksha storms</strong> — 3 lotuses fade twice as fast.
           Keep the lotus above <strong>60%</strong> for 3 minutes to win!
         </div>
       </div>
@@ -237,59 +237,77 @@
 </div>
 
 <!-- STORM -->
-<div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 petals fading faster…</span></div>
+<div id="storm">⚡ The Yaksha storms!<br><span style="font-size:.8rem;font-weight:normal">3 lotuses fading faster…</span></div>
 
 <!-- END SCREEN -->
-<div id="endscreen">
-  <div id="end-bg-canvas-wrap" style="position:absolute;inset:0;z-index:0;overflow:hidden;">
-    <canvas id="end-bg-canvas" style="width:100%;height:100%;"></canvas>
-  </div>
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:2rem 1.5rem;overflow-y:auto;">
+<div id="endscreen" style="
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse at center,#1a0800 0%,#000 100%);
+  display:none;flex-direction:column;align-items:center;
+  color:#f5c97a;overflow-y:auto;">
 
-    <!-- Lotus animation -->
-    <canvas id="end-lotus-canvas" width="160" height="160"
-      style="border-radius:50%;margin-bottom:.8rem;
-             box-shadow:0 0 40px rgba(245,169,35,0.5);"></canvas>
+  <div style="width:100%;max-width:420px;padding:1.8rem 1.5rem 2.5rem;
+    display:flex;flex-direction:column;align-items:center;">
 
-    <!-- Result -->
-    <div id="end-yaksha-msg" style="font-size:.8rem;letter-spacing:.12em;color:#b8864a;margin-bottom:.4rem;text-transform:uppercase;"></div>
-    <h2 id="end-title" style="font-size:1.8rem;font-weight:bold;color:#f5c97a;margin-bottom:.3rem;text-align:center;line-height:1.2;"></h2>
-    <div id="verdict" style="font-style:italic;color:#b8864a;font-size:.95rem;margin-bottom:1.2rem;text-align:center;"></div>
+    <canvas id="end-lotus-canvas" width="110" height="110"
+      style="border-radius:50%;margin-bottom:.7rem;
+             box-shadow:0 0 24px rgba(245,169,35,0.4);"></canvas>
 
-    <!-- Big score ring -->
-    <div style="position:relative;width:140px;height:140px;margin-bottom:1.2rem;">
-      <canvas id="score-ring-canvas" width="140" height="140" style="position:absolute;inset:0;"></canvas>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div id="final-pct" style="font-size:2.4rem;font-weight:bold;color:#f5a623;line-height:1;"></div>
-        <div style="font-size:.7rem;color:#b8864a;letter-spacing:.08em;">LOTUS HEALTH</div>
+    <div id="end-yaksha-msg" style="font-size:.65rem;letter-spacing:.14em;
+      color:#b8864a;margin-bottom:.3rem;text-transform:uppercase;"></div>
+    <h2 id="end-title" style="font-size:1.5rem;font-weight:bold;color:#f5c97a;
+      margin-bottom:.2rem;text-align:center;line-height:1.2;"></h2>
+    <div id="verdict" style="font-style:italic;color:#b8864a;font-size:.85rem;
+      margin-bottom:1rem;text-align:center;max-width:280px;"></div>
+
+    <div style="position:relative;width:110px;height:110px;margin-bottom:1rem;">
+      <canvas id="score-ring-canvas" width="110" height="110"
+        style="position:absolute;inset:0;"></canvas>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;">
+        <div id="final-pct" style="font-size:1.8rem;font-weight:bold;
+          color:#f5a623;line-height:1;"></div>
+        <div style="font-size:.55rem;color:#b8864a;letter-spacing:.06em;">LOTUS HEALTH</div>
       </div>
     </div>
 
-    <!-- Petal grid summary -->
-    <div style="width:100%;max-width:360px;margin-bottom:1.2rem;">
-      <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin-bottom:.5rem;text-align:center;">PETAL SURVIVAL</div>
-      <div id="end-petal-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;"></div>
+    <div style="width:100%;margin-bottom:.9rem;">
+      <div style="font-size:.62rem;color:#b8864a;letter-spacing:.08em;
+        margin-bottom:.4rem;text-align:center;">LOTUS SURVIVAL</div>
+      <div id="end-petal-grid" style="display:grid;
+        grid-template-columns:repeat(4,1fr);gap:5px;"></div>
     </div>
 
-    <!-- Guardian leaderboard -->
-    <div id="board" style="width:100%;max-width:340px;margin-bottom:1.4rem;
-      background:rgba(245,169,35,.06);border:1px solid rgba(245,169,35,.18);
-      border-radius:14px;padding:.9rem 1.2rem;">
-      <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin-bottom:.6rem;text-align:center;">GUARDIAN SCORES</div>
+    <div style="width:100%;background:rgba(245,169,35,.06);
+      border:1px solid rgba(245,169,35,.18);border-radius:12px;
+      padding:.8rem 1rem;margin-bottom:1rem;">
+
+      <div id="end-level-rows"></div>
+
+      <div style="display:flex;justify-content:space-between;
+        padding:.3rem 0;border-top:1px solid rgba(245,169,35,.1);
+        font-size:.8rem;color:#f5a623;margin-top:.2rem;">
+        <span>⭐ Bonus earned</span>
+        <span id="end-bonus-pts">+0</span>
+      </div>
+
+      <div style="font-size:.62rem;color:#b8864a;letter-spacing:.08em;
+        margin:.5rem 0 .3rem;text-align:center;">GUARDIAN SCORES</div>
+      <div id="board"></div>
     </div>
 
-    <!-- Buttons -->
-    <div style="display:flex;gap:.8rem;width:100%;max-width:340px;">
+    <div style="display:flex;gap:.7rem;width:100%;">
       <button onclick="location.reload()"
-        style="flex:1;background:linear-gradient(135deg,#c8780a,#f5a623);border:none;
-               border-radius:12px;padding:.9rem;font-size:.95rem;font-weight:bold;
-               color:#1a0800;cursor:pointer;">
+        style="flex:1;background:linear-gradient(135deg,#c8780a,#f5a623);
+          border:none;border-radius:10px;padding:.8rem;font-size:.92rem;
+          font-weight:bold;color:#1a0800;cursor:pointer;">
         🪷 Play Again
       </button>
       <button onclick="shareResult()"
-        style="flex:1;background:rgba(245,169,35,.12);border:1px solid rgba(245,169,35,.3);
-               border-radius:12px;padding:.9rem;font-size:.95rem;font-weight:bold;
-               color:#f5c97a;cursor:pointer;">
+        style="flex:1;background:rgba(245,169,35,.08);
+          border:1px solid rgba(245,169,35,.25);border-radius:10px;
+          padding:.8rem;font-size:.92rem;font-weight:bold;
+          color:#f5c97a;cursor:pointer;">
         📤 Share
       </button>
     </div>
@@ -599,9 +617,7 @@ const db=firebase.database();
 // LEVELS
 // ─────────────────────────────────────────
 const LEVELS = [
-  { num:1, name:"Awakening",   duration:180, fadeRate:0.7,  stormRate:2.2, stormAt:90,  stormCount:3, winThreshold:60, bonusGoal:5  },
-  { num:2, name:"The Yaksha's Fury", duration:150, fadeRate:1.2,  stormRate:3.5, stormAt:75,  stormCount:4, winThreshold:65, bonusGoal:8  },
-  { num:3, name:"Wrath of Darkness", duration:120, fadeRate:2.0,  stormRate:5.0, stormAt:60,  stormCount:5, winThreshold:70, bonusGoal:12 },
+  { num:1, name:"Awakening", duration:180, fadeRate:0.7, stormRate:2.2, stormAt:90, stormCount:3, winThreshold:60, bonusGoal:3 },
 ];
 let currentLevel = 0; // index into LEVELS
 let levelScores  = []; // avg brightness per level
@@ -688,23 +704,24 @@ const SFX = {
 // ─────────────────────────────────────────
 // Bonus tasks shown to player — complete for extra points
 const BONUS_TASKS = [
-  { id:'b1', text:'Guard 3 petals in 10 seconds',  pts:50,  check: ()=> visible.filter(Boolean).length >= 3 },
-  { id:'b2', text:'Keep all petals above 80%',     pts:75,  check: ()=> petals.every(p=>p>=80) },
-  { id:'b3', text:'Sprint to a storm petal!',      pts:100, check: ()=> stormActive && stormPetals.some(i=>visible[i]) },
-  { id:'b4', text:'Guard same petal for 15s',      pts:60,  check: null }, // handled separately
-  { id:'b5', text:'Save a petal below 20%',        pts:80,  check: ()=> petals.some((p,i)=>p<20&&visible[i]) },
+  { id:'b1', text:'Guard 3 lotuses in 10s',      pts:50,  check: ()=> visible.filter(Boolean).length >= 3,                       minTime: 30  },
+  { id:'b2', text:'Keep all lotuses above 80%',  pts:75,  check: ()=> petals.every(p=>p>=80),                                    minTime: 60  },
+  { id:'b4', text:'Guard same lotus for 15s',    pts:60,  check: null,                                                            minTime: 20  },
+  { id:'b5', text:'Save a lotus below 20%',      pts:80,  check: ()=> petals.some((p,i)=>p<20&&visible[i]),                      minTime: 30  },
 ];
+// minTime = seconds elapsed before this bonus becomes checkable
 let bonusCompleted = new Set();
 let consecutiveGuardTime = 0;
 let consecutiveGuardPetal = -1;
 let bonusScore = 0;
 
 function checkBonuses(){
+  const elapsed = LEVELS[currentLevel].duration - timeLeft;
   BONUS_TASKS.forEach(task=>{
     if(bonusCompleted.has(task.id)) return;
+    if(elapsed < (task.minTime||0)) return; // not yet active
     let earned = false;
     if(task.id==='b4'){
-      // Track consecutive guard on same petal
       const guardedIdx = visible.findIndex(v=>v);
       if(guardedIdx>=0 && guardedIdx===consecutiveGuardPetal){
         consecutiveGuardTime++;
@@ -743,27 +760,47 @@ function showBonusToast(text, pts){
 }
 
 function buildBonusPanel(){
-  const lev = LEVELS[currentLevel];
   const panel=document.getElementById('bonus-panel');
   if(!panel) return;
-  panel.innerHTML=`<div style="font-size:.62rem;color:#b8864a;letter-spacing:.06em;margin-bottom:4px;">⭐ BONUS CHALLENGES</div>`+
-    BONUS_TASKS.slice(0, lev.bonusGoal > 5 ? 5 : lev.bonusGoal).map(t=>`
-      <div id="bp-${t.id}" style="display:flex;justify-content:space-between;align-items:center;
-        font-size:.62rem;color:${bonusCompleted.has(t.id)?'#00e676':'#888'};
-        margin-bottom:2px;gap:4px;">
-        <span>${bonusCompleted.has(t.id)?'✓':''} ${t.text}</span>
-        <span style="color:#f5a623;white-space:nowrap">+${t.pts}</span>
-      </div>`).join('');
+  renderBonusPanel(panel);
 }
 
+function renderBonusPanel(panel){
+  const done=bonusCompleted.size;
+  const total=BONUS_TASKS.length;
+  panel.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      font-size:.62rem;color:#888;cursor:pointer;padding:2px 0;"
+      onclick="toggleBonusDetail()">
+      <span>⭐ Bonus challenges &nbsp;
+        <span style="color:${done>0?'#00e676':'#888'}">${done}/${total} earned</span>
+      </span>
+      <span id="bonus-chevron" style="color:#b8864a;">▼</span>
+    </div>
+    <div id="bonus-detail" style="display:none;margin-top:4px;">
+      ${BONUS_TASKS.map(t=>`
+        <div style="display:flex;justify-content:space-between;font-size:.58rem;
+          color:${bonusCompleted.has(t.id)?'#00e676':'#666'};margin-bottom:1px;">
+          <span>${bonusCompleted.has(t.id)?'✓ ':''} ${t.text}</span>
+          <span style="color:#f5a623;margin-left:4px;">+${t.pts}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+function toggleBonusDetail(){
+  const d=document.getElementById('bonus-detail');
+  const c=document.getElementById('bonus-chevron');
+  if(!d) return;
+  const open=d.style.display==='block';
+  d.style.display=open?'none':'block';
+  if(c) c.textContent=open?'▼':'▲';
+}
+window.toggleBonusDetail=toggleBonusDetail;
+
 function updateBonusPanel(){
-  BONUS_TASKS.forEach(t=>{
-    const el=document.getElementById('bp-'+t.id);
-    if(el&&bonusCompleted.has(t.id)){
-      el.style.color='#00e676';
-      el.querySelector('span').textContent='✓ '+t.text;
-    }
-  });
+  const panel=document.getElementById('bonus-panel');
+  if(!panel) return;
+  renderBonusPanel(panel);
 }
 
 // ─────────────────────────────────────────
@@ -896,7 +933,7 @@ function startLevel(){
 
   // Update level badge
   const badge=document.getElementById('level-badge');
-  if(badge) badge.textContent=`LV${lev.num} — ${lev.name}`;
+  if(badge) badge.textContent=`LV${lev.num} ${lev.name}`;
 
   buildFlowerGrid();
   buildBonusPanel();
@@ -911,7 +948,7 @@ function setupMarkers(){
     const idx=i;
     m.addEventListener("markerFound",()=>{
       visible[idx]=true;
-      $status.textContent=`🪷 Guarding ${PALETTES[idx].name} petal…`;
+      $status.textContent=`🪷 Guarding ${PALETTES[idx].name} lotus…`;
       SFX.guard();
     });
     m.addEventListener("markerLost",()=>{
@@ -964,7 +1001,7 @@ function runLoop(){
 
     if(!stormShown) $status.textContent = visible.some(v=>v)
       ? `🪷 Guarding — ${timeLeft}s left`
-      : `⚠️ No petal guarded — ${timeLeft}s left`;
+      : `⚠️ No lotus guarded — ${timeLeft}s left`;
 
     // Storm trigger
     if(!stormShown&&timeLeft<=lev.stormAt){
@@ -1146,154 +1183,101 @@ function showEnd(avg, scores, levelsCleared=0){
   $scene.style.display="none";
   $hud.style.display="none";
   $panel.style.display="none";
-  const endEl = document.getElementById("endscreen");
-  endEl.style.display="flex";
+  document.getElementById("endscreen").style.display="flex";
 
-  // ── Animated particle background ──
-  const bgCanvas = document.getElementById("end-bg-canvas");
-  bgCanvas.width  = window.innerWidth;
-  bgCanvas.height = window.innerHeight;
-  const bgCtx = bgCanvas.getContext("2d");
-  const particles = Array.from({length:60},()=>({
-    x: Math.random()*bgCanvas.width,
-    y: Math.random()*bgCanvas.height,
-    r: Math.random()*2+0.5,
-    vx:(Math.random()-.5)*0.4,
-    vy:(Math.random()-.5)*0.4,
-    a: Math.random()
-  }));
-  const winColour = avg>=60 ? "#f5a623" : "#cc2200";
-  function animateBg(){
-    bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
-    // background gradient
-    const bg = bgCtx.createRadialGradient(
-      bgCanvas.width/2, bgCanvas.height/2, 0,
-      bgCanvas.width/2, bgCanvas.height/2, bgCanvas.height*.8
-    );
-    bg.addColorStop(0, avg>=60?"#1a0800":"#1a0000");
-    bg.addColorStop(1, "#000");
-    bgCtx.fillStyle=bg;
-    bgCtx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
-    // particles
-    particles.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.a+=0.01;
-      if(p.x<0)p.x=bgCanvas.width; if(p.x>bgCanvas.width)p.x=0;
-      if(p.y<0)p.y=bgCanvas.height; if(p.y>bgCanvas.height)p.y=0;
-      bgCtx.beginPath(); bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      bgCtx.fillStyle=`rgba(245,169,35,${(Math.sin(p.a)*.5+.5)*.6})`;
-      bgCtx.fill();
-    });
-    requestAnimationFrame(animateBg);
-  }
-  animateBg();
-
-  // ── Spinning lotus on end screen ──
-  const lotusCanvas = document.getElementById("end-lotus-canvas");
+  // Spinning lotus
+  const lotusCanvas=document.getElementById("end-lotus-canvas");
+  const sz=110;
   let angle=0;
-  const selPal = avg>=60 ? PALETTES[0] : {base:"#330000",mid:"#660000",light:"#aa3300",glow:"#ff2200"};
+  const selPal=avg>=60?PALETTES[0]:{base:"#330000",mid:"#660000",light:"#aa3300",glow:"#ff2200"};
+  const tmpC=document.createElement("canvas"); tmpC.width=sz; tmpC.height=sz;
+  drawLotus(tmpC,selPal);
+  const lCtx=lotusCanvas.getContext("2d");
   function animateLotus(){
-    const tmpC=document.createElement("canvas"); tmpC.width=160; tmpC.height=160;
-    drawLotus(tmpC, selPal);
-    const lCtx=lotusCanvas.getContext("2d");
-    lCtx.clearRect(0,0,160,160);
+    lCtx.clearRect(0,0,sz,sz);
     lCtx.save();
-    lCtx.translate(80,80); lCtx.rotate(angle); lCtx.translate(-80,-80);
+    lCtx.translate(sz/2,sz/2); lCtx.rotate(angle); lCtx.translate(-sz/2,-sz/2);
     lCtx.drawImage(tmpC,0,0);
     lCtx.restore();
-    angle += avg>=60 ? 0.008 : 0.025;
+    angle+=avg>=60?0.006:0.02;
     requestAnimationFrame(animateLotus);
   }
   animateLotus();
 
-  // ── Score ring ──
-  const ringCanvas = document.getElementById("score-ring-canvas");
-  const ringCtx = ringCanvas.getContext("2d");
-  let ringProgress=0;
-  const targetAngle = (avg/100)*Math.PI*2;
+  // Score ring
+  const rc=document.getElementById("score-ring-canvas");
+  const rx=rc.getContext("2d");
+  let rp=0; const target=(avg/100)*Math.PI*2;
   function animateRing(){
-    ringCtx.clearRect(0,0,140,140);
-    // background ring
-    ringCtx.beginPath(); ringCtx.arc(70,70,58,0,Math.PI*2);
-    ringCtx.strokeStyle="rgba(255,255,255,0.08)"; ringCtx.lineWidth=10; ringCtx.stroke();
-    // progress ring
-    if(ringProgress<targetAngle) ringProgress=Math.min(ringProgress+0.06,targetAngle);
-    ringCtx.beginPath();
-    ringCtx.arc(70,70,58,-Math.PI/2,-Math.PI/2+ringProgress);
-    ringCtx.strokeStyle=avg>=60?"#f5a623":"#ff4444";
-    ringCtx.lineWidth=10; ringCtx.lineCap="round"; ringCtx.stroke();
-    if(ringProgress<targetAngle) requestAnimationFrame(animateRing);
+    rx.clearRect(0,0,110,110);
+    rx.beginPath(); rx.arc(55,55,46,0,Math.PI*2);
+    rx.strokeStyle="rgba(255,255,255,0.08)"; rx.lineWidth=8; rx.stroke();
+    if(rp<target) rp=Math.min(rp+0.06,target);
+    rx.beginPath(); rx.arc(55,55,46,-Math.PI/2,-Math.PI/2+rp);
+    rx.strokeStyle=avg>=60?"#f5a623":"#ff4444";
+    rx.lineWidth=8; rx.lineCap="round"; rx.stroke();
+    if(rp<target) requestAnimationFrame(animateRing);
   }
   animateRing();
 
-  // ── Text content ──
-  const outcomes = [
-    [75, "The Yaksha flees!", "The sacred lotus endures. The pavilion is protected.", "🏆 Victory"],
-    [60, "A narrow escape…", "The Yaksha is weakened but not defeated. Stay vigilant.", "⚠️ Survived"],
-    [0,  "The lotus fades.", "The Yaksha has won. The pavilion falls into darkness.", "💀 Defeated"]
+  // Text
+  const outcomes=[
+    [75,"The Yaksha flees!","The sacred lotus endures. The pavilion is safe.","🏆 Victory"],
+    [60,"A narrow escape…","The Yaksha is weakened but lurks still.","⚠️ Survived"],
+    [0, "The lotus fades.","The Yaksha has won. The pavilion falls dark.","💀 Defeated"]
   ];
-  const [,title,verdict,msg] = outcomes.find(([th])=>avg>=th);
-  document.getElementById("end-yaksha-msg").textContent = msg;
-  document.getElementById("end-title").textContent = title;
-  document.getElementById("verdict").textContent = verdict;
-  document.getElementById("final-pct").textContent = avg+"%";
+  const [,title,verdict,msg]=outcomes.find(([th])=>avg>=th);
+  document.getElementById("end-yaksha-msg").textContent=msg;
+  document.getElementById("end-title").textContent=title;
+  document.getElementById("verdict").textContent=verdict;
+  document.getElementById("final-pct").textContent=avg+"%";
 
-  // ── Petal survival grid ──
-  const grid = document.getElementById("end-petal-grid");
-  grid.innerHTML = "";
+  // Lotus survival grid
+  const grid=document.getElementById("end-petal-grid");
+  grid.innerHTML="";
   petals.forEach((val,i)=>{
-    const b=Math.round(val);
-    const survived = b>0;
+    const b=Math.round(val), survived=b>0;
     const card=document.createElement("div");
-    card.style.cssText=`
-      background:${survived?`rgba(${hexToRgb(PALETTES[i].glow)},0.12)`:"rgba(255,0,0,0.08)"};
-      border:1px solid ${survived?PALETTES[i].glow+"55":"#ff444433"};
-      border-radius:10px; padding:6px 4px; text-align:center;`;
-    // mini canvas
+    card.style.cssText=`background:${survived?`rgba(${hexToRgb(PALETTES[i].glow)},0.1)`:"rgba(255,0,0,0.07)"};
+      border:1px solid ${survived?PALETTES[i].glow+"44":"#ff444422"};
+      border-radius:8px;padding:5px 3px;text-align:center;`;
     const mc=document.createElement("canvas");
-    mc.width=52; mc.height=52; mc.style.cssText="width:44px;height:44px;border-radius:6px;display:block;margin:0 auto;";
+    mc.width=52;mc.height=52;mc.style.cssText="width:42px;height:42px;border-radius:5px;display:block;margin:0 auto;";
     const mctx=mc.getContext("2d");
-    const tmp=document.createElement("canvas"); tmp.width=52; tmp.height=52;
-    drawLotus(tmp,PALETTES[i]);
-    mctx.globalAlpha=survived?1:0.25;
-    mctx.drawImage(tmp,0,0,52,52);
+    const t2=document.createElement("canvas");t2.width=52;t2.height=52;
+    drawLotus(t2,PALETTES[i]);
+    mctx.globalAlpha=survived?1:0.2;
+    mctx.drawImage(t2,0,0,52,52);
     card.appendChild(mc);
     card.innerHTML+=`
-      <div style="font-size:.58rem;color:#d4a85a;margin-top:3px;font-weight:bold;">${PALETTES[i].name}</div>
-      <div style="font-size:.7rem;color:${b>65?"#00e676":b>35?"#f5a623":"#ff4444"};font-weight:bold;">${b}%</div>`;
+      <div style="font-size:.55rem;color:#d4a85a;margin-top:2px;font-weight:bold;">${PALETTES[i].name}</div>
+      <div style="font-size:.65rem;color:${b>65?"#00e676":b>35?"#f5a623":"#ff4444"};font-weight:bold;">${b}%</div>`;
     grid.appendChild(card);
   });
 
-  // ── Leaderboard + level breakdown ──
-  const board=document.getElementById("board");
-  const medals=["🥇","🥈","🥉"];
-
-  // Level scores summary
-  const levelRows = levelScores.map((s,i)=>{
-    const lev=LEVELS[i];
-    const passed=s>=lev.winThreshold;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;
-      padding:.3rem .2rem;border-bottom:1px solid rgba(245,169,35,.08);font-size:.82rem;">
+  // Level summary row
+  const lr=document.getElementById("end-level-rows");
+  if(lr) lr.innerHTML=levelScores.map((s,i)=>{
+    const lev=LEVELS[i],passed=s>=lev.winThreshold;
+    return `<div style="display:flex;justify-content:space-between;
+      padding:.28rem 0;border-bottom:1px solid rgba(245,169,35,.08);font-size:.78rem;">
       <span style="color:#b8864a;">Lv${lev.num} ${lev.name}</span>
       <span style="color:${passed?"#00e676":"#ff4444"};font-weight:bold;">${s}% ${passed?"✓":"✗"}</span>
     </div>`;
   }).join('');
 
-  board.innerHTML=`
-    <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin-bottom:.6rem;text-align:center;">
-      LEVELS CLEARED: ${levelsCleared}/${LEVELS.length}
-    </div>
-    ${levelRows}
-    <div style="display:flex;justify-content:space-between;padding:.4rem .2rem;
-      border-bottom:1px solid rgba(245,169,35,.08);font-size:.82rem;color:#f5a623;">
-      <span>⭐ Bonus points</span><span>+${bonusScore}</span>
-    </div>
-    <div style="font-size:.72rem;color:#b8864a;letter-spacing:.08em;margin:.6rem 0 .4rem;text-align:center;">GUARDIAN SCORES</div>
-    ${scores.map((p,i)=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;
-        padding:.4rem .2rem;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.1)":"none"};">
-        <span style="font-size:.9rem;">${medals[i]||"  "} ${p.name}</span>
-        <span style="font-size:.9rem;color:#f5a623;font-weight:bold;">${p.score} pts</span>
-      </div>`).join('')}`;
+  const bp=document.getElementById("end-bonus-pts");
+  if(bp) bp.textContent="+"+bonusScore;
+
+  // Leaderboard
+  const medals=["🥇","🥈","🥉"];
+  document.getElementById("board").innerHTML=scores.map((p,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;
+      padding:.3rem 0;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.08)":"none"};
+      font-size:.82rem;">
+      <span>${medals[i]||""} ${p.name}</span>
+      <span style="color:#f5a623;font-weight:bold;">${p.score} pts</span>
+    </div>`).join('');
 }
 
 // ── Helper: hex to rgb for rgba() use ──
