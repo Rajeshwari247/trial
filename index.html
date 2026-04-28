@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>Ashtadala – The Fading Lotus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -19,7 +20,29 @@
       display:flex;flex-direction:column;align-items:center;justify-content:center;
       color:#f5c97a;padding:2rem;text-align:center;
     }
-    #splash h1{font-size:2rem;margin-bottom:.3rem;}
+    /* Canvas lotus sits above the title */
+    #splash-lotus-canvas{
+      display:block;
+      width:110px;height:110px;
+      margin-bottom:.6rem;
+      filter:drop-shadow(0 0 18px rgba(245,169,35,.55));
+      animation:lotus-glow 4s ease-in-out infinite;
+    }
+    @keyframes lotus-glow{
+      0%,100%{filter:drop-shadow(0 0 14px rgba(245,169,35,.45));}
+      50%     {filter:drop-shadow(0 0 28px rgba(245,169,35,.75));}
+    }
+    /* Title uses Cinzel Decorative — no emoji */
+    #splash h1{
+      font-family:'Cinzel Decorative',serif;
+      font-size:1.85rem;
+      font-weight:700;
+      letter-spacing:.04em;
+      color:#f5c97a;
+      text-shadow:0 0 24px rgba(245,169,35,.35), 0 2px 0 rgba(0,0,0,.6);
+      margin-bottom:.3rem;
+      line-height:1.1;
+    }
     #splash .sub{font-style:italic;color:#b8864a;margin-bottom:1.2rem;}
     #splash .story{
       background:rgba(245,169,35,.08);border:1px solid rgba(245,169,35,.25);
@@ -74,11 +97,16 @@
       padding:.6rem 1rem .8rem;color:#f5c97a;pointer-events:none;
     }
     .hud-top{display:flex;justify-content:space-between;align-items:center;}
-    .hud-title{font-size:.75rem;letter-spacing:.08em;color:#b8864a;}
+    /* HUD title — Cinzel Decorative, no emoji */
+    .hud-title{
+      font-family:'Cinzel Decorative',serif;
+      font-size:.68rem;
+      letter-spacing:.06em;
+      color:#b8864a;
+    }
     #timer{font-size:1.5rem;font-weight:bold;}
     #timer.urgent{color:#ff4444;animation:blink .5s step-end infinite;}
     @keyframes blink{50%{opacity:.3;}}
-    /* overall lotus health bar */
     #overall-bar-wrap{margin-top:6px;}
     #overall-label{display:flex;justify-content:space-between;font-size:.72rem;color:#b8864a;margin-bottom:3px;}
     #overall-track{height:6px;background:#222;border-radius:3px;overflow:hidden;}
@@ -90,15 +118,11 @@
       background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.7) 100%);
       padding:.5rem .6rem .8rem;
     }
-    .flower-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:5px;
-    }
+    .flower-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
     .flower-card{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
       border-radius:10px;padding:5px 4px 4px;
-      display:flex;flex-direction:column;align-items:center;
-      transition:border-color .3s;
+      display:flex;flex-direction:column;align-items:center;transition:border-color .3s;
     }
     .flower-card.guarded{border-color:#00e5ff;background:rgba(0,229,255,.08);}
     .flower-card.critical{border-color:#ff4444;background:rgba(255,60,0,.08);}
@@ -107,12 +131,7 @@
     .flower-pct{font-size:.65rem;color:#f5c97a;margin-top:1px;}
     .flower-bar-track{width:100%;height:3px;background:#333;border-radius:2px;margin-top:2px;overflow:hidden;}
     .flower-bar-fill{height:100%;border-radius:2px;transition:width .8s,background .5s;}
-
-    /* status strip above grid */
-    #status-strip{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:.3rem .2rem .4rem;
-    }
+    #status-strip{display:flex;justify-content:space-between;align-items:center;padding:.3rem .2rem .4rem;}
     #status{font-size:.78rem;color:#d4a85a;font-style:italic;}
     #myscore{font-size:.78rem;color:#f5c97a;}
 
@@ -140,7 +159,10 @@
 
 <!-- SPLASH -->
 <div id="splash">
-  <h1>🪷 Ashtadala</h1>
+  <!-- Canvas lotus drawn by JS, sits above title -->
+  <canvas id="splash-lotus-canvas" width="220" height="220"></canvas>
+  <!-- No emoji in h1 -->
+  <h1>Ashtadala</h1>
   <p class="sub">The Fading Lotus</p>
   <div class="story">
     A mischievous <strong>Yaksha</strong> is erasing the sacred lotus protecting this pavilion.
@@ -191,10 +213,10 @@
   </div>
 </div>
 
-<!-- HUD TOP -->
+<!-- HUD TOP — no emoji in title -->
 <div id="hud">
   <div class="hud-top">
-    <span class="hud-title">🪷 ASHTADALA</span>
+    <span class="hud-title">ASHTADALA</span>
     <span id="timer">3:00</span>
   </div>
   <div id="overall-bar-wrap">
@@ -281,7 +303,7 @@
         style="flex:1;background:linear-gradient(135deg,#c8780a,#f5a623);
           border:none;border-radius:10px;padding:.8rem;font-size:.92rem;
           font-weight:bold;color:#1a0800;cursor:pointer;">
-        🪷 Play Again
+        Play Again
       </button>
       <button onclick="shareResult()"
         style="flex:1;background:rgba(245,169,35,.08);
@@ -310,14 +332,14 @@
 // PALETTE — Kannada colour names
 // ─────────────────────────────────────────
 const PALETTES = [
-  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600', name:'Kesari'   }, // saffron
-  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff', name:'Jambuneya'}, // magenta/plum
-  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55', name:'Hasiru'   }, // green
-  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff', name:'Neeli'    }, // blue
-  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333', name:'Kempu'    }, // red
-  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc', name:'Firozi'   }, // teal
-  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00', name:'Haladi'   }, // turmeric/yellow
-  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff', name:'Neli'     }, // violet
+  { base:'#cc4400', mid:'#ff7700', light:'#ffcc55', glow:'#ff6600', name:'Kesari'   },
+  { base:'#880088', mid:'#dd22cc', light:'#ffaaee', glow:'#ff44ff', name:'Jambuneya'},
+  { base:'#005500', mid:'#00aa44', light:'#88ffaa', glow:'#00dd55', name:'Hasiru'   },
+  { base:'#003388', mid:'#1166dd', light:'#88ccff', glow:'#2299ff', name:'Neeli'    },
+  { base:'#880011', mid:'#dd2222', light:'#ffaaaa', glow:'#ff3333', name:'Kempu'    },
+  { base:'#005555', mid:'#00aaaa', light:'#88ffee', glow:'#00ddcc', name:'Firozi'   },
+  { base:'#885500', mid:'#cc8800', light:'#ffdd88', glow:'#ffaa00', name:'Haladi'   },
+  { base:'#440077', mid:'#7722cc', light:'#cc99ff', glow:'#9933ff', name:'Neli'     },
 ];
 
 // ─────────────────────────────────────────
@@ -366,6 +388,14 @@ function drawLotus(canvas, pal) {
   const gem=ctx.createRadialGradient(cx,cy,0,cx,cy,S*.04);
   gem.addColorStop(0,'#ffffff'); gem.addColorStop(0.5,'#ffe566'); gem.addColorStop(1,'#ffaa00');
   ctx.beginPath(); ctx.arc(cx,cy,S*.04,0,Math.PI*2); ctx.fillStyle=gem; ctx.fill();
+}
+
+// ─────────────────────────────────────────
+// DRAW SPLASH LOTUS — uses the Kesari palette at full size
+// ─────────────────────────────────────────
+function drawSplashLotus(){
+  const canvas = document.getElementById('splash-lotus-canvas');
+  drawLotus(canvas, PALETTES[0]); // Kesari (saffron)
 }
 
 // ─────────────────────────────────────────
@@ -429,13 +459,12 @@ function drawYaksha(canvas){
 // ─────────────────────────────────────────
 // BUILD FLOWER CARD GRID (HTML panel)
 // ─────────────────────────────────────────
-const cardCanvases = []; // store mini canvas refs for updating
+const cardCanvases = [];
 
 function buildFlowerGrid(){
   const grid=document.getElementById('flower-grid');
   grid.innerHTML='';
   PALETTES.forEach((pal,i)=>{
-    // Mini lotus canvas for the card
     const c=document.createElement('canvas');
     c.width=104; c.height=104;
     drawLotus(c,pal);
@@ -445,22 +474,16 @@ function buildFlowerGrid(){
     card.className='flower-card';
     card.id='fcard-'+i;
 
-    const barId='fbar-'+i;
-    const pctId='fpct-'+i;
-
     card.innerHTML=`
       <canvas width="104" height="104" id="fcv-${i}" style="width:52px;height:52px;border-radius:6px;"></canvas>
       <div class="flower-name">${pal.name}</div>
-      <div class="flower-pct" id="${pctId}">100%</div>
+      <div class="flower-pct" id="fpct-${i}">100%</div>
       <div class="flower-bar-track">
-        <div class="flower-bar-fill" id="${barId}" style="width:100%;background:${pal.glow}"></div>
+        <div class="flower-bar-fill" id="fbar-${i}" style="width:100%;background:${pal.glow}"></div>
       </div>`;
 
     grid.appendChild(card);
-
-    // Draw the mini lotus into the card's canvas
-    const cardCtx=card.querySelector(`#fcv-${i}`).getContext('2d');
-    cardCtx.drawImage(c,0,0,52,52);
+    card.querySelector(`#fcv-${i}`).getContext('2d').drawImage(c,0,0,52,52);
   });
 }
 
@@ -479,43 +502,34 @@ function updateFlowerGrid(){
     const pct=document.getElementById('fpct-'+i);
     if(!card) continue;
 
-    // Card border state
-    if(g)       card.className='flower-card guarded';
+    if(g)         card.className='flower-card guarded';
     else if(b<35) card.className='flower-card critical';
     else          card.className='flower-card';
 
-    // Pct label colour
     if(pct){
       pct.textContent=b+'%';
       pct.style.color=b>65?'#00e676':b>35?'#f5a623':'#ff4444';
     }
-
-    // Bar width + colour
     if(bar){
       bar.style.width=b+'%';
       bar.style.background=g?'#00e5ff':b>65?PALETTES[i].glow:b>35?'#f5a623':'#ff4444';
     }
   }
 
-  // Overall health bar
   const avg=Math.round(total/N);
   const fill=document.getElementById('overall-fill');
   const opct=document.getElementById('overall-pct');
-  if(fill){
-    fill.style.width=avg+'%';
-    fill.style.background=avg>65?'#00e676':avg>35?'#f5a623':'#ff4444';
-  }
+  if(fill){ fill.style.width=avg+'%'; fill.style.background=avg>65?'#00e676':avg>35?'#f5a623':'#ff4444'; }
   if(opct) opct.textContent=avg+'%';
 }
 
 // ─────────────────────────────────────────
-// BUILD AR SCENE — ONE Yaksha on marker 0 only
+// BUILD AR SCENE
 // ─────────────────────────────────────────
 function buildScene(){
   const assets=document.getElementById('assets');
   const scene=document.getElementById('ar-scene');
 
-  // Yaksha texture (used once on marker 0)
   const yc=document.createElement('canvas');
   drawYaksha(yc);
   const yi=document.createElement('img');
@@ -535,15 +549,11 @@ function buildScene(){
     marker.setAttribute('smooth','true');
     marker.setAttribute('smoothCount','5');
 
-    // Yaksha on every marker but hidden by default
-    const yakshaHTML = `
+    const yakshaHTML=`
       <a-plane id="yaksha-${i}"
-        src="#yaksha-tex"
-        width="0.9" height="0.9"
+        src="#yaksha-tex" width="0.9" height="0.9"
         transparent="true" opacity="0" side="double"
-        position="0 0.52 0"
-        visible="false"
-        look-at="[camera]"
+        position="0 0.52 0" visible="false" look-at="[camera]"
         animation__float="property:position; from:0 0.48 0; to:0 0.65 0; dir:alternate; loop:true; dur:1800; easing:easeInOutSine"
         animation__rock="property:rotation; from:0 -10 0; to:0 10 0; dir:alternate; loop:true; dur:2200; easing:easeInOutSine">
       </a-plane>`;
@@ -552,11 +562,9 @@ function buildScene(){
       <a-entity id="pe${i}">
         ${yakshaHTML}
         <a-plane id="lotus-plane-${i}"
-          src="#tex${i}"
-          width="1.5" height="1.5"
+          src="#tex${i}" width="1.5" height="1.5"
           transparent="true" opacity="1" side="double"
-          position="0 0 0"
-          look-at="[camera]"
+          position="0 0 0" look-at="[camera]"
           animation__spin="property:rotation; from:0 0 0; to:0 0 360; loop:true; dur:12000; easing:linear"
           animation__pulse="property:scale; from:1 1 1; to:1.08 1.08 1.08; dir:alternate; loop:true; dur:1500">
         </a-plane>
@@ -591,184 +599,103 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
 // ─────────────────────────────────────────
-// GAME STATE
-// ─────────────────────────────────────────
-// ─────────────────────────────────────────
 // LEVELS
 // ─────────────────────────────────────────
-const LEVELS = [
-  { num:1, name:"Awakening", duration:180, fadeRate:0.7, stormRate:2.2, stormAt:90, stormCount:3, winThreshold:60, bonusGoal:3 },
+const LEVELS=[
+  {num:1,name:"Awakening",duration:180,fadeRate:0.7,stormRate:2.2,stormAt:90,stormCount:3,winThreshold:60,bonusGoal:3},
 ];
-let currentLevel = 0; // index into LEVELS
-let levelScores  = []; // avg brightness per level
-
-const N = 8;
+let currentLevel=0, levelScores=[];
+const N=8;
 
 // ─────────────────────────────────────────
-// SOUND ENGINE — Web Audio API, no files needed
+// SOUND ENGINE
 // ─────────────────────────────────────────
-let audioCtx = null;
-function getAudio(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  return audioCtx;
-}
+let audioCtx=null;
+function getAudio(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
 
-function playTone(freq, type, dur, vol=0.3, delay=0){
-  try {
-    const ctx = getAudio();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+function playTone(freq,type,dur,vol=0.3,delay=0){
+  try{
+    const ctx=getAudio();
+    const osc=ctx.createOscillator(), gain=ctx.createGain();
     osc.connect(gain); gain.connect(ctx.destination);
-    osc.type = type; osc.frequency.setValueAtTime(freq, ctx.currentTime+delay);
-    gain.gain.setValueAtTime(0, ctx.currentTime+delay);
-    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime+delay+0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+dur);
-    osc.start(ctx.currentTime+delay);
-    osc.stop(ctx.currentTime+delay+dur+0.05);
-  } catch(e){}
+    osc.type=type; osc.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+    gain.gain.setValueAtTime(0,ctx.currentTime+delay);
+    gain.gain.linearRampToValueAtTime(vol,ctx.currentTime+delay+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+delay+dur);
+    osc.start(ctx.currentTime+delay); osc.stop(ctx.currentTime+delay+dur+0.05);
+  }catch(e){}
 }
 
-const SFX = {
-  // Soft chime when guarding a petal
-  guard: ()=>{
-    playTone(523, 'sine', 0.3, 0.25);
-    playTone(659, 'sine', 0.3, 0.2, 0.1);
-    playTone(784, 'sine', 0.4, 0.2, 0.2);
-  },
-  // Low rumble when marker is lost
-  lose: ()=>{
-    playTone(180, 'sawtooth', 0.4, 0.15);
-    playTone(140, 'sawtooth', 0.4, 0.12, 0.1);
-  },
-  // Dramatic storm alert
-  storm: ()=>{
-    [0,0.1,0.2,0.3,0.4].forEach((d,i)=>{
-      playTone(100+i*30, 'sawtooth', 0.25, 0.2, d);
-    });
-    playTone(80, 'sine', 0.8, 0.3, 0.5);
-  },
-  // Bonus point earned — bright sparkle
-  bonus: ()=>{
-    playTone(880, 'sine', 0.15, 0.3);
-    playTone(1108, 'sine', 0.15, 0.25, 0.08);
-    playTone(1318, 'sine', 0.2, 0.2, 0.16);
-  },
-  // Level complete fanfare
-  levelUp: ()=>{
-    const notes=[523,659,784,1047];
-    notes.forEach((f,i)=>playTone(f,'sine',0.4,0.3,i*0.12));
-    playTone(1047,'sine',0.6,0.35,0.6);
-  },
-  // Victory fanfare
-  victory: ()=>{
-    [523,659,784,659,784,1047].forEach((f,i)=>playTone(f,'sine',0.35,0.3,i*0.1));
-    playTone(1319,'sine',0.8,0.35,0.7);
-  },
-  // Defeat sound
-  defeat: ()=>{
-    playTone(400,'sawtooth',0.3,0.3);
-    playTone(300,'sawtooth',0.4,0.3,0.2);
-    playTone(200,'sawtooth',0.6,0.3,0.5);
-  },
-  // Critical petal warning
-  critical: ()=>{
-    playTone(220,'square',0.15,0.2);
-    playTone(220,'square',0.15,0.2,0.2);
-  },
-  // Petal fully faded
-  dead: ()=>{ playTone(100,'sawtooth',0.5,0.25); },
+const SFX={
+  guard:   ()=>{ playTone(523,'sine',0.3,0.25); playTone(659,'sine',0.3,0.2,0.1); playTone(784,'sine',0.4,0.2,0.2); },
+  lose:    ()=>{ playTone(180,'sawtooth',0.4,0.15); playTone(140,'sawtooth',0.4,0.12,0.1); },
+  storm:   ()=>{ [0,0.1,0.2,0.3,0.4].forEach((d,i)=>playTone(100+i*30,'sawtooth',0.25,0.2,d)); playTone(80,'sine',0.8,0.3,0.5); },
+  bonus:   ()=>{ playTone(880,'sine',0.15,0.3); playTone(1108,'sine',0.15,0.25,0.08); playTone(1318,'sine',0.2,0.2,0.16); },
+  levelUp: ()=>{ [523,659,784,1047].forEach((f,i)=>playTone(f,'sine',0.4,0.3,i*0.12)); playTone(1047,'sine',0.6,0.35,0.6); },
+  victory: ()=>{ [523,659,784,659,784,1047].forEach((f,i)=>playTone(f,'sine',0.35,0.3,i*0.1)); playTone(1319,'sine',0.8,0.35,0.7); },
+  defeat:  ()=>{ playTone(400,'sawtooth',0.3,0.3); playTone(300,'sawtooth',0.4,0.3,0.2); playTone(200,'sawtooth',0.6,0.3,0.5); },
+  critical:()=>{ playTone(220,'square',0.15,0.2); playTone(220,'square',0.15,0.2,0.2); },
+  dead:    ()=>{ playTone(100,'sawtooth',0.5,0.25); },
 };
 
 // ─────────────────────────────────────────
 // BONUS SYSTEM
 // ─────────────────────────────────────────
-// Bonus tasks shown to player — complete for extra points
-const BONUS_TASKS = [
-  { id:'b1', text:'Guard 3 lotuses in 10s',      pts:50,  check: ()=> visible.filter(Boolean).length >= 3,                       minTime: 30  },
-  { id:'b2', text:'Keep all lotuses above 80%',  pts:75,  check: ()=> petals.every(p=>p>=80),                                    minTime: 60  },
-  { id:'b4', text:'Guard same lotus for 15s',    pts:60,  check: null,                                                            minTime: 20  },
-  { id:'b5', text:'Save a lotus below 20%',      pts:80,  check: ()=> petals.some((p,i)=>p<20&&visible[i]),                      minTime: 30  },
+const BONUS_TASKS=[
+  {id:'b1',text:'Guard 3 lotuses in 10s',     pts:50, check:()=>visible.filter(Boolean).length>=3,              minTime:30},
+  {id:'b2',text:'Keep all lotuses above 80%', pts:75, check:()=>petals.every(p=>p>=80),                         minTime:60},
+  {id:'b4',text:'Guard same lotus for 15s',   pts:60, check:null,                                                minTime:20},
+  {id:'b5',text:'Save a lotus below 20%',     pts:80, check:()=>petals.some((p,i)=>p<20&&visible[i]),           minTime:30},
 ];
-// minTime = seconds elapsed before this bonus becomes checkable
-let bonusCompleted = new Set();
-let consecutiveGuardTime = 0;
-let consecutiveGuardPetal = -1;
-let bonusScore = 0;
+let bonusCompleted=new Set(), consecutiveGuardTime=0, consecutiveGuardPetal=-1, bonusScore=0;
 
 function checkBonuses(){
-  const elapsed = LEVELS[currentLevel].duration - timeLeft;
+  const elapsed=LEVELS[currentLevel].duration-timeLeft;
   BONUS_TASKS.forEach(task=>{
     if(bonusCompleted.has(task.id)) return;
-    if(elapsed < (task.minTime||0)) return; // not yet active
-    let earned = false;
+    if(elapsed<(task.minTime||0)) return;
+    let earned=false;
     if(task.id==='b4'){
-      const guardedIdx = visible.findIndex(v=>v);
-      if(guardedIdx>=0 && guardedIdx===consecutiveGuardPetal){
-        consecutiveGuardTime++;
-        if(consecutiveGuardTime>=15) earned=true;
-      } else {
-        consecutiveGuardPetal=guardedIdx;
-        consecutiveGuardTime=guardedIdx>=0?1:0;
-      }
-    } else if(task.check && task.check()){
-      earned=true;
-    }
+      const gi=visible.findIndex(v=>v);
+      if(gi>=0&&gi===consecutiveGuardPetal){ consecutiveGuardTime++; if(consecutiveGuardTime>=15) earned=true; }
+      else{ consecutiveGuardPetal=gi; consecutiveGuardTime=gi>=0?1:0; }
+    } else if(task.check&&task.check()){ earned=true; }
     if(earned){
-      bonusCompleted.add(task.id);
-      bonusScore+=task.pts;
-      myScore+=task.pts;
-      $pts.textContent=myScore;
-      SFX.bonus();
-      showBonusToast(task.text, task.pts);
-      updateBonusPanel();
+      bonusCompleted.add(task.id); bonusScore+=task.pts; myScore+=task.pts;
+      $pts.textContent=myScore; SFX.bonus(); showBonusToast(task.text,task.pts); updateBonusPanel();
     }
   });
 }
 
-function showBonusToast(text, pts){
+function showBonusToast(text,pts){
   const toast=document.createElement('div');
-  toast.style.cssText=`
-    position:fixed;top:30%;left:50%;transform:translateX(-50%);
-    z-index:500;background:rgba(0,200,100,0.95);
-    border:2px solid #00ff88;border-radius:12px;
-    padding:.7rem 1.4rem;color:#003300;font-weight:bold;
-    font-size:.95rem;text-align:center;pointer-events:none;
-    animation:toastIn .3s ease;`;
+  toast.style.cssText=`position:fixed;top:30%;left:50%;transform:translateX(-50%);z-index:500;
+    background:rgba(0,200,100,0.95);border:2px solid #00ff88;border-radius:12px;
+    padding:.7rem 1.4rem;color:#003300;font-weight:bold;font-size:.95rem;
+    text-align:center;pointer-events:none;animation:toastIn .3s ease;`;
   toast.innerHTML=`⭐ BONUS! +${pts} pts<br><span style="font-size:.75rem;font-weight:normal">${text}</span>`;
   document.body.appendChild(toast);
   setTimeout(()=>{ toast.style.opacity='0'; toast.style.transition='opacity .5s'; setTimeout(()=>toast.remove(),500); },2500);
 }
 
-function buildBonusPanel(){
-  const panel=document.getElementById('bonus-panel');
-  if(!panel) return;
-  renderBonusPanel(panel);
-}
-
+function buildBonusPanel(){ const p=document.getElementById('bonus-panel'); if(p) renderBonusPanel(p); }
 function renderBonusPanel(panel){
-  const done=bonusCompleted.size;
-  const total=BONUS_TASKS.length;
+  const done=bonusCompleted.size, total=BONUS_TASKS.length;
   panel.innerHTML=`<div style="font-size:.58rem;color:#888;text-align:center;padding:2px 0;">
     ⭐ Bonus: <span style="color:${done>0?'#00e676':'#888'}">${done}/${total}</span> earned
-    &nbsp;·&nbsp; ${BONUS_TASKS.filter(t=>!bonusCompleted.has(t.id)).slice(0,1).map(t=>`
-      <span style="color:#666">${t.text} +${t.pts}</span>`).join('')}
+    &nbsp;·&nbsp; ${BONUS_TASKS.filter(t=>!bonusCompleted.has(t.id)).slice(0,1).map(t=>`<span style="color:#666">${t.text} +${t.pts}</span>`).join('')}
   </div>`;
 }
-
-function updateBonusPanel(){
-  const panel=document.getElementById('bonus-panel');
-  if(!panel) return;
-  renderBonusPanel(panel);
-}
+function updateBonusPanel(){ const p=document.getElementById('bonus-panel'); if(p) renderBonusPanel(p); }
 
 // ─────────────────────────────────────────
 // GAME STATE
 // ─────────────────────────────────────────
-let playerName="Guardian",playerId="p_"+Math.random().toString(36).substr(2,6);
-let gameActive=false,timeLeft=0,myScore=0;
-let petals=Array(N).fill(100),visible=Array(N).fill(false);
-let stormPetals=[],stormActive=false,stormShown=false,isHost=false;
-let lastCritical=Array(N).fill(false); // track petal state changes for sfx
+let playerName="Guardian", playerId="p_"+Math.random().toString(36).substr(2,6);
+let gameActive=false, timeLeft=0, myScore=0;
+let petals=Array(N).fill(100), visible=Array(N).fill(false);
+let stormPetals=[], stormActive=false, stormShown=false, isHost=false;
+let lastCritical=Array(N).fill(false);
 
 const $timer=document.getElementById("timer");
 const $status=document.getElementById("status");
@@ -783,46 +710,44 @@ const $scene=document.getElementById("ar-scene");
 // ─────────────────────────────────────────
 let tutStep=0;
 function drawTutIllustrations(){
-  // Slide 0: phone → pillar → lotus
   (function(){
     const c=document.getElementById('tut-canvas-0');
-    c.width=180;c.height=180;
+    c.width=180; c.height=180;
     const ctx=c.getContext('2d');
-    ctx.fillStyle='#222';ctx.beginPath();ctx.roundRect(100,40,55,100,8);ctx.fill();
-    ctx.fillStyle='#334';ctx.beginPath();ctx.roundRect(105,50,45,80,4);ctx.fill();
-    ctx.beginPath();ctx.arc(127,48,4,0,Math.PI*2);ctx.fillStyle='#444';ctx.fill();
-    ctx.font='18px Arial';ctx.fillText('🪷',116,96);
-    ctx.setLineDash([4,3]);ctx.strokeStyle='#f5a623';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(100,90);ctx.lineTo(65,90);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='#666';ctx.fillRect(30,30,28,130);
-    ctx.fillStyle='#888';ctx.fillRect(32,30,6,130);
-    ctx.font='26px Arial';ctx.fillText('🪷',26,75);
-    ctx.strokeStyle='rgba(255,170,0,0.4)';ctx.lineWidth=2;
-    for(let r=18;r<=30;r+=6){ctx.beginPath();ctx.arc(39,63,r,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle='#222'; ctx.beginPath(); ctx.roundRect(100,40,55,100,8); ctx.fill();
+    ctx.fillStyle='#334'; ctx.beginPath(); ctx.roundRect(105,50,45,80,4); ctx.fill();
+    ctx.beginPath(); ctx.arc(127,48,4,0,Math.PI*2); ctx.fillStyle='#444'; ctx.fill();
+    ctx.font='18px Arial'; ctx.fillText('🪷',116,96);
+    ctx.setLineDash([4,3]); ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(100,90); ctx.lineTo(65,90); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#666'; ctx.fillRect(30,30,28,130);
+    ctx.fillStyle='#888'; ctx.fillRect(32,30,6,130);
+    ctx.font='26px Arial'; ctx.fillText('🪷',26,75);
+    ctx.strokeStyle='rgba(255,170,0,0.4)'; ctx.lineWidth=2;
+    for(let r=18;r<=30;r+=6){ ctx.beginPath(); ctx.arc(39,63,r,0,Math.PI*2); ctx.stroke(); }
   })();
-  // Slide 1: pavilion map
   (function(){
     const c=document.getElementById('tut-canvas-1');
-    c.width=180;c.height=180;
+    c.width=180; c.height=180;
     const ctx=c.getContext('2d');
     const cx=90,cy=85,R=65;
-    ctx.strokeStyle='rgba(245,169,35,0.2)';ctx.lineWidth=1;ctx.beginPath();
+    ctx.strokeStyle='rgba(245,169,35,0.2)'; ctx.lineWidth=1; ctx.beginPath();
     for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2-Math.PI/8;i===0?ctx.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R):ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);}
-    ctx.closePath();ctx.stroke();
+    ctx.closePath(); ctx.stroke();
     const cols=['#ff8800','#333','#cc44ff','#ff4444','#00cc88','#333','#2299ff','#ffcc00'];
     const ems=['🪷','💀','🪷','⚡','🪷','💀','🪷','🪷'];
     for(let i=0;i<8;i++){
       const a=(i/8)*Math.PI*2-Math.PI/8;
-      const px=cx+Math.cos(a)*R,py=cy+Math.sin(a)*R;
-      ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fillStyle=cols[i];ctx.fill();
-      ctx.font='13px Arial';ctx.fillText(ems[i],px-7,py-10);
+      const px=cx+Math.cos(a)*R, py=cy+Math.sin(a)*R;
+      ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2); ctx.fillStyle=cols[i]; ctx.fill();
+      ctx.font='13px Arial'; ctx.fillText(ems[i],px-7,py-10);
     }
-    ctx.font='22px Arial';ctx.fillText('🏃',cx-11,cy+8);
-    ctx.strokeStyle='#f5a623';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+46,cy-46);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='rgba(245,169,35,0.15)';ctx.fillRect(10,158,160,12);
-    ctx.fillStyle='#f5a623';ctx.fillRect(10,158,112,12);
-    ctx.fillStyle='#1a0800';ctx.font='bold 9px Arial';ctx.fillText('lotus health  70%',14,168);
+    ctx.font='22px Arial'; ctx.fillText('🏃',cx-11,cy+8);
+    ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5; ctx.setLineDash([3,2]);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+46,cy-46); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(245,169,35,0.15)'; ctx.fillRect(10,158,160,12);
+    ctx.fillStyle='#f5a623'; ctx.fillRect(10,158,112,12);
+    ctx.fillStyle='#1a0800'; ctx.font='bold 9px Arial'; ctx.fillText('lotus health  70%',14,168);
   })();
 }
 
@@ -830,8 +755,8 @@ function openTutorial(){
   const name=document.getElementById('name-input').value.trim();
   if(!name){
     const inp=document.getElementById('name-input');
-    inp.focus();inp.style.border='1px solid #ff6644';
-    setTimeout(()=>{inp.style.border='1px solid rgba(245,169,35,.35)';},1200);
+    inp.focus(); inp.style.border='1px solid #ff6644';
+    setTimeout(()=>{ inp.style.border='1px solid rgba(245,169,35,.35)'; },1200);
     return;
   }
   document.getElementById('splash').style.display='none';
@@ -849,19 +774,17 @@ function tutNav(dir){
   const nb=document.getElementById('tut-next');
   if(tutStep===1){
     nb.textContent="I'm Ready! 🪷";
-    nb.onclick=()=>{document.getElementById('tutorial').classList.remove('visible');startGame();};
-  } else {
-    nb.textContent='Next →'; nb.onclick=()=>tutNav(1);
-  }
+    nb.onclick=()=>{ document.getElementById('tutorial').classList.remove('visible'); startGame(); };
+  } else { nb.textContent='Next →'; nb.onclick=()=>tutNav(1); }
 }
 window.tutNav=tutNav;
 
 function setupTutSwipe(){
   const track=document.getElementById('tut-slides');
-  let sx=0,moved=false;
-  track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;moved=false;},{passive:true});
-  track.addEventListener('touchmove',()=>{moved=true;},{passive:true});
-  track.addEventListener('touchend',e=>{if(!moved)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)tutNav(dx<0?1:-1);});
+  let sx=0, moved=false;
+  track.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; moved=false; },{passive:true});
+  track.addEventListener('touchmove',()=>{ moved=true; },{passive:true});
+  track.addEventListener('touchend',e=>{ if(!moved)return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40)tutNav(dx<0?1:-1); });
 }
 
 // ─────────────────────────────────────────
@@ -869,8 +792,7 @@ function setupTutSwipe(){
 // ─────────────────────────────────────────
 function startGame(){
   playerName=document.getElementById('name-input').value.trim()||'Guardian';
-  currentLevel=0;
-  myScore=0; bonusScore=0; bonusCompleted=new Set();
+  currentLevel=0; myScore=0; bonusScore=0; bonusCompleted=new Set();
   startLevel();
 }
 window.startGame=startGame;
@@ -878,52 +800,28 @@ window.startGame=startGame;
 function startLevel(){
   const lev=LEVELS[currentLevel];
   timeLeft=lev.duration;
-  petals=Array(N).fill(100);
-  visible=Array(N).fill(false);
+  petals=Array(N).fill(100); visible=Array(N).fill(false);
   stormPetals=[]; stormActive=false; stormShown=false;
   lastCritical=Array(N).fill(false);
   consecutiveGuardTime=0; consecutiveGuardPetal=-1;
 
-  $hud.style.display='block';
-  $panel.style.display='block';
-  $scene.style.display='block';
-
-  buildFlowerGrid();
-  buildBonusPanel();
-  setupMarkers();
-  electHost();
+  $hud.style.display='block'; $panel.style.display='block'; $scene.style.display='block';
+  buildFlowerGrid(); buildBonusPanel(); setupMarkers(); electHost();
 }
 
 function setupMarkers(){
   for(let i=0;i<N;i++){
-    const m=document.querySelector(`a-marker[value="${i}"]`);
-    if(!m) continue;
+    const m=document.querySelector(`a-marker[value="${i}"]`); if(!m) continue;
     const idx=i;
-    m.addEventListener("markerFound",()=>{
-      visible[idx]=true;
-      $status.textContent=`🪷 Guarding ${PALETTES[idx].name} lotus…`;
-      SFX.guard();
-    });
-    m.addEventListener("markerLost",()=>{
-      visible[idx]=false;
-      $status.textContent='Point camera at a pillar marker…';
-      SFX.lose();
-    });
+    m.addEventListener("markerFound",()=>{ visible[idx]=true; $status.textContent=`🪷 Guarding ${PALETTES[idx].name} lotus…`; SFX.guard(); });
+    m.addEventListener("markerLost", ()=>{ visible[idx]=false; $status.textContent='Point camera at a pillar marker…'; SFX.lose(); });
   }
 }
 
-// ─────────────────────────────────────────
-// HOST ELECTION — simple timestamp race
-// whoever writes first wins, with 3s fallback
-// ─────────────────────────────────────────
 function electHost(){
   db.ref("players/"+playerId).set({name:playerName,score:0});
   db.ref("players/"+playerId).onDisconnect().remove();
-  // Just become host immediately — simplest possible approach
-  // If two phones start at same time, they both run fading locally
-  // and Firebase syncs whichever value is most recent (last write wins)
   isHost=true;
-  console.log("Running as host/standalone");
   const init={}; for(let i=0;i<N;i++) init[i]=100;
   db.ref("petals").set(init);
   startListeningAndPlaying();
@@ -933,100 +831,64 @@ function startListeningAndPlaying(){
   db.ref("petals").on("value",snap=>{
     const d=snap.val(); if(!d) return;
     for(let i=0;i<N;i++) if(d[i]!==undefined) petals[i]=d[i];
-    updateARVisuals();
-    updateFlowerGrid();
+    updateARVisuals(); updateFlowerGrid();
   });
-  gameActive=true;
-  runLoop();
+  gameActive=true; runLoop();
 }
 
 // ─────────────────────────────────────────
 // GAME LOOP
-// Fading runs locally on every phone.
-// Host writes to Firebase so all phones agree.
-// If solo (single phone), still fades correctly.
 // ─────────────────────────────────────────
 function runLoop(){
   const lev=LEVELS[currentLevel];
   const iv=setInterval(()=>{
-    if(!gameActive){clearInterval(iv);return;}
+    if(!gameActive){ clearInterval(iv); return; }
     timeLeft--; updateTimer();
 
-    if(!stormShown) $status.textContent = visible.some(v=>v)
+    if(!stormShown) $status.textContent=visible.some(v=>v)
       ? `🪷 Guarding — ${timeLeft}s left`
       : `⚠️ No lotus guarded — ${timeLeft}s left`;
 
-    // Storm trigger
     if(!stormShown&&timeLeft<=lev.stormAt){
       stormShown=true; stormActive=true;
       stormPetals=shuffle([0,1,2,3,4,5,6,7]).slice(0,lev.stormCount);
-      $storm.style.display="block";
-      SFX.storm();
-      setTimeout(()=>{$storm.style.display="none";},3000);
+      $storm.style.display="block"; SFX.storm();
+      setTimeout(()=>{ $storm.style.display="none"; },3000);
       setTimeout(()=>{ stormActive=false; hideAllYakshas(); },20000);
       showYakshaOnStormPetals();
     }
 
-    // Score
     for(let i=0;i<N;i++) if(visible[i]) myScore++;
     $pts.textContent=myScore;
     db.ref("players/"+playerId+"/score").set(myScore);
 
-    // Fading
     for(let i=0;i<N;i++){
-      if(visible[i]){
-        petals[i]=Math.min(100,petals[i]+0.3);
-      } else {
-        const rate=(stormActive&&stormPetals.includes(i))?lev.stormRate:lev.fadeRate;
-        petals[i]=Math.max(0,petals[i]-rate);
-      }
-      // Sound cues
+      if(visible[i]){ petals[i]=Math.min(100,petals[i]+0.3); }
+      else{ const rate=(stormActive&&stormPetals.includes(i))?lev.stormRate:lev.fadeRate; petals[i]=Math.max(0,petals[i]-rate); }
       const isCrit=petals[i]<20;
       if(isCrit&&!lastCritical[i]) SFX.critical();
       if(petals[i]<=0&&lastCritical[i]===false) SFX.dead();
       lastCritical[i]=isCrit;
     }
 
-    // Check bonus tasks
-    checkBonuses();
+    checkBonuses(); updateARVisuals(); updateFlowerGrid();
 
-    updateARVisuals();
-    updateFlowerGrid();
-
-    if(isHost){
-      const upd={}; for(let i=0;i<N;i++) upd[i]=parseFloat(petals[i].toFixed(1));
-      db.ref("petals").set(upd);
-    }
-
-    if(timeLeft<=0){clearInterval(iv); endLevel();}
+    if(isHost){ const upd={}; for(let i=0;i<N;i++) upd[i]=parseFloat(petals[i].toFixed(1)); db.ref("petals").set(upd); }
+    if(timeLeft<=0){ clearInterval(iv); endLevel(); }
   },1000);
 }
 
 // ─────────────────────────────────────────
-// YAKSHA — only appears on storm petals during storm
+// YAKSHA
 // ─────────────────────────────────────────
 function showYakshaOnStormPetals(){
-  // Hide all Yakshas first
-  for(let i=0;i<N;i++){
-    const y=document.getElementById("yaksha-"+i);
-    if(y){ y.setAttribute("visible","false"); y.setAttribute("opacity","0"); }
-  }
-  // Show only on storm petals
-  stormPetals.forEach(idx=>{
-    const y=document.getElementById("yaksha-"+idx);
-    if(y){
-      y.setAttribute("visible","true");
-      y.setAttribute("opacity","0.95");
-      y.setAttribute("scale","1 1 1");
-    }
-  });
-  // Hide again when storm ends
-  setTimeout(()=>{
-    for(let i=0;i<N;i++){
-      const y=document.getElementById("yaksha-"+i);
-      if(y){ y.setAttribute("visible","false"); y.setAttribute("opacity","0"); }
-    }
-  }, 20000);
+  for(let i=0;i<N;i++){ const y=document.getElementById("yaksha-"+i); if(y){ y.setAttribute("visible","false"); y.setAttribute("opacity","0"); } }
+  stormPetals.forEach(idx=>{ const y=document.getElementById("yaksha-"+idx); if(y){ y.setAttribute("visible","true"); y.setAttribute("opacity","0.95"); y.setAttribute("scale","1 1 1"); } });
+  setTimeout(()=>{ for(let i=0;i<N;i++){ const y=document.getElementById("yaksha-"+i); if(y){ y.setAttribute("visible","false"); y.setAttribute("opacity","0"); } } },20000);
+}
+
+function hideAllYakshas(){
+  for(let i=0;i<N;i++){ const y=document.getElementById("yaksha-"+i); if(y){ y.setAttribute("visible","false"); y.setAttribute("opacity","0"); } }
 }
 
 // ─────────────────────────────────────────
@@ -1036,17 +898,14 @@ function updateARVisuals(){
   for(let i=0;i<N;i++){
     const b=Math.round(petals[i]), g=visible[i];
     const plane=document.getElementById("lotus-plane-"+i);
-    if(plane){
-      plane.setAttribute("opacity",g?1.0:Math.max(0.06,b/100));
-      plane.setAttribute("color",g?"#aaddff":"#ffffff");
-    }
+    if(plane){ plane.setAttribute("opacity",g?1.0:Math.max(0.06,b/100)); plane.setAttribute("color",g?"#aaddff":"#ffffff"); }
     const txt=document.getElementById("pt"+i);
-    if(txt) txt.setAttribute("value", g?`${PALETTES[i].name}  GUARDED`:`${PALETTES[i].name}  ${b}%`);
+    if(txt) txt.setAttribute("value",g?`${PALETTES[i].name}  GUARDED`:`${PALETTES[i].name}  ${b}%`);
   }
 }
 
 function updateTimer(){
-  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
   $timer.textContent=`${m}:${s.toString().padStart(2,"0")}`;
   $timer.className=timeLeft<=30?"urgent":"";
 }
@@ -1054,69 +913,42 @@ function updateTimer(){
 // ─────────────────────────────────────────
 // END GAME
 // ─────────────────────────────────────────
-function hideAllYakshas(){
-  for(let i=0;i<N;i++){
-    const y=document.getElementById("yaksha-"+i);
-    if(y){y.setAttribute("visible","false");y.setAttribute("opacity","0");}
-  }
-}
-
 async function endLevel(){
   gameActive=false;
-
-  // Save final score to Firebase before anything else
-  try { await db.ref("players/"+playerId+"/score").set(myScore); } catch(e){}
+  try{ await db.ref("players/"+playerId+"/score").set(myScore); }catch(e){}
 
   const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
   levelScores.push(avg);
 
-  $hud.style.display='none';
-  $panel.style.display='none';
-  $scene.style.display='none';
-
+  $hud.style.display='none'; $panel.style.display='none'; $scene.style.display='none';
   if(avg>=60) SFX.victory(); else SFX.defeat();
 
-  // Show end screen immediately with local data
-  // Then try to enrich with Firebase scores if available
-  const localScore=[{name:playerName, score:myScore}];
-  showEnd(avg, localScore);
+  const localScore=[{name:playerName,score:myScore}];
+  showEnd(avg,localScore);
 
-  // Try to get all player scores from Firebase (1.5s window)
   setTimeout(async()=>{
-    try {
+    try{
       const snap=await db.ref("players").once("value");
       const data=snap.val()||{};
       const scores=Object.values(data).sort((a,b)=>b.score-a.score);
       if(scores.length>0){
-        // Update leaderboard with full scores
         const medals=["🥇","🥈","🥉"];
         const board=document.getElementById("board");
         if(board) board.innerHTML=scores.map((p,i)=>`
           <div style="display:flex;justify-content:space-between;align-items:center;
-            padding:.3rem 0;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.08)":"none"};
-            font-size:.82rem;">
+            padding:.3rem 0;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.08)":"none"};font-size:.82rem;">
             <span>${medals[i]||""} ${p.name}</span>
             <span style="color:#f5a623;font-weight:bold;">${p.score} pts</span>
           </div>`).join('');
       }
-    } catch(e){}
-    // Clean up Firebase
-    try {
-      db.ref("meta").remove();
-      db.ref("petals").remove();
-      db.ref("players").remove();
-    } catch(e){}
-  }, 1500);
+    }catch(e){}
+    try{ db.ref("meta").remove(); db.ref("petals").remove(); db.ref("players").remove(); }catch(e){}
+  },1500);
 }
 
-async function endGame(){
-  // Fallback — called if endLevel somehow misses
-  if(!gameActive) return; // already ended
-  endLevel();
-}
+async function endGame(){ if(!gameActive) return; endLevel(); }
 
-function showEnd(avg, scores, levelsCleared=0){
-  // Hide all game screens
+function showEnd(avg,scores){
   try{ $scene.style.display="none"; }catch(e){}
   try{ $hud.style.display="none"; }catch(e){}
   try{ $panel.style.display="none"; }catch(e){}
@@ -1125,28 +957,25 @@ function showEnd(avg, scores, levelsCleared=0){
   if(!endEl) return;
   endEl.style.display="flex";
 
-  // ── Spinning lotus ──
+  // Spinning lotus
   try{
-    const lotusCanvas=document.getElementById("end-lotus-canvas");
-    const sz=110;
-    let angle=0;
+    const lc=document.getElementById("end-lotus-canvas");
+    const sz=110; let angle=0;
     const selPal=avg>=60?PALETTES[0]:{base:"#330000",mid:"#660000",light:"#aa3300",glow:"#ff2200"};
-    const tmpC=document.createElement("canvas"); tmpC.width=sz; tmpC.height=sz;
-    drawLotus(tmpC,selPal);
-    const lCtx=lotusCanvas.getContext("2d");
+    const tmp=document.createElement("canvas"); tmp.width=sz; tmp.height=sz;
+    drawLotus(tmp,selPal);
+    const lCtx=lc.getContext("2d");
     function animateLotus(){
-      lCtx.clearRect(0,0,sz,sz);
-      lCtx.save();
+      lCtx.clearRect(0,0,sz,sz); lCtx.save();
       lCtx.translate(sz/2,sz/2); lCtx.rotate(angle); lCtx.translate(-sz/2,-sz/2);
-      lCtx.drawImage(tmpC,0,0);
-      lCtx.restore();
+      lCtx.drawImage(tmp,0,0); lCtx.restore();
       angle+=avg>=60?0.006:0.02;
       requestAnimationFrame(animateLotus);
     }
     animateLotus();
   }catch(e){}
 
-  // ── Score ring ──
+  // Score ring
   try{
     const rc=document.getElementById("score-ring-canvas");
     const rx=rc.getContext("2d");
@@ -1157,14 +986,13 @@ function showEnd(avg, scores, levelsCleared=0){
       rx.strokeStyle="rgba(255,255,255,0.08)"; rx.lineWidth=8; rx.stroke();
       if(rp<target) rp=Math.min(rp+0.06,target);
       rx.beginPath(); rx.arc(55,55,46,-Math.PI/2,-Math.PI/2+rp);
-      rx.strokeStyle=avg>=60?"#f5a623":"#ff4444";
-      rx.lineWidth=8; rx.lineCap="round"; rx.stroke();
+      rx.strokeStyle=avg>=60?"#f5a623":"#ff4444"; rx.lineWidth=8; rx.lineCap="round"; rx.stroke();
       if(rp<target) requestAnimationFrame(animateRing);
     }
     animateRing();
   }catch(e){}
 
-  // ── Text outcome ──
+  // Text
   const outcomes=[
     [75,"The Yaksha flees!","The sacred lotus endures. The pavilion is safe.","🏆 Victory"],
     [60,"A narrow escape…","The Yaksha is weakened but lurks still.","⚠️ Survived"],
@@ -1176,23 +1004,21 @@ function showEnd(avg, scores, levelsCleared=0){
   try{ document.getElementById("verdict").textContent=verdict; }catch(e){}
   try{ document.getElementById("final-pct").textContent=avg+"%"; }catch(e){}
 
-  // ── Lotus survival grid ──
+  // Petal survival grid
   try{
-    const grid=document.getElementById("end-petal-grid");
-    grid.innerHTML="";
+    const grid=document.getElementById("end-petal-grid"); grid.innerHTML="";
     petals.forEach((val,i)=>{
       const b=Math.round(val), survived=b>0;
       const card=document.createElement("div");
       card.style.cssText=`background:${survived?`rgba(${hexToRgb(PALETTES[i].glow)},0.1)`:"rgba(255,0,0,0.07)"};
         border:1px solid ${survived?PALETTES[i].glow+"44":"#ff444422"};
         border-radius:8px;padding:5px 3px;text-align:center;`;
-      const mc=document.createElement("canvas");
-      mc.width=52;mc.height=52;mc.style.cssText="width:42px;height:42px;border-radius:5px;display:block;margin:0 auto;";
+      const mc=document.createElement("canvas"); mc.width=52; mc.height=52;
+      mc.style.cssText="width:42px;height:42px;border-radius:5px;display:block;margin:0 auto;";
       const mctx=mc.getContext("2d");
-      const t2=document.createElement("canvas");t2.width=52;t2.height=52;
+      const t2=document.createElement("canvas"); t2.width=52; t2.height=52;
       drawLotus(t2,PALETTES[i]);
-      mctx.globalAlpha=survived?1:0.2;
-      mctx.drawImage(t2,0,0,52,52);
+      mctx.globalAlpha=survived?1:0.2; mctx.drawImage(t2,0,0,52,52);
       card.appendChild(mc);
       card.innerHTML+=`
         <div style="font-size:.55rem;color:#d4a85a;margin-top:2px;font-weight:bold;">${PALETTES[i].name}</div>
@@ -1201,68 +1027,57 @@ function showEnd(avg, scores, levelsCleared=0){
     });
   }catch(e){}
 
-  // ── Your score (always shown) ──
+  // Your score
   try{
     const lr=document.getElementById("end-level-rows");
     if(lr) lr.innerHTML=`
-      <div style="display:flex;justify-content:space-between;
-        padding:.28rem 0;border-bottom:1px solid rgba(245,169,35,.08);font-size:.85rem;">
+      <div style="display:flex;justify-content:space-between;padding:.28rem 0;border-bottom:1px solid rgba(245,169,35,.08);font-size:.85rem;">
         <span style="color:#b8864a;">Your score</span>
         <span style="color:#f5a623;font-weight:bold;">${myScore} pts</span>
       </div>
-      <div style="display:flex;justify-content:space-between;
-        padding:.28rem 0;border-bottom:1px solid rgba(245,169,35,.08);font-size:.85rem;">
+      <div style="display:flex;justify-content:space-between;padding:.28rem 0;border-bottom:1px solid rgba(245,169,35,.08);font-size:.85rem;">
         <span style="color:#b8864a;">Lotus health</span>
         <span style="color:${avg>=60?"#00e676":"#ff4444"};font-weight:bold;">${avg}%</span>
       </div>`;
   }catch(e){}
 
-  try{
-    const bp=document.getElementById("end-bonus-pts");
-    if(bp) bp.textContent="+"+bonusScore;
-  }catch(e){}
+  try{ const bp=document.getElementById("end-bonus-pts"); if(bp) bp.textContent="+"+bonusScore; }catch(e){}
 
-  // ── Leaderboard (populated with local data immediately) ──
+  // Leaderboard
   try{
     const medals=["🥇","🥈","🥉"];
     const board=document.getElementById("board");
     if(board) board.innerHTML=scores.map((p,i)=>`
       <div style="display:flex;justify-content:space-between;align-items:center;
-        padding:.3rem 0;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.08)":"none"};
-        font-size:.82rem;">
+        padding:.3rem 0;border-bottom:${i<scores.length-1?"1px solid rgba(245,169,35,.08)":"none"};font-size:.82rem;">
         <span>${medals[i]||""} ${p.name}</span>
         <span style="color:#f5a623;font-weight:bold;">${p.score} pts</span>
       </div>`).join('');
   }catch(e){}
 }
 
-// ── Helper: hex to rgb for rgba() use ──
 function hexToRgb(hex){
-  const r=parseInt(hex.slice(1,3),16);
-  const g=parseInt(hex.slice(3,5),16);
-  const b=parseInt(hex.slice(5,7),16);
-  return `${r},${g},${b}`;
+  return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;
 }
 
-// ── Share result ──
 function shareResult(){
   const avg=Math.round(petals.reduce((a,b)=>a+b,0)/N);
-  const txt=`🪷 Ashtadala — The Fading Lotus\nLotus health: ${avg}%\n${avg>=60?"The Yaksha was defeated!":"The Yaksha won..."}\nPlay at: ${location.href}`;
-  if(navigator.share){
-    navigator.share({title:"Ashtadala",text:txt});
-  } else {
-    navigator.clipboard.writeText(txt).then(()=>alert("Result copied to clipboard!"));
-  }
+  const txt=`🪷 Ashtadala — The Fading Lotus\nLotus health: ${avg}%\n${avg>=60?"The Yaksha was defeated!":"The Yaksha won…"}\nPlay at: ${location.href}`;
+  if(navigator.share){ navigator.share({title:"Ashtadala",text:txt}); }
+  else { navigator.clipboard.writeText(txt).then(()=>alert("Result copied to clipboard!")); }
 }
 window.shareResult=shareResult;
 
 function shuffle(arr){
   const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
   return a;
 }
 
-// Build AR scene on page load
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+drawSplashLotus(); // draw lotus canvas on the splash screen
 buildScene();
 </script>
 </body>
